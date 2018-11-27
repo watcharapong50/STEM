@@ -26,15 +26,16 @@ module.exports.updateSystem = (req, res, next) => {
 module.exports.showTimeDelay = (req, res, next) => {
     var system = new System();
 
-    System.find({}, { __v: false, _id: false}, (err, time) => {// .find({}, { _id: false, name: true }).limit(5).sort({ name: -1 })
+    System.findOne({ }, { __v: false, _id: false }, (err, time) => {// .find({}, { _id: false, name: true }).limit(5).sort({ name: -1 })
         if (err) {
             return res.status(404).json({ success: false, message: 'Err : ' + err });
-        } else if(!time){
-            system.timeDelay = 30;
-            system.save();
+        } else if (time) {
+            return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json(time);
         }
         else {
-            return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json(time);
+            system.timeDelay = 30;
+            system.save();
+            return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json({timeDelay:30});
         }
     }).sort({ date: -1 })//.limit(2);
 
