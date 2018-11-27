@@ -12,7 +12,7 @@ const rtsIndex = require('./routes/index.router');
 
 var app = express();
 
-app.use(express.static(path.join(__dirname, '/APP/')));
+app.use(express.static(path.join(__dirname, '/App/')));
 
 
 
@@ -36,7 +36,7 @@ app.use((err, req, res, next) => {
 });
 
 app.use('*', function (req, res) {
-    res.sendFile(path.join(__dirname, '/APP/index.html'));
+    res.sendFile(path.join(__dirname, '/App/index.html'));
 });
 
 // start server
