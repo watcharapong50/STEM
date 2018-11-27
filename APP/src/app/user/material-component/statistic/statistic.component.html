@@ -1,0 +1,37 @@
+<mat-card>
+    <mat-card-content>
+        <mat-tab-group>
+            <mat-tab label="รายงานการใช้ไฟ">
+                <br>
+                <h4>กรุณาเลือกเดือน :</h4>
+                <mat-form-field>
+                    <mat-select [(value)]="monthSelected">
+                        <mat-option value="January">January</mat-option>
+                        <mat-option value="February">February</mat-option>
+                        <mat-option value="March">March</mat-option>
+                        <mat-option value="April">April</mat-option>
+                        <mat-option value="May">May</mat-option>
+                        <mat-option value="June">June</mat-option>
+                        <mat-option value="July">July</mat-option>
+                        <mat-option value="August">August</mat-option>
+                        <mat-option value="September">September</mat-option>
+                        <mat-option value="October">October</mat-option>
+                        <mat-option value="November">November</mat-option>
+                        <mat-option value="December">December</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <h4>กรุณาเลือกปี (ค.ศ.) :</h4>
+                <mat-form-field>
+                    <mat-select [(value)]="yearSelected">
+                        <mat-option value="2018">2018</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <p>เวลาที่เลือก : {{monthSelected}} {{yearSelected}}
+                    <button mat-raised-button color="accent" class="button" (click)="openDialog()" style="float: right;">
+                        <mat-icon>send</mat-icon> เลือก
+                    </button>
+                </p>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>

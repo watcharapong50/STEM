@@ -1,0 +1,28 @@
+<section class="pricing py-5" >
+    <div class="container-fluid" >
+        <div class="form-group" >
+            <input [(ngModel)]="searchText" type="text" class="form-control" id="usr" name="searchRoom" placeholder="ค้นหาห้อง">
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-sm-4" *ngFor="let bill of data | filter : searchText" style="margin-bottom:15px">
+                <div class="card mb-5 mb-lg-0">
+                    <div class="card-body">
+                        <h3 class="text-center">Room: {{bill.room}}</h3>
+                        <hr>
+                        <h5>หน่วยไฟที่ใช้</h5>
+                        <ul class="fa-ul">
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>{{bill.start}} - {{bill.end}}</li>
+                        </ul>
+                        <h5>จำนวนหน่วยไฟที่ใช้</h5>
+                        <ul class="fa-ul">
+                            <li><span class="fa-li"><i class="fas fa-check"></i></span>{{bill.end-bill.start|
+                                number:'1.0-0'}} หน่วย</li>
+                        </ul>
+                        <a style="color: aliceblue" class="btn btn-block btn-primary text-uppercase">฿{{(bill.end-bill.start)*7|
+                            number:'1.0-0'}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

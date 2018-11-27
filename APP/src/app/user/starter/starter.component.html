@@ -1,0 +1,87 @@
+<div class="row">
+    <div class="col-lg-4">
+        <div class="col-sm-4"></div>
+        <mat-card>
+            <mat-card-content *ngIf="userDetails">
+                <h4>ชื่อผู้ใช้งาน: {{userDetails.username}}<br>ชื่อ: {{userDetails.firstname.substring(0,
+                    1).toUpperCase()}}{{userDetails.firstname.substring(1,userDetails.firstname. length)}}
+                    {{userDetails.lastname.substring(0,
+                    1).toUpperCase()}}{{userDetails.lastname.substring(1,userDetails.lastname. length)}}</h4>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="col-lg-4">
+        <mat-card>
+            <mat-card-content>
+                <h4>ชื่อห้อง: {{roomName}}<br>ชื่อมิเตอร์ไฟฟ้า: {{Maddr}}</h4>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="col-lg-4">
+        <mat-card>
+            <mat-card-content>
+                <h4>หน่วยไฟที่ใช้: {{startFullTime}} - {{lastFullTime}} <br>จำนวนเงินที่ต้องจ่าย: {{(lastFullTime-startFullTime)*7 |number:'1.0-0'}} บาท</h4>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="col-lg-6">
+        <div fxLayout="row" fxLayoutWrap="wrap">
+            <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                <mat-card>
+                    <mat-card-content>
+                        <div fxLayout="row" fxLayoutWrap="wrap">
+                            <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" *ngIf="Maddr userDetails ">
+                            </div>
+                        </div>
+                        <canvas id="ActiveEnergy" width="800" height="450"></canvas>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div fxLayout="row" fxLayoutWrap="wrap">
+            <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                <mat-card>
+                    <mat-card-content>
+                        <div fxLayout="row" fxLayoutWrap="wrap">
+                            <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" *ngIf="Maddr userDetails ">
+                            </div>
+                        </div>
+                        <canvas id="LineCurrent" width="800" height="450"></canvas>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div fxLayout="row" fxLayoutWrap="wrap">
+            <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                <mat-card>
+                    <mat-card-content>
+                        <div fxLayout="row" fxLayoutWrap="wrap">
+                            <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" *ngIf="Maddr userDetails ">
+                            </div>
+                        </div>
+                        <canvas id="Frequency" width="800" height="450"></canvas>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div fxLayout="row" fxLayoutWrap="wrap">
+            <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                <mat-card>
+                    <mat-card-content>
+                        <div fxLayout="row" fxLayoutWrap="wrap">
+                            <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" *ngIf="Maddr userDetails ">
+                            </div>
+                        </div>
+                        <canvas id="LineVoltage" width="800" height="450"></canvas>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

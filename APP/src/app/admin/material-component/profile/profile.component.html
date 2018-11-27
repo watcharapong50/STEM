@@ -1,0 +1,75 @@
+<div class="mat-elevation-z8 size">
+
+  <mat-card *ngIf="userDetails">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="row-fluid user-infos cyruxx">
+      <div class="span10 offset1">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">ข้อมูลผู้ใช้งาน</h3>
+          </div>
+          <div class="panel-body container">
+            <br>
+            <table class="table table-hover">
+              <tbody>
+                <tr>
+
+                  <td class="with-icon">
+                    <mat-icon class="colorOne-icon">assignment_ind</mat-icon><strong>ชื่อผู้ใช้งาน :</strong>
+                  </td>
+                  <td>{{userDetails.username}}</td>
+                </tr>
+                <tr>
+                  <td class="with-icon">
+                    <mat-icon class="colorOne-icon">assignment</mat-icon><strong>ชื่อ :</strong>
+                  </td>
+                  <td>{{userDetails.firstname.substring(0,
+                    1).toUpperCase()}}{{userDetails.firstname.substring(1,userDetails.firstname. length)}}</td>
+                </tr>
+                <tr>
+
+                  <td class="with-icon">
+                    <mat-icon class="colorOne-icon">chrome_reader_mode</mat-icon><strong>นามสกุล:</strong>
+                  </td>
+                  <td>{{userDetails.lastname.substring(0,
+                    1).toUpperCase()}}{{userDetails.lastname.substring(1,userDetails.lastname. length)}}</td>
+                </tr>
+
+                <tr>
+
+                  <td class="with-icon">
+                    <mat-icon class="colorOne-icon">https</mat-icon><strong>ระดับสิทธิผู้ใช้งาน :</strong>
+                  </td>
+                  <td>Administrator</td>
+                </tr>
+                <tr>
+
+                  <td class="with-icon">
+                    <mat-icon class="colorOne-icon">email</mat-icon><strong>อีเมล :</strong>
+                  </td>
+                  <td>{{userDetails.email}}</td>
+                </tr>
+                <tr>
+
+                  <td class="with-icon">
+                    <mat-icon class="colorOne-icon">home</mat-icon><strong>ชื่อห้อง :</strong>
+                  </td>
+                  <td>{{userDetails.room}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+  </mat-card>
+</div>

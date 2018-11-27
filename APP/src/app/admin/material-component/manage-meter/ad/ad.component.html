@@ -1,0 +1,35 @@
+<mat-card-content>
+  <div>
+    <!-- <img src="/assets/img/users.png" id="icon" alt="User Icon" /> -->
+  </div>
+  <form #signUpForm="ngForm" (ngSubmit)="signUpForm.valid && onSubmit(signUpForm)">
+    <mat-form-field>
+      <input matInput type="text" #Maddr="ngModel" [(ngModel)]="meterService.selectedUser.Maddr" name="Maddr"
+        placeholder="ชื่อมิเตอร์ไฟฟ้า (Mac Address)" required [ngClass]="{'invalid-textbox' :signUpForm.submitted && !Maddr.valid }">
+    </mat-form-field>
+    <div *ngIf="signUpForm.submitted && !Maddr.valid">
+      <label class="validation-message" style="color: red">กรุณากรอกชื่อมิเตอร์ไฟฟ้า</label>
+    </div>
+    <mat-form-field>
+      <input matInput type="text" #room="ngModel" [(ngModel)]="meterService.selectedUser.room" name="room" placeholder="ชื่อห้อง"
+        required [ngClass]="{'invalid-textbox' :signUpForm.submitted && !room.valid }">
+    </mat-form-field>
+    <div *ngIf="signUpForm.submitted && !room.valid">
+      <label class="validation-message" style="color: red">กรุณากรอกชื่อห้อง</label>
+    </div>
+    <div style="width:135px; margin-right:auto; margin-left:auto;">
+        <input class="btn btn-success" type="submit" value="เพิ่มมิเตอร์ไฟฟ้า" (click)='ngOnInit()'>
+    </div>
+  </form>
+  <br>
+  <!-- Success message -->
+  <div class="success" *ngIf="showSucessMessage" class="success">
+    เพิ่มมิเตอร์ไฟฟ้าสำเร็จ
+  </div>
+
+  <!-- Error message -->
+  <div class="alert" *ngIf="serverErrorMessages" class="warn">
+    {{serverErrorMessages}}
+
+  </div>
+</mat-card-content>

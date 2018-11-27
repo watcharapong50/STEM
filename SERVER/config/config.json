@@ -1,0 +1,14 @@
+{
+    "development": {
+        "PORT": 3000,
+        "MONGODB_URI": "mongodb://localhost:27017/STEM_DB",
+        "JWT_SECRET": "SECRET#STEM",
+        "JWT_EXP": "1d"
+    },
+    "production": {
+        "PORT": 80,
+        "MONGODB_URI": "mongodb://localhost:27017/STEM_DB",
+        "JWT_SECRET": "SECRET#STEM",
+        "JWT_EXP": "1d"
+    }
+}

@@ -1,0 +1,86 @@
+<mat-card>
+    <mat-card-content>
+        <mat-tab-group>
+            <!-- <mat-tab label="ค่าไฟเดือนนี้">
+                <mat-card-content>
+                    <div class="search-div">
+                        <mat-form-field class="search-form-field" floatLabel="never">
+                            <input matInput [(ngModel)]="searchKey" placeholder="ค้นหาห้อง" autocomplete="off" (keyup)="applyFilter()">
+                            <button mat-button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field><button mat-button matSuffix mat-icon-button (click)="ngOnInit()">
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                    </div>
+                    <div class="mat-elevation-z8">
+                        <mat-table [dataSource]="dataSource" matSort>
+                            <ng-container matColumnDef="room">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อห้อง</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.room}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="start" sticky>
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>ค่าพลังงานไฟฟ้าเริ่มต้น</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{element.start}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>ค่าพลังงานไฟฟ้าสิ้นสุด</mat-header-cell>
+                                <mat-cell *matCellDef="let element">
+                                    {{element.end}}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="bill">
+                                <mat-header-cell *matHeaderCellDef>ค่าไฟ (บาท)</mat-header-cell>
+                                <mat-cell *matCellDef="let element">{{(element.end-element.start)*7 |number:'1.0-0'}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="noData">
+                                <mat-footer-cell *matFooterCellDef colspan="6">
+                                    No data.
+                                </mat-footer-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="loading">
+                                <mat-footer-cell *matFooterCellDef colspan="6">
+                                    Loading data...
+                                </mat-footer-cell>
+                            </ng-container>
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                            <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!(dataSource!=null && dataSource.data.length==0)}"></mat-footer-row>
+                            <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':dataSource!=null}"></mat-footer-row>
+                        </mat-table>
+                        <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" [pageSize]="10" showFirstLastButtons></mat-paginator>
+                    </div>
+                </mat-card-content>
+            </mat-tab> -->
+            <mat-tab label="รายงานค่าไฟ">
+                <br>
+                <form>
+                    <mat-form-field>
+                        <mat-select placeholder="กรุณาเลือกเดือน" [(ngModel)]="selectedMonth" name="month"
+                            [formControl]="monthForm" required>
+                            <mat-option *ngFor="let month of months" [value]="month.month">
+                                {{month.month}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="monthForm.hasError('required')">กรุณาเลือกเดือน</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-select placeholder="กรุณาเลือกปี (ค.ศ.)" [(ngModel)]="selectedYear" name="year"
+                            [formControl]="yearForm" required>
+                            <mat-option *ngFor="let year of years" [value]="year.year">
+                                {{year.year}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="yearForm.hasError('required')">กรุณาเลือกปี (ค.ศ.)</mat-error>
+                    </mat-form-field>
+                    <p> เวลาที่เลือก : {{selectedMonth}} {{selectedYear}} </p>
+                </form>
+                <div class="wrapper-center">
+                    <button mat-raised-button color="accent" class="button" (click)="openDialog()">
+                        <mat-icon>search</mat-icon> ค้นหา
+                    </button>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>

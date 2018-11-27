@@ -1,0 +1,104 @@
+<mat-card>
+  <mat-card-content>
+    <mat-tab-group>
+      <mat-tab label="รายงานค่าไฟ">
+        <br>
+        <form>
+          <mat-form-field>
+            <mat-select placeholder="กรุณาเลือกเดือน" [(ngModel)]="selectedMonth" name="month" [formControl]="monthForm"
+              required>
+              <mat-option *ngFor="let month of months" [value]="month.month">
+                {{month.month}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="monthForm.hasError('required')">กรุณาเลือกเดือน</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select placeholder="กรุณาเลือกปี (ค.ศ.)" [(ngModel)]="selectedYear" name="year" [formControl]="yearForm"
+              required>
+              <mat-option *ngFor="let year of years" [value]="year.year">
+                {{year.year}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="yearForm.hasError('required')">กรุณาเลือกปี (ค.ศ.)</mat-error>
+          </mat-form-field>
+          <p> เวลาที่เลือก : {{selectedMonth}} {{selectedYear}} </p>
+        </form>
+        <div class="wrapper-center">
+          <button mat-raised-button color="accent" class="button" (click)="show = true" (click)="submit()">
+            <mat-icon>send</mat-icon> เลือก
+          </button>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>
+
+<!-- <div *ngIf="show">
+  <mat-card>
+    <mat-card-content>
+      <div>
+        <button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="show = false" style="float: right;">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="row" *ngIf="bill">
+        <div class="col-lg-4">
+          <p>ค่าพลังงานไฟฟ้าเริ่มต้น : {{bill.startFullTime.ActiveEnergy}}</p>
+          <p>เวลาที่บันทึก : {{bill.startFullTime.date}}</p>
+
+        </div>
+        <div class="col-lg-4">
+          <p>ค่าพลังงานไฟฟ้าสุดท้าย : {{bill.lastFullTime.ActiveEnergy}} </p>
+          <p>เวลาที่บันทึก : {{bill.lastFullTime.date}}</p>
+        </div>
+        <div class="col-lg-4">
+          <p>จำนวนเงินที่ต้องจ่าย : {{(bill.lastFullTime.ActiveEnergy-bill.startFullTime.ActiveEnergy)*7}} บาท</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div> -->
+
+<div *ngIf="show">
+  <section class="pricing py-5" *ngIf="bill">
+    <div class="container">
+      <div class="row">
+        <!-- Free Tier -->
+        <div class="col-lg-4">
+
+        </div>
+        <!-- Plus Tier -->
+        <div class="col-lg-4">
+          <div class="card mb-5 mb-lg-0">
+            <div class="card-body">
+              <h6 class="card-price text-center">{{(bill.lastFullTime.ActiveEnergy-bill.startFullTime.ActiveEnergy)*7 |
+                number:'1.0-0'}}฿</h6>
+              <hr>
+              <h4>ค่าไฟประจำเดือน :</h4>
+              <ul class="fa-ul">
+                <li><span class="fa-li"><i class="fas fa-check"></i></span>{{selectedMonth}} {{selectedYear}}</li>
+              </ul>
+              <h4>หน่วยไฟที่ใช้ :</h4>
+              <ul class="fa-ul">
+                <li><span class="fa-li"><i class="fas fa-check"></i>{{bill.startFullTime.ActiveEnergy}} -
+                    {{bill.lastFullTime.ActiveEnergy}}</span></li>
+              </ul>
+              <h4>เวลาที่บันทึก:</h4>
+              <ul class="fa-ul">
+                <li><span class="fa-li"><i class="fas fa-check"></i></span>{{bill.startFullTime.date}}</li>
+                <li><span class="fa-li"><i class="fas fa-check"></i></span>{{bill.lastFullTime.date}}</li>
+              </ul>
+              <a href="" class="btn btn-block btn-primary text-uppercase" (click)="show = false">ปิด</a>
+            </div>
+          </div>
+        </div>
+        <!-- Pro Tier -->
+        <div class="col-lg-4">
+
+
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

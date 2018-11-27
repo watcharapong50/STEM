@@ -1,0 +1,24 @@
+<div fxLayout="row">
+  <div fxFlex.gt-sm="50%">
+    <mat-card>
+      <mat-card-content>
+        <mat-card-title>เวลาที่มิเตอร์ไฟฟ้าส่งค่าไฟฟ้าให้ Server (นาที)</mat-card-title>
+        <mat-card-subtitle></mat-card-subtitle>
+        <mat-button-toggle-group appearance="legacy" name="fontStyle" aria-label="Font Style">
+          <mat-button-toggle value="1" (click)="time(1)"  checked={{bt1}}>1</mat-button-toggle>
+          <mat-button-toggle value="5" (click)="time(5)" checked={{bt5}}>5</mat-button-toggle>
+          <mat-button-toggle value="10" (click)="time(10)" checked={{bt10}}>10</mat-button-toggle>
+          <mat-button-toggle value="15" (click)="time(15)" checked={{bt15}}>15</mat-button-toggle>
+          <mat-button-toggle value="30" (click)="time(30)" checked={{bt30}}>30</mat-button-toggle>
+          <mat-button-toggle value="45" (click)="time(45)" checked={{bt45}}>45</mat-button-toggle>
+          <mat-button-toggle value="60" (click)="time(60)" checked={{bt60}}>60</mat-button-toggle>
+        </mat-button-toggle-group>
+        <h5>
+          <br>
+          เวลาที่เลือก : <strong>{{userDetails}} </strong> นาที
+        </h5>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+

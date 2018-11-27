@@ -1,0 +1,65 @@
+<div class="search-div">
+    <mat-form-field class="search-form-field" floatLabel="never">
+        <input matInput [(ngModel)]="searchKeyReport" placeholder="ค้นหา" autocomplete="off" (keyup)="applyFilterReport()">
+        <button mat-button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchKeyReport" (click)="onSearchClearReport()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+
+</div>
+<mat-dialog-content class="mat-typography">
+    <div class="mat-elevation-z8 size">
+        <mat-table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="ActiveEnergy">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>ค่าพลังงานไฟฟ้า</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.ActiveEnergy}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Frequency" sticky>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>ความถี่</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.Frequency}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="LineCurrent">
+                <mat-header-cell *matHeaderCellDef>กระแสไฟฟ้าที่สาย</mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{element.LineCurrent}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="LineVoltage">
+                <mat-header-cell *matHeaderCellDef>แรงดันระหว่างสาย</mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{element.LineVoltage}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="date">
+                <mat-header-cell *matHeaderCellDef>เวลาที่บันทึก</mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{element.date}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="noData">
+                <mat-footer-cell *matFooterCellDef colspan="6">
+                    ไม่มีข้อมูล
+                </mat-footer-cell>
+            </ng-container>
+            <ng-container matColumnDef="loading">
+                <mat-footer-cell *matFooterCellDef colspan="6">
+                    กำลังดาวน์โหลดข้อมูล
+                </mat-footer-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!(dataSource!=null && dataSource.data.length==0)}"></mat-footer-row>
+            <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':dataSource!=null}"></mat-footer-row>
+        </mat-table>
+        <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" [pageSize]="10" showFirstLastButtons></mat-paginator>
+    </div>
+    <br>
+</mat-dialog-content>
+<div class="wrapper-center button-row">
+    <button mat-raised-button color="primary" (click)="exportAsXLSX()">
+        <mat-icon>cloud_download</mat-icon> ดาวโหลด (.xlsx)
+    </button>
+    <button mat-raised-button color="warn" (click)="onClear()">
+        <mat-icon>clear</mat-icon>ปิด
+    </button>
+</div>

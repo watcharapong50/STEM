@@ -1,0 +1,17 @@
+<form [formGroup]="meterService.form" class="normal-form" #signUpForm="ngForm" (ngSubmit)="signUpForm.valid && onSubmit(signUpForm)">
+    <mat-grid-list cols="2" rowHeight="300px">
+        <div class="controles-container">
+          <h5>ชื่อมิเตอร์ไฟฟ้า (Mac Address) : {{data.Maddr}}</h5>
+          <input [(ngModel)]="data.Maddr" type="hidden" formControlName="Maddr">
+           <mat-form-field >
+            <input [(ngModel)]="data.room" formControlName="room" value="{{data.room}}"
+              matInput placeholder="ชื่อห้อง*">
+          </mat-form-field>
+          <div class="button-row">
+            <button mat-raised-button color="primary" type="submit" value="Sign Up" type="submit" >แก้ไขมิเตอร์ไฟฟ้า</button>
+            <button mat-raised-button color="warn" (click)="onClear()">ปิด</button>
+          </div>
+        </div>
+    </mat-grid-list>
+  </form> 
+  
