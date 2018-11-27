@@ -2217,7 +2217,7 @@ __webpack_require__.r(__webpack_exports__);
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 var environment = {
     production: false,
-    apiBaseUrl: 'http://35.240.216.73/api'
+    apiBaseUrl: 'http://1.2.3.26/api'
 };
 
 
@@ -2260,7 +2260,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\New folder\STEM - Copy\APP\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! C:\New folder\STEM - Copy\stemTest\src\main.ts */"./src/main.ts");
 
 
 /***/ }),
