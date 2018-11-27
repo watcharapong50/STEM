@@ -1388,7 +1388,7 @@ var SystemSettingComponent = /** @class */ (function () {
     SystemSettingComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.meterService.showTimeDelay().subscribe(function (res) {
-            _this.userDetails = res[0].timeDelay;
+            _this.userDetails = res['timeDelay'];
             _this.btActive(_this.userDetails);
         }, function (err) {
             console.log(err);
