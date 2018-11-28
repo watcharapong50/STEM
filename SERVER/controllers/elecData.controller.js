@@ -5,7 +5,7 @@ const Elec = mongoose.model('Elec');
 const Meter = mongoose.model('Meter');
 
 module.exports.addElecData = (req, res, next) => {
-                dateFormat.masks.hammerDate = 'dddd, dd, mmmm, yyyy, HH:MM';
+            dateFormat.masks.hammerDate = 'dddd, dd, mmmm, yyyy, HH:MM';
             var time = dateFormat(new Date(), "hammerDate").toString();
             var elec = new Elec();
     Meter.findOne({ Maddr: req.body.Maddr }, (err, data) => {
@@ -18,6 +18,7 @@ module.exports.addElecData = (req, res, next) => {
             elec.ActiveEnergy = req.body.ActiveEnergy;
             elec.LineCurrent = req.body.LineCurrent;
             elec.date = time;
+            elec.sort =  Date.now();
             elec.save((err, doc) => {
                 if (!err) {
                     res.send(doc);
@@ -41,8 +42,9 @@ module.exports.showElec = (req, res, next) => {
         } else {
             return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json(elec);
         }
-    }).sort({ date: -1 });
+    }).sort({ sort:-1 });
 }
+
 
 module.exports.showMyElec = (req, res, next) => {
     if (req.params.Maddr == null || req.params.Maddr == '') {
@@ -54,7 +56,7 @@ module.exports.showMyElec = (req, res, next) => {
             } else {
                 return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json(elec);
             }
-        }).sort({ date: -1 }).limit(24);
+        }).sort({ sort: 1 }).limit(24);
     }
 }
 
@@ -72,7 +74,7 @@ module.exports.showStatistic = (req, res, next) => {
                 } else {
                     return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + err });
                 }
-            }).sort({ date: 1 })
+            }).sort({ sort: 1 })
         } else {
             return res.status(404).json({ success: false, message: 'can\'t find room: ' + error });
         }
@@ -110,15 +112,15 @@ module.exports.showBillUser = (req, res, next) => {
                         } else {
                             return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + err });
                         }
-                    }).sort({ date: 1 })
+                    }).sort({ sort: 1 })
                 } else {
                     return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + error });
                 }
-            }).sort({ date: -1 })
+            }).sort({ sort: -1 })
         } else {
             return res.status(404).json({ success: false, message: 'can\'t find lastFullTime: ' + err });
         }
-    }).sort({ date: -1 })
+    }).sort({ sort: -1 })
 }
 
 module.exports.showBill = (req, res, next) => {
@@ -169,12 +171,12 @@ module.exports.showBill = (req, res, next) => {
                                         console.log('Can\'t find');
                                         //return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + err });
                                     }
-                                }).sort({ date: 1 })
+                                }).sort({ sort: 1 })
                             } else {
                                 console.log('Can\'t find');
                                 //return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + error });
                             }
-                        }).sort({ date: -1 })
+                        }).sort({ sort: -1 })
                     } else {
                         dataArray.push({ Room: room, startActiveEnergy: '0', endActiveEnergy: '0' });
                         if (dataArray.length == meter.length) {
@@ -182,10 +184,10 @@ module.exports.showBill = (req, res, next) => {
                         }
                         //return res.status(404).json({ success: false, message: 'can\'t find lastFullTime: ' + err });
                     }
-                }).sort({ date: -1 })
+                }).sort({ sort: -1 })
             }
         }
-    }).sort({ date: -1 })
+    }).sort({ sort: -1 })
 }
 
 
@@ -238,12 +240,12 @@ module.exports.showBillUserAll = (req, res, next) => {
                                         console.log('Can\'t find');
                                         //return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + err });
                                     }
-                                }).sort({ date: 1 })
+                                }).sort({ sort: 1 })
                             } else {
                                 console.log('Can\'t find');
                                 //return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + error });
                             }
-                        }).sort({ date: -1 })
+                        }).sort({ sort: -1 })
                     } else {
                         dataArray.push({ start: '0', end: '0', room: room, Maddr: Maddr });
                         if (dataArray.length == meter.length) {
@@ -251,10 +253,10 @@ module.exports.showBillUserAll = (req, res, next) => {
                         }
                         //return res.status(404).json({ success: false, message: 'can\'t find lastFullTime: ' + err });
                     }
-                }).sort({ date: -1 })
+                }).sort({ sort: -1 })
             }
         }
-    }).sort({ date: -1 })
+    }).sort({ sort: -1 })
 }
 
 module.exports.showBillUserReport = (req, res, next) => {
@@ -285,13 +287,13 @@ module.exports.showBillUserReport = (req, res, next) => {
                         } else {
                             return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + err });
                         }
-                    }).sort({ date: 1 })
+                    }).sort({ sort: 1 })
                 } else {
                     return res.status(200).json({ startFullTime: { ActiveEnergy: 0, date: 'ไม่มีการบันทึกค่า' }, lastFullTime: { ActiveEnergy: 0, date: 'ไม่มีการบันทึกค่า' } });
                 }
-            }).sort({ date: -1 })
+            }).sort({ sort: -1 })
         } else {
             return res.status(200).json({ startFullTime: { ActiveEnergy: 0, date: 'ไม่มีการบันทึกค่า' }, lastFullTime: { ActiveEnergy: 0, date: 'ไม่มีการบันทึกค่า' } });
         }
-    }).sort({ date: -1 })
+    }).sort({ sort: -1 })
 }
