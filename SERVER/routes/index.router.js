@@ -40,6 +40,7 @@ router.get('/showBillUserReport/:Maddr/:month/:year', ctrlElec.showBillUserRepor
 // System
 router.get('/updateSystem/:timeDelay', ctrlSystem.updateSystem);
 router.get('/showTimeDelay', ctrlSystem.showTimeDelay);
+router.post('/showTimeDelayPost', ctrlSystem.showTimeDelayPost);
 
 module.exports = router;
 
