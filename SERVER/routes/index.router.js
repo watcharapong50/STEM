@@ -42,6 +42,8 @@ router.get('/updateSystem/:timeDelay', ctrlSystem.updateSystem);
 router.get('/showTimeDelay', ctrlSystem.showTimeDelay);
 router.post('/showTimeDelayPost', ctrlSystem.showTimeDelayPost);
 
+router.get('/updateBath/:bath', ctrlSystem.updateBath);
+router.get('/showBathPerNum', ctrlSystem.showBathPerNum);
 module.exports = router;
 
 
