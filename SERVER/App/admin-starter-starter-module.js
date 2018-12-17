@@ -71,7 +71,7 @@ module.exports = ".wrapper-center {\r\n    text-align: center;\r\n}\r\n\r\n.butt
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<section class=\"pricing py-5\" >\r\n    <div class=\"container-fluid\" >\r\n        <div class=\"form-group\" >\r\n            <input [(ngModel)]=\"searchText\" type=\"text\" class=\"form-control\" id=\"usr\" name=\"searchRoom\" placeholder=\"ค้นหาห้อง\">\r\n        </div>\r\n        <div class=\"row\">\r\n            <div class=\"col-lg-3 col-sm-4\" *ngFor=\"let bill of data | filter : searchText\" style=\"margin-bottom:15px\">\r\n                <div class=\"card mb-5 mb-lg-0\">\r\n                    <div class=\"card-body\">\r\n                        <h3 class=\"text-center\">Room: {{bill.room}}</h3>\r\n                        <hr>\r\n                        <h5>หน่วยไฟที่ใช้</h5>\r\n                        <ul class=\"fa-ul\">\r\n                            <li><span class=\"fa-li\"><i class=\"fas fa-check\"></i></span>{{bill.start}} - {{bill.end}}</li>\r\n                        </ul>\r\n                        <h5>จำนวนหน่วยไฟที่ใช้</h5>\r\n                        <ul class=\"fa-ul\">\r\n                            <li><span class=\"fa-li\"><i class=\"fas fa-check\"></i></span>{{bill.end-bill.start|\r\n                                number:'1.0-0'}} หน่วย</li>\r\n                        </ul>\r\n                        <a style=\"color: aliceblue\" class=\"btn btn-block btn-primary text-uppercase\">฿{{(bill.end-bill.start)*7|\r\n                            number:'1.0-0'}}</a>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</section>"
+module.exports = "<section class=\"pricing py-5\" >\r\n    <div class=\"container-fluid\" >\r\n        <div class=\"form-group\" >\r\n            <input [(ngModel)]=\"searchText\" type=\"text\" class=\"form-control\" id=\"usr\" name=\"searchRoom\" placeholder=\"ค้นหาห้อง\">\r\n        </div>\r\n        <div class=\"row\">\r\n            <div class=\"col-lg-3 col-sm-4\" *ngFor=\"let bill of data | filter : searchText\" style=\"margin-bottom:15px\">\r\n                <div class=\"card mb-5 mb-lg-0\">\r\n                    <div class=\"card-body\">\r\n                        <h3 class=\"text-center\">Room: {{bill.room}}</h3>\r\n                        <hr>\r\n                        <h5>หน่วยไฟที่ใช้</h5>\r\n                        <ul class=\"fa-ul\">\r\n                            <li><span class=\"fa-li\"><i class=\"fas fa-check\"></i></span>{{bill.start}} - {{bill.end}}</li>\r\n                        </ul>\r\n                        <h5>จำนวนหน่วยไฟที่ใช้</h5>\r\n                        <ul class=\"fa-ul\">\r\n                            <li><span class=\"fa-li\"><i class=\"fas fa-check\"></i></span>{{bill.end-bill.start|\r\n                                number:'1.0-0'}} หน่วย</li>\r\n                        </ul>\r\n                        <a style=\"color: aliceblue\" class=\"btn btn-block btn-primary text-uppercase\">฿{{(bill.end-bill.start)*userDetailsBath|\r\n                            number:'1.0-0'}}</a>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</section>"
 
 /***/ }),
 
@@ -109,6 +109,12 @@ var StarterComponent = /** @class */ (function () {
                 return;
             }
             _this.data = data;
+        });
+        this.meterService.showBathPerNum().subscribe(function (res) {
+            _this.userDetailsBath = res['bathPerNum'];
+            console.log(_this.userDetailsBath);
+        }, function (err) {
+            console.log(err);
         });
     };
     StarterComponent = __decorate([

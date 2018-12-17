@@ -1341,7 +1341,7 @@ module.exports = "  .mat-button-toggle-checked {\r\n    background-color:rgba(7,
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"row\">\n  <div fxFlex.gt-sm=\"50%\">\n    <mat-card>\n      <mat-card-content>\n        <mat-card-title>เวลาที่มิเตอร์ไฟฟ้าส่งค่าไฟฟ้าให้ Server (นาที)</mat-card-title>\n        <mat-card-subtitle></mat-card-subtitle>\n        <mat-button-toggle-group appearance=\"legacy\" name=\"fontStyle\" aria-label=\"Font Style\">\n          <mat-button-toggle value=\"1\" (click)=\"time(1)\"  checked={{bt1}}>1</mat-button-toggle>\n          <mat-button-toggle value=\"5\" (click)=\"time(5)\" checked={{bt5}}>5</mat-button-toggle>\n          <mat-button-toggle value=\"10\" (click)=\"time(10)\" checked={{bt10}}>10</mat-button-toggle>\n          <mat-button-toggle value=\"15\" (click)=\"time(15)\" checked={{bt15}}>15</mat-button-toggle>\n          <mat-button-toggle value=\"30\" (click)=\"time(30)\" checked={{bt30}}>30</mat-button-toggle>\n          <mat-button-toggle value=\"45\" (click)=\"time(45)\" checked={{bt45}}>45</mat-button-toggle>\n          <mat-button-toggle value=\"60\" (click)=\"time(60)\" checked={{bt60}}>60</mat-button-toggle>\n        </mat-button-toggle-group>\n        <h5>\n          <br>\n          เวลาที่เลือก : <strong>{{userDetails}} </strong> นาที\n        </h5>\n      </mat-card-content>\n    </mat-card>\n  </div>\n</div>\n\n"
+module.exports = "<div fxLayout=\"row\">\n  <div fxFlex.gt-sm=\"50%\">\n    <mat-card>\n      <mat-card-content>\n        <mat-card-title>เวลาที่มิเตอร์ไฟฟ้าส่งค่าไฟฟ้าให้ Server (นาที)</mat-card-title>\n        <mat-card-subtitle></mat-card-subtitle>\n        <mat-button-toggle-group appearance=\"legacy\" name=\"fontStyle\" aria-label=\"Font Style\">\n          <mat-button-toggle value=\"1\" (click)=\"time(1)\"  checked={{bt1}}>1</mat-button-toggle>\n          <mat-button-toggle value=\"5\" (click)=\"time(5)\" checked={{bt5}}>5</mat-button-toggle>\n          <mat-button-toggle value=\"10\" (click)=\"time(10)\" checked={{bt10}}>10</mat-button-toggle>\n          <mat-button-toggle value=\"15\" (click)=\"time(15)\" checked={{bt15}}>15</mat-button-toggle>\n          <mat-button-toggle value=\"30\" (click)=\"time(30)\" checked={{bt30}}>30</mat-button-toggle>\n          <mat-button-toggle value=\"45\" (click)=\"time(45)\" checked={{bt45}}>45</mat-button-toggle>\n          <mat-button-toggle value=\"60\" (click)=\"time(60)\" checked={{bt60}}>60</mat-button-toggle>\n        </mat-button-toggle-group>\n        <h5>\n          <br>\n          เวลาที่เลือก : <strong>{{userDetails}} </strong> นาที\n        </h5>\n      </mat-card-content>\n    </mat-card>\n  </div>\n  <div fxFlex.gt-sm=\"50%\">\n    <mat-card>\n      <mat-card-content>\n        <mat-card-title>ค่าไฟต่อหน่วย (บาท)</mat-card-title>\n        <mat-card-subtitle></mat-card-subtitle>\n        <mat-button-toggle-group appearance=\"legacy\" name=\"fontStyle\" aria-label=\"Font Style\">\n          <mat-button-toggle value=\"4\" (click)=\"bath(4)\"  checked={{bat1}}>4</mat-button-toggle>\n          <mat-button-toggle value=\"5\" (click)=\"bath(5)\" checked={{bat5}}>5</mat-button-toggle>\n          <mat-button-toggle value=\"6\" (click)=\"bath(6)\" checked={{bat10}}>6</mat-button-toggle>\n          <mat-button-toggle value=\"7\" (click)=\"bath(7)\" checked={{bat15}}>7</mat-button-toggle>\n          <mat-button-toggle value=\"8\" (click)=\"bath(8)\" checked={{bat30}}>8</mat-button-toggle>\n          <mat-button-toggle value=\"9\" (click)=\"bath(9)\" checked={{bat45}}>9</mat-button-toggle>\n          <mat-button-toggle value=\"10\" (click)=\"bath(10)\" checked={{bat60}}>10</mat-button-toggle>\n        </mat-button-toggle-group>\n        <h5>\n          <br>\n          ค่าเลือก : <strong>{{userDetailsBath}} </strong> บาท\n        </h5>\n      </mat-card-content>\n    </mat-card>\n  </div>\n</div>\n\n"
 
 /***/ }),
 
@@ -1384,12 +1384,26 @@ var SystemSettingComponent = /** @class */ (function () {
         this.bt30 = false;
         this.bt45 = false;
         this.bt60 = false;
+        this.bat1 = false;
+        this.bat5 = false;
+        this.bat10 = false;
+        this.bat15 = false;
+        this.bat30 = false;
+        this.bat45 = false;
+        this.bat60 = false;
     }
     SystemSettingComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.meterService.showTimeDelay().subscribe(function (res) {
             _this.userDetails = res['timeDelay'];
             _this.btActive(_this.userDetails);
+        }, function (err) {
+            console.log(err);
+        });
+        this.meterService.showBathPerNum().subscribe(function (res) {
+            _this.userDetailsBath = res['bathPerNum'];
+            console.log(_this.userDetailsBath);
+            _this.btActiveBath(_this.userDetailsBath);
         }, function (err) {
             console.log(err);
         });
@@ -1427,6 +1441,53 @@ var SystemSettingComponent = /** @class */ (function () {
     SystemSettingComponent.prototype.time = function (time) {
         var _this = this;
         this.meterService.updateSystem(time).subscribe(function (res) {
+            _this.showSucessMessage = true;
+            setTimeout(function () { return _this.showSucessMessage = false; }, 4000);
+            _this.notificationService.success('Edit successfully !!!');
+            _this.ngOnInit();
+        }, function (err) {
+            if (err.status === 422) {
+                _this.serverErrorMessages = err.error.join('<br/>');
+            }
+            else {
+                _this.notificationService.warn('Edit Fail!!!');
+                _this.serverErrorMessages = 'Something went wrong.Please contact admin.';
+            }
+        });
+    };
+    SystemSettingComponent.prototype.btActiveBath = function (state) {
+        this.bat1 = false;
+        this.bat5 = false;
+        this.bat10 = false;
+        this.bat15 = false;
+        this.bat30 = false;
+        this.bat45 = false;
+        this.bat60 = false;
+        if (state == 4) {
+            this.bat1 = true;
+        }
+        else if (state == 5) {
+            this.bat5 = true;
+        }
+        else if (state == 6) {
+            this.bat10 = true;
+        }
+        else if (state == 7) {
+            this.bat15 = true;
+        }
+        else if (state == 8) {
+            this.bat30 = true;
+        }
+        else if (state == 9) {
+            this.bat45 = true;
+        }
+        else if (state == 10) {
+            this.bat60 = true;
+        }
+    };
+    SystemSettingComponent.prototype.bath = function (time) {
+        var _this = this;
+        this.meterService.updateBath(time).subscribe(function (res) {
             _this.showSucessMessage = true;
             setTimeout(function () { return _this.showSucessMessage = false; }, 4000);
             _this.notificationService.success('Edit successfully !!!');
