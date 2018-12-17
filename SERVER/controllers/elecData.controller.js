@@ -3,11 +3,12 @@ var dateFormat = require('dateformat');
 
 const Elec = mongoose.model('Elec');
 const Meter = mongoose.model('Meter');
+const System = mongoose.model('System');
 
 module.exports.addElecData = (req, res, next) => {
-            dateFormat.masks.hammerDate = 'dddd, dd, mmmm, yyyy, HH:MM';
-            var time = dateFormat(new Date(), "hammerDate").toString();
-            var elec = new Elec();
+    dateFormat.masks.hammerDate = 'dddd, dd, mmmm, yyyy, HH:MM';
+    var time = dateFormat(new Date(), "hammerDate").toString();
+    var elec = new Elec();
     Meter.findOne({ Maddr: req.body.Maddr }, (err, data) => {
         if (err) {
             return res.status(404).json({ success: false, message: 'Err : ' + err });
@@ -18,7 +19,7 @@ module.exports.addElecData = (req, res, next) => {
             elec.ActiveEnergy = req.body.ActiveEnergy;
             elec.LineCurrent = req.body.LineCurrent;
             elec.date = time;
-            elec.sort =  Date.now();
+            elec.sort = Date.now();
             elec.save((err, doc) => {
                 if (!err) {
                     res.send(doc);
@@ -42,7 +43,7 @@ module.exports.showElec = (req, res, next) => {
         } else {
             return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json(elec);
         }
-    }).sort({ sort:-1 });
+    }).sort({ sort: -1 });
 }
 
 
@@ -56,7 +57,7 @@ module.exports.showMyElec = (req, res, next) => {
             } else {
                 return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json(elec);
             }
-        }).sort({ sort: 1 }).limit(24);
+        }).sort({ sort: -1 }).limit(24);
     }
 }
 
@@ -124,70 +125,82 @@ module.exports.showBillUser = (req, res, next) => {
 }
 
 module.exports.showBill = (req, res, next) => {
-    const dataArray = new Array();
-
-    Meter.find({}, { __v: false, _id: false, shortCircuit: false, status: false, timeDelay: false, date: false }, (err, meter) => {// .find({}, { _id: false, name: true }).limit(5).sort({ name: -1 })
+    System.findOne({}, { __v: false, _id: false, timeDelay: false }, (err, time) => {// .find({}, { _id: false, name: true }).limit(5).sort({ name: -1 })
         if (err) {
             return res.status(404).json({ success: false, message: 'Err : ' + err });
-        } else {
-            var month = req.params.month;
-            var year = req.params.year;
-            let newyear = year;
-            let startmonth;
-            if (month == 'January') { startmonth = 'December'; year = year - 1 } else if (month == 'February') { startmonth = 'January' } else if (month == 'March') { startmonth = 'February' } else if (month == 'April') { startmonth = 'March' } else if (month == 'May') { startmonth = 'April' } else if (month == 'June') { startmonth = 'May' } else if (month == 'July') { startmonth = 'June' } else if (month == 'August') { startmonth = 'July' } else if (month == 'September') { startmonth = 'August' } else if (month == 'October') { startmonth = 'September' } else if (month == 'November') { startmonth = 'October' } else if (month == 'December') { startmonth = 'November' } else { startmonth = 'False' }
-            let startFullTime = startmonth + ', ' + year;
-            let lastFullTime = month + ', ' + newyear;
+        } else if (time) {
+            const dataArray = new Array();
 
-            for (let meterDetails of meter) {
-                let room = meterDetails.room
-                let Maddr = meterDetails.Maddr
+            Meter.find({}, { __v: false, _id: false, shortCircuit: false, status: false, timeDelay: false, date: false }, (err, meter) => {// .find({}, { _id: false, name: true }).limit(5).sort({ name: -1 })
+                if (err) {
+                    return res.status(404).json({ success: false, message: 'Err : ' + err });
+                } else {
+                    var month = req.params.month;
+                    var year = req.params.year;
+                    let newyear = year;
+                    let startmonth;
+                    if (month == 'January') { startmonth = 'December'; year = year - 1 } else if (month == 'February') { startmonth = 'January' } else if (month == 'March') { startmonth = 'February' } else if (month == 'April') { startmonth = 'March' } else if (month == 'May') { startmonth = 'April' } else if (month == 'June') { startmonth = 'May' } else if (month == 'July') { startmonth = 'June' } else if (month == 'August') { startmonth = 'July' } else if (month == 'September') { startmonth = 'August' } else if (month == 'October') { startmonth = 'September' } else if (month == 'November') { startmonth = 'October' } else if (month == 'December') { startmonth = 'November' } else { startmonth = 'False' }
+                    let startFullTime = startmonth + ', ' + year;
+                    let lastFullTime = month + ', ' + newyear;
 
-                Elec.findOne({ "date": { '$regex': lastFullTime }, "Maddr": meterDetails.Maddr }, { __v: false, _id: false, Maddr: false, LineVoltage: false, Frequency: false, LineCurrent: false }, (err, elec) => {
-                    if (err) {
-                        return res.status(404).json({ success: false, message: 'Err : ' + err });
-                    } else if (elec) { //มีค่าสุดท้ายของเดือนที่หา
-                        //หาค่าสุดท้ายของเดือนที่แล้ว
-                        Elec.findOne({ "date": { '$regex': startFullTime }, Maddr: meterDetails.Maddr }, { __v: false, _id: false, Maddr: false, LineVoltage: false, Frequency: false, LineCurrent: false }, (error, startelec) => {
-                            if (error) {
-                                return res.status(404).json({ success: false, message: 'Err : ' + error });
-                            } else if (startelec) { // มีค่าสุดท้ายของเดือนที่แล้ว
-                                var bill2 = ((elec.ActiveEnergy - startelec.ActiveEnergy) * 7).toFixed(0)
-                                dataArray.push({ Room: room, Date_Start: startelec.date, Date_End: elec.date, startActiveEnergy: startelec.ActiveEnergy, endActiveEnergy: elec.ActiveEnergy, Bill: bill2 });
-                                if (dataArray.length == meter.length) {
-                                    return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json(dataArray);
-                                }
-                            } else if (elec) { // ไม่มีค่าสุดท้ายของเดือนที่แล้ว
-                                // หาค่าแรกของเดือนที่หาแทน
-                                Elec.findOne({ "date": { '$regex': lastFullTime }, Maddr: meterDetails.Maddr }, { __v: false, _id: false, Maddr: false, LineVoltage: false, Frequency: false, LineCurrent: false, }, (err, data) => {
-                                    if (err) {
-                                        return res.status(404).json({ success: false, message: 'Err : ' + err });
-                                    } else if (data) {
-                                        var bill = ((elec.ActiveEnergy - data.ActiveEnergy) * 7).toFixed(0)
-                                        dataArray.push({ Room: room, Date_Start: data.date, Date_End: elec.date, startActiveEnergy: data.ActiveEnergy, endActiveEnergy: elec.ActiveEnergy, Bill: bill });
+                    for (let meterDetails of meter) {
+                        let room = meterDetails.room
+                        let Maddr = meterDetails.Maddr
+
+                        Elec.findOne({ "date": { '$regex': lastFullTime }, "Maddr": meterDetails.Maddr }, { __v: false, _id: false, Maddr: false, LineVoltage: false, Frequency: false, LineCurrent: false }, (err, elec) => {
+                            if (err) {
+                                return res.status(404).json({ success: false, message: 'Err : ' + err });
+                            } else if (elec) { //มีค่าสุดท้ายของเดือนที่หา
+                                //หาค่าสุดท้ายของเดือนที่แล้ว
+                                Elec.findOne({ "date": { '$regex': startFullTime }, Maddr: meterDetails.Maddr }, { __v: false, _id: false, Maddr: false, LineVoltage: false, Frequency: false, LineCurrent: false }, (error, startelec) => {
+                                    if (error) {
+                                        return res.status(404).json({ success: false, message: 'Err : ' + error });
+                                    } else if (startelec) { // มีค่าสุดท้ายของเดือนที่แล้ว
+                                        var bill2 = ((elec.ActiveEnergy - startelec.ActiveEnergy) * time['bathPerNum']).toFixed(0)
+                                        dataArray.push({ Room: room, Date_Start: startelec.date, Date_End: elec.date, startActiveEnergy: startelec.ActiveEnergy, endActiveEnergy: elec.ActiveEnergy, Bill: bill2 });
                                         if (dataArray.length == meter.length) {
                                             return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json(dataArray);
                                         }
+                                    } else if (elec) { // ไม่มีค่าสุดท้ายของเดือนที่แล้ว
+                                        // หาค่าแรกของเดือนที่หาแทน
+                                        Elec.findOne({ "date": { '$regex': lastFullTime }, Maddr: meterDetails.Maddr }, { __v: false, _id: false, Maddr: false, LineVoltage: false, Frequency: false, LineCurrent: false, }, (err, data) => {
+                                            if (err) {
+                                                return res.status(404).json({ success: false, message: 'Err : ' + err });
+                                            } else if (data) {
+                                                var bill = ((elec.ActiveEnergy - data.ActiveEnergy) * time['bathPerNum']).toFixed(0)
+                                                dataArray.push({ Room: room, Date_Start: data.date, Date_End: elec.date, startActiveEnergy: data.ActiveEnergy, endActiveEnergy: elec.ActiveEnergy, Bill: bill });
+                                                if (dataArray.length == meter.length) {
+                                                    return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json(dataArray);
+                                                }
+                                            } else {
+                                                console.log('Can\'t find');
+                                                //return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + err });
+                                            }
+                                        }).sort({ sort: 1 })
                                     } else {
                                         console.log('Can\'t find');
-                                        //return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + err });
+                                        //return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + error });
                                     }
-                                }).sort({ sort: 1 })
+                                }).sort({ sort: -1 })
                             } else {
-                                console.log('Can\'t find');
-                                //return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + error });
+                                dataArray.push({ Room: room, startActiveEnergy: '0', endActiveEnergy: '0' });
+                                if (dataArray.length == meter.length) {
+                                    return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json(dataArray);
+                                }
+                                //return res.status(404).json({ success: false, message: 'can\'t find lastFullTime: ' + err });
                             }
                         }).sort({ sort: -1 })
-                    } else {
-                        dataArray.push({ Room: room, startActiveEnergy: '0', endActiveEnergy: '0' });
-                        if (dataArray.length == meter.length) {
-                            return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json(dataArray);
-                        }
-                        //return res.status(404).json({ success: false, message: 'can\'t find lastFullTime: ' + err });
                     }
-                }).sort({ sort: -1 })
-            }
+                }
+            }).sort({ sort: -1 })
         }
-    }).sort({ sort: -1 })
+        else {
+            system.bathPerNum = 4;
+            system.save();
+            return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json({ bathPerNum: 4 });
+        }
+    }).sort({ date: -1 })//.limit(2);
+
 }
 
 
