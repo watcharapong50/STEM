@@ -74,7 +74,9 @@ export class BillAllComponent implements OnInit {
   }
 
   bill;
+  userDetailsBath;
   submit() {
+    
     this.meterService.showBillUserReport(this.Maddr, this.selectedMonth, this.selectedYear).subscribe(
       res => {
         this.bill = res
@@ -85,5 +87,16 @@ export class BillAllComponent implements OnInit {
         console.log(err);
       }
     );
+    this.meterService.showBathPerNum().subscribe(
+      res => {
+        this.userDetailsBath = res['bathPerNum'];
+        console.log(this.userDetailsBath);
+      },
+      err => {
+        console.log(err);
+      }
+
+    );
   }
+
 }

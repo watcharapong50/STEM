@@ -25,11 +25,25 @@ export class SystemSettingComponent implements OnInit {
     private http: HttpClient
   ) { }
   userDetails;
+  userDetailsBath;
   ngOnInit() {
     this.meterService.showTimeDelay().subscribe(
       res => {
-        this.userDetails = res[0].timeDelay;
+        this.userDetails = res['timeDelay'];
         this.btActive(this.userDetails)
+      },
+      err => {
+        console.log(err);
+      }
+
+    );
+
+    this.meterService.showBathPerNum().subscribe(
+      res => {
+        this.userDetailsBath = res['bathPerNum'];
+        console.log(this.userDetailsBath);
+
+        this.btActiveBath(this.userDetailsBath)
       },
       err => {
         console.log(err);
@@ -83,4 +97,57 @@ export class SystemSettingComponent implements OnInit {
       }
     );
   }
+
+  bat1 = false;
+  bat5 = false;
+  bat10 = false;
+  bat15 = false;
+  bat30 = false;
+  bat45 = false;
+  bat60 = false;
+  btActiveBath(state) {
+    this.bat1 = false;
+    this.bat5 = false;
+    this.bat10 = false;
+    this.bat15 = false;
+    this.bat30 = false;
+    this.bat45 = false;
+    this.bat60 = false;
+    if (state == 4) {
+      this.bat1 = true
+    } else if (state == 5) {
+      this.bat5 = true
+    } else if (state == 6) {
+      this.bat10 = true
+    } else if (state == 7) {
+      this.bat15 = true
+    } else if (state == 8) {
+      this.bat30 = true
+    } else if (state == 9) {
+      this.bat45 = true
+    } else if (state == 10) {
+      this.bat60 = true
+    }
+
+  }
+  bath(time) {
+    this.meterService.updateBath(time).subscribe(
+      res => {
+        this.showSucessMessage = true;
+        setTimeout(() => this.showSucessMessage = false, 4000);
+        this.notificationService.success('Edit successfully !!!');
+        this.ngOnInit();
+      },
+      err => {
+        if (err.status === 422) {
+          this.serverErrorMessages = err.error.join('<br/>');
+        }
+        else {
+          this.notificationService.warn('Edit Fail!!!');
+          this.serverErrorMessages = 'Something went wrong.Please contact admin.';
+        }
+      }
+    );
+  }
+
 }

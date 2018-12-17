@@ -75,4 +75,10 @@ export class MeterService {
     showTimeDelay(): Observable<system[]> {
         return this.http.get<system[]>(environment.apiBaseUrl + '/showTimeDelay');
     }
+    updateBath(systemTime) {
+        return this.http.get(environment.apiBaseUrl + '/updateBath/' + systemTime);
+    }
+    showBathPerNum(): Observable<system[]> {
+        return this.http.get<system[]>(environment.apiBaseUrl + '/showBathPerNum');
+    }
 }

@@ -15,6 +15,7 @@ export class StarterComponent implements OnInit {
   ) { }
 
   data;
+  userDetailsBath;
   ngOnInit() {
     this.meterService.showBillUserAll().subscribe(data => {
       if (!data) {
@@ -22,6 +23,17 @@ export class StarterComponent implements OnInit {
       }
       this.data = data
     })
+
+    this.meterService.showBathPerNum().subscribe(
+      res => {
+        this.userDetailsBath = res['bathPerNum'];
+        console.log(this.userDetailsBath);
+      },
+      err => {
+        console.log(err);
+      }
+
+    );
   }
 
 }
