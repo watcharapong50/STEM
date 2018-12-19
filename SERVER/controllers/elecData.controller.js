@@ -46,7 +46,6 @@ module.exports.showElec = (req, res, next) => {
     }).sort({ sort: -1 });
 }
 
-
 module.exports.showMyElec = (req, res, next) => {
     if (req.params.Maddr == null || req.params.Maddr == '') {
         return res.status(404).json({ success: false, message: 'can\'t find Meter : ' });
@@ -67,11 +66,37 @@ module.exports.showStatistic = (req, res, next) => {
         if (error) {
             return res.status(404).json({ success: false, message: 'Err : ' + error });
         } else if (Maddr) {
-            Elec.find({ "date": { '$regex': time }, Maddr: Maddr.Maddr }, { __v: false, _id: false, Maddr: false }, (err, data) => {// .find({}, { _id: false, name: true }).limit(5).sort({ name: -1 })
+            Elec.find({ "date": { '$regex': time }, Maddr: Maddr.Maddr }, { __v: false, _id: false, Maddr: false, sort: false }, (err, data) => {// .find({}, { _id: false, name: true }).limit(5).sort({ name: -1 })
                 if (err) {
                     return res.status(404).json({ success: false, message: 'Err : ' + err });
                 } else if (data) {
                     return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json(data);
+                } else {
+                    return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + err });
+                }
+            }).sort({ sort: 1 })
+        } else {
+            return res.status(404).json({ success: false, message: 'can\'t find room: ' + error });
+        }
+    })
+
+}
+
+module.exports.showStatisticTH = (req, res, next) => {
+    let time = req.params.month + ", " + req.params.year;
+    Meter.findOne({ room: req.params.room }, { __v: false, _id: false, shortCircuit: false, status: false, timeDelay: false, date: false, room: false }, (error, Maddr) => {
+        if (error) {
+            return res.status(404).json({ success: false, message: 'Err : ' + error });
+        } else if (Maddr) {
+            Elec.find({ "date": { '$regex': time }, Maddr: Maddr.Maddr }, { __v: false, _id: false, Maddr: false, sort: false }, (err, data) => {// .find({}, { _id: false, name: true }).limit(5).sort({ name: -1 })
+                if (err) {
+                    return res.status(404).json({ success: false, message: 'Err : ' + err });
+                } else if (data) {
+                    var dataArray = new Array();
+                    for (let i = 0; i < data.length; i++) {
+                        dataArray.push({ หน่วยไฟที่ใช้: data[i].ActiveEnergy, เวลาที่บันทึก: data[i].date });
+                    }
+                    return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json({ สถิติการใช้:dataArray});
                 } else {
                     return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + err });
                 }
@@ -183,7 +208,7 @@ module.exports.showBill = (req, res, next) => {
                                     }
                                 }).sort({ sort: -1 })
                             } else {
-                                dataArray.push({ Room: room, startActiveEnergy: '0', endActiveEnergy: '0' });
+                                dataArray.push({ Room: room, Date_Start: "ไม่มีการบันทึกค่าไฟ", Date_End: "ไม่มีการบันทึกค่าไฟ", startActiveEnergy: '0', endActiveEnergy: '0', Bill: '0' });
                                 if (dataArray.length == meter.length) {
                                     return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json(dataArray);
                                 }
@@ -203,6 +228,87 @@ module.exports.showBill = (req, res, next) => {
 
 }
 
+module.exports.showBillTH = (req, res, next) => {
+    System.findOne({}, { __v: false, _id: false, timeDelay: false }, (err, time) => {// .find({}, { _id: false, name: true }).limit(5).sort({ name: -1 })
+        if (err) {
+            return res.status(404).json({ success: false, message: 'Err : ' + err });
+        } else if (time) {
+            const dataArray = new Array();
+
+            Meter.find({}, { __v: false, _id: false, shortCircuit: false, status: false, timeDelay: false, date: false }, (err, meter) => {// .find({}, { _id: false, name: true }).limit(5).sort({ name: -1 })
+                if (err) {
+                    return res.status(404).json({ success: false, message: 'Err : ' + err });
+                } else {
+                    var month = req.params.month;
+                    var year = req.params.year;
+                    let newyear = year;
+                    let startmonth;
+                    if (month == 'January') { startmonth = 'December'; year = year - 1 } else if (month == 'February') { startmonth = 'January' } else if (month == 'March') { startmonth = 'February' } else if (month == 'April') { startmonth = 'March' } else if (month == 'May') { startmonth = 'April' } else if (month == 'June') { startmonth = 'May' } else if (month == 'July') { startmonth = 'June' } else if (month == 'August') { startmonth = 'July' } else if (month == 'September') { startmonth = 'August' } else if (month == 'October') { startmonth = 'September' } else if (month == 'November') { startmonth = 'October' } else if (month == 'December') { startmonth = 'November' } else { startmonth = 'False' }
+                    let startFullTime = startmonth + ', ' + year;
+                    let lastFullTime = month + ', ' + newyear;
+
+                    for (let meterDetails of meter) {
+                        let room = meterDetails.room
+                        let Maddr = meterDetails.Maddr
+
+                        Elec.findOne({ "date": { '$regex': lastFullTime }, "Maddr": meterDetails.Maddr }, { __v: false, _id: false, Maddr: false, LineVoltage: false, Frequency: false, LineCurrent: false }, (err, elec) => {
+                            if (err) {
+                                return res.status(404).json({ success: false, message: 'Err : ' + err });
+                            } else if (elec) { //มีค่าสุดท้ายของเดือนที่หา
+                                //หาค่าสุดท้ายของเดือนที่แล้ว
+                                Elec.findOne({ "date": { '$regex': startFullTime }, Maddr: meterDetails.Maddr }, { __v: false, _id: false, Maddr: false, LineVoltage: false, Frequency: false, LineCurrent: false }, (error, startelec) => {
+                                    if (error) {
+                                        return res.status(404).json({ success: false, message: 'Err : ' + error });
+                                    } else if (startelec) { // มีค่าสุดท้ายของเดือนที่แล้ว
+                                        var bill2 = ((elec.ActiveEnergy - startelec.ActiveEnergy) * time['bathPerNum']).toFixed(0)
+                                        ///////////////////////////////////////////////////////////////////////////////                                        
+                                        dataArray.push({ ชื่อห้อง: room, เวลาที่เริ่มบันทึก: startelec.date, เวลาสิ้นสุด: elec.date, หน่วยไฟที่เรื่มจด: startelec.ActiveEnergy, หน่วยไฟสิ้นสุด: elec.ActiveEnergy, ค่าไฟ: bill2 });
+                                        if (dataArray.length == meter.length) {
+                                            return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json(dataArray);
+                                        }
+                                    } else if (elec) { // ไม่มีค่าสุดท้ายของเดือนที่แล้ว
+                                        // หาค่าแรกของเดือนที่หาแทน
+                                        Elec.findOne({ "date": { '$regex': lastFullTime }, Maddr: meterDetails.Maddr }, { __v: false, _id: false, Maddr: false, LineVoltage: false, Frequency: false, LineCurrent: false, }, (err, data) => {
+                                            if (err) {
+                                                return res.status(404).json({ success: false, message: 'Err : ' + err });
+                                            } else if (data) {
+                                                var bill = ((elec.ActiveEnergy - data.ActiveEnergy) * time['bathPerNum']).toFixed(0)
+                                                ///////////////////////////////////////////////////////////////////////////////
+                                                dataArray.push({ ชื่อห้อง: room, เวลาที่เริ่มบันทึก: data.date, เวลาสิ้นสุด: elec.date, หน่วยไฟที่เรื่มจด: data.ActiveEnergy, หน่วยไฟสิ้นสุด: elec.ActiveEnergy, ค่าไฟ: bill });
+                                                if (dataArray.length == meter.length) {
+                                                    return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json(dataArray);
+                                                }
+                                            } else {
+                                                console.log('Can\'t find');
+                                                //return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + err });
+                                            }
+                                        }).sort({ sort: 1 })
+                                    } else {
+                                        console.log('Can\'t find');
+                                        //return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + error });
+                                    }
+                                }).sort({ sort: -1 })
+                            } else {
+                                ///////////////////////////////////////////////////////////////////////////////
+                                dataArray.push({ ชื่อห้อง: room, เวลาที่เริ่มบันทึก: "ไม่มีการบันทึกค่าไฟ", เวลาสิ้นสุด: "ไม่มีการบันทึกค่าไฟ", หน่วยไฟที่เรื่มจด: '0', หน่วยไฟสิ้นสุด: '0', ค่าไฟ: '0' });
+                                if (dataArray.length == meter.length) {
+                                    return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json(dataArray);
+                                }
+                                //return res.status(404).json({ success: false, message: 'can\'t find lastFullTime: ' + err });
+                            }
+                        }).sort({ sort: -1 })
+                    }
+                }
+            }).sort({ sort: -1 })
+        }
+        else {
+            system.bathPerNum = 4;
+            system.save();
+            return res.header('Access-Control-Allow-Origin', '*') + res.status(200).json({ bathPerNum: 4 });
+        }
+    }).sort({ date: -1 })//.limit(2);
+
+}
 
 module.exports.showBillUserAll = (req, res, next) => {
     const dataArray = new Array();

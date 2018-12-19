@@ -33,9 +33,11 @@ router.post('/addElecData', ctrlElec.addElecData);
 router.get('/showElec', ctrlElec.showElec);
 router.get('/showMyElec/:Maddr', ctrlElec.showMyElec);
 router.get('/showBill/:month/:year', ctrlElec.showBill);
+router.get('/showBillTH/:month/:year', ctrlElec.showBillTH);
 router.get('/showBillUser/:Maddr', ctrlElec.showBillUser);
 router.get('/showBillUserAll', ctrlElec.showBillUserAll);
 router.get('/showStatistic/:room/:month/:year', ctrlElec.showStatistic);
+router.get('/showStatisticTH/:room/:month/:year', ctrlElec.showStatisticTH);
 router.get('/showBillUserReport/:Maddr/:month/:year', ctrlElec.showBillUserReport);
 // System
 router.get('/updateSystem/:timeDelay', ctrlSystem.updateSystem);
