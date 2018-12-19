@@ -61,7 +61,7 @@
 /******/
 /******/ 	// script path function
 /******/ 	function jsonpScriptSrc(chunkId) {
-/******/ 		return __webpack_require__.p + "" + ({"common":"common","admin-material-component-material-module":"admin-material-component-material-module","admin-starter-starter-module":"admin-starter-starter-module","user-material-component-material-module":"user-material-component-material-module","user-starter-starter-module":"user-starter-starter-module"}[chunkId]||chunkId) + ".js"
+/******/ 		return __webpack_require__.p + "" + ({"admin-material-component-material-module":"admin-material-component-material-module","admin-starter-starter-module":"admin-starter-starter-module","user-material-component-material-module~user-starter-starter-module":"user-material-component-material-module~user-starter-starter-module","user-material-component-material-module":"user-material-component-material-module","user-starter-starter-module":"user-starter-starter-module"}[chunkId]||chunkId) + ".js"
 /******/ 	}
 /******/
 /******/ 	// The require function

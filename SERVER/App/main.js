@@ -10,22 +10,20 @@
 var map = {
 	"./admin/material-component/material.module": [
 		"./src/app/admin/material-component/material.module.ts",
-		"common",
 		"admin-material-component-material-module"
 	],
 	"./admin/starter/starter.module": [
 		"./src/app/admin/starter/starter.module.ts",
-		"common",
 		"admin-starter-starter-module"
 	],
 	"./user/material-component/material.module": [
 		"./src/app/user/material-component/material.module.ts",
-		"common",
+		"user-material-component-material-module~user-starter-starter-module",
 		"user-material-component-material-module"
 	],
 	"./user/starter/starter.module": [
 		"./src/app/user/starter/starter.module.ts",
-		"common",
+		"user-material-component-material-module~user-starter-starter-module",
 		"user-starter-starter-module"
 	]
 };
