@@ -2218,8 +2218,9 @@ __webpack_require__.r(__webpack_exports__);
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 var environment = {
     production: false,
-    apiBaseUrl: 'http://35.240.216.73/api' //'http://localhost/api'
+    apiBaseUrl: 'http://35.240.216.73/api'
 };
+// 'http://localhost/api'
 
 
 /***/ }),

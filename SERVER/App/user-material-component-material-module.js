@@ -304,7 +304,7 @@ module.exports = "\r\n\r\n#customers td,\r\n#customers th {\r\n    border: 1px s
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-card>\n  <mat-card-content>\n    <mat-tab-group>\n      <mat-tab label=\"รายงานการใช้ไฟรายปี\">\n        <br>\n        <h4>กรุณาเลือกปี (พ.ศ.) :</h4>\n        <mat-form-field>\n          <mat-select [(value)]=\"yearSelected\">\n            <mat-option value=\"2018\">2561</mat-option>\n          </mat-select>\n        </mat-form-field>\n        <p>\n          <button mat-raised-button color=\"accent\" class=\"button\" (click)=\"show = true\" (click)=\"submit()\" style=\"float: right;\">\n            <mat-icon>send</mat-icon> เลือก\n          </button>\n        </p>\n      </mat-tab>\n    </mat-tab-group>\n  </mat-card-content>\n</mat-card>\n\n\n<div *ngIf=\"show\">\n  <mat-card>\n    <mat-card-content>\n      <h3 class=\"text-center\"><strong>ตารางแสดงค่าไฟปี พ.ศ.{{this.selectedYear + 543}}</strong></h3>\n      <div class=\"wrapper-center button-row\">\n          <button mat-raised-button color=\"warn\" style=\"float: right;\"(click)=\"show = false\">\n              <mat-icon>clear</mat-icon>ปิด\n            </button>\n            <span>&nbsp;&nbsp;&nbsp;</span>\n            <button mat-raised-button color=\"primary\" style=\"float: right;\" (click)=\"exportAsXLSX()\">\n              <mat-icon>cloud_download</mat-icon> ดาวโหลด (.xlsx)\n            </button>\n      </div>\n      <br>\n\n      <table class=\"table table-bordered\" id=\"customers\">\n        <thead>\n          <tr>\n            <th class=\"text-center\">เดือน</th>\n            <th class=\"text-center\">หน่วยไฟที่เริ่มบันทึก</th>\n            <th class=\"text-center\">เวลาที่เริ่มบันทึกหน่วยไฟ</th>\n            <th class=\"text-center\">หน่วยไฟสิ้นสุด</th>\n            <th class=\"text-center\">เวลาสิ้นสุดที่ทึกหน่วยไฟ</th>\n            <th class=\"text-center\">จำนวนหน่วยไฟ (หน่วย)</th>\n            <th class=\"text-center\">ค่าไฟ (บาท)</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr *ngFor=\"let item of Data\">\n            <td>{{item.month}}</td>\n            <td class=\"text-center\">{{item.startFullTime.ActiveEnergy}}</td>\n            <td>{{item.startFullTime.date}}</td>\n            <td class=\"text-center\">{{item.lastFullTime.ActiveEnergy}}</td>\n            <td>{{item.lastFullTime.date}}</td>\n            <td class=\"text-center\">{{item.num}}</td>\n            <td class=\"text-center\">{{item.bill}}</td>\n          </tr>\n        </tbody>\n      </table>\n      <div class=\"col-lg-12\">\n        <div fxLayout=\"row\" fxLayoutWrap=\"wrap\">\n          <div fxFlex.gt-sm=\"100\" fxFlex.gt-xs=\"100\" fxFlex=\"100\">\n            <mat-card>\n              <mat-card-content>\n                <div fxLayout=\"row\" fxLayoutWrap=\"wrap\">\n                  <div fxFlex.gt-sm=\"50\" fxFlex.gt-xs=\"50\">\n                  </div>\n                </div>\n                <canvas id=\"mychart\" width=\"800\" height=\"450\"></canvas>\n              </mat-card-content>\n            </mat-card>\n          </div>\n        </div>\n      </div>\n    </mat-card-content>\n  </mat-card>\n  <!-- <div *ngFor=\"let item of Data\">\n  <span>{{item|json}}</span>\n</div> -->\n\n</div>"
+module.exports = "<mat-card>\n  <mat-card-content>\n    <mat-tab-group>\n      <mat-tab label=\"รายงานการใช้ไฟรายปี\">\n        <br>\n        <h4>กรุณาเลือกปี (พ.ศ.) :</h4>\n        <mat-form-field>\n          <mat-select [(value)]=\"yearSelected\">\n            <mat-option value=\"2018\">2561</mat-option>\n          </mat-select>\n        </mat-form-field>\n        <p>\n          <button mat-raised-button color=\"accent\" class=\"button\" (click)=\"show = true\" (click)=\"submit()\" style=\"float: right;\">\n            <mat-icon>send</mat-icon> เลือก\n          </button>\n        </p>\n      </mat-tab>\n    </mat-tab-group>\n  </mat-card-content>\n</mat-card>\n\n\n<div *ngIf=\"show\">\n  <mat-card>\n    <mat-card-content>\n      <h3 class=\"text-center\"><strong>ตารางแสดงค่าไฟปี พ.ศ.{{this.selectedYear + 543}}</strong></h3>\n      <div class=\"wrapper-center button-row\">\n        <button mat-raised-button color=\"warn\" style=\"float: right;\" (click)=\"show = false\">\n          <mat-icon>clear</mat-icon>ปิด\n        </button>\n        <span>&nbsp;&nbsp;&nbsp;</span>\n        <button mat-raised-button color=\"primary\" style=\"float: right;\" (click)=\"exportAsXLSX()\">\n          <mat-icon>cloud_download</mat-icon> ดาวโหลด (.xlsx)\n        </button>\n      </div>\n      <br>\n\n      <table class=\"table table-bordered\" id=\"customers\">\n        <thead>\n          <tr>\n            <th class=\"text-center\">เดือน</th>\n            <th class=\"text-center\">หน่วยไฟที่เริ่มบันทึก</th>\n            <th class=\"text-center\">เวลาที่เริ่มบันทึกหน่วยไฟ</th>\n            <th class=\"text-center\">หน่วยไฟสิ้นสุด</th>\n            <th class=\"text-center\">เวลาสิ้นสุดที่ทึกหน่วยไฟ</th>\n            <th class=\"text-center\">จำนวนหน่วยไฟ (หน่วย)</th>\n            <th class=\"text-center\">ค่าไฟ (บาท)</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr *ngFor=\"let item of Data\">\n            <td>{{item.month}}</td>\n            <td class=\"text-center\">{{item.startFullTime.ActiveEnergy}}</td>\n            <td>{{item.startFullTime.date}}</td>\n            <td class=\"text-center\">{{item.lastFullTime.ActiveEnergy}}</td>\n            <td>{{item.lastFullTime.date}}</td>\n            <td class=\"text-center\">{{item.num}}</td>\n            <td class=\"text-center\">{{item.bill}}</td>\n          </tr>\n        </tbody>\n      </table>\n      <div *ngIf=\"userDetails\">\n        <br>\n        <h4 class=\"text-center\">กราฟค่าไฟห้อง {{userDetails.room}} ประจำปี พ.ศ. {{this.conYearTh(this.selectedYear)}}\n        </h4>\n        <canvas id=\"mychart\" width=\"800\" height=\"450\"></canvas>\n      </div>\n\n    </mat-card-content>\n  </mat-card>\n  <!-- <div *ngFor=\"let item of Data\">\n  <span>{{item|json}}</span>\n</div> -->\n\n</div>"
 
 /***/ }),
 
@@ -395,8 +395,7 @@ var BillYearComponent = /** @class */ (function () {
                 },
                 options: {
                     title: {
-                        display: true,
-                        text: 'ค่าไฟประจำปี พ.ศ.' + _this.conYearTh(_this.selectedYear)
+                        display: true
                     },
                     tooltips: {
                         callbacks: {
@@ -407,6 +406,19 @@ var BillYearComponent = /** @class */ (function () {
                     },
                     legend: {
                         display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                                ticks: {
+                                    fontSize: 16,
+                                    FontFamily: "'Prompt', sans-serif"
+                                }
+                            }],
+                        xAxes: [{
+                                ticks: {
+                                    fontSize: 16
+                                }
+                            }]
                     }
                 }
             });
