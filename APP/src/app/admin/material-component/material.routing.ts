@@ -7,7 +7,7 @@ import { ElectricBillComponent } from './electric-bill/electric-bill.component';
 import { PowerCutComponent } from './power-cut/power-cut.component';
 import { SystemSettingComponent } from "./system-setting/system-setting.component";
 import { StatisticAdminComponent } from './statistic-admin/statistic-admin.component';
-
+import { BillYearAdminComponent } from "./bill-year-admin/bill-year-admin.component";
 export const MaterialRoutes: Routes = [
   {
     path: 'profile',
@@ -30,5 +30,8 @@ export const MaterialRoutes: Routes = [
   },{
     path: 'statisticAdmin',
     component: StatisticAdminComponent
+  },{
+    path: 'billYearAdmin',
+    component: BillYearAdminComponent
   }
 ];

@@ -15,15 +15,24 @@ export class AdComponent implements OnInit {
   constructor(
     private meterService: MeterService,
     private notificationService: NotificationService,
-    private manageMeterComponent:ManageMeterComponent
+    private manageMeterComponent: ManageMeterComponent
   ) { }
 
 
   ngOnInit() {
+    this.focusMethod = function getFocus() {           
+      document.getElementById("myTextField").focus();
+    }
   }
 
   showSucessMessage: boolean;
   serverErrorMessages: string;
+  focusMethod() {
+    this.focusMethod = function getFocus() {           
+      document.getElementById("myTextField").focus();
+    }
+  }
+
 
   onSubmit(form: NgForm) {
     this.meterService.postUser(form.value).subscribe(
@@ -46,7 +55,7 @@ export class AdComponent implements OnInit {
   resetForm(form: NgForm) {
     this.meterService.selectedUser = {
       Maddr: '',
-      room:''
+      room: ''
     };
     form.resetForm();
     this.serverErrorMessages = '';

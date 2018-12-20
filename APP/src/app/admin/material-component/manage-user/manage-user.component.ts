@@ -20,8 +20,8 @@ export class ManageUserComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   dataSource;
-  displayedColumns = ['username', 'firstname', 'lastname', 'email', 'room', 'permission', 'date', 'actions'];
-
+  displayedColumns = ['username', 'firstname', 'lastname', 'room', 'actions'];
+//, 'email', 'permission', 'date'
   searchKey: string;
   dialog: any;
 
@@ -39,8 +39,15 @@ export class ManageUserComponent implements OnInit {
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     })
+    this.focusMethod = function getFocus() {           
+      document.getElementById("myTextField").focus();
+    }
   }
-
+  focusMethod() {
+    this.focusMethod = function getFocus() {           
+      document.getElementById("myTextField").focus();
+    }
+  }
   onSearchClear() {
     this.searchKey = "";
     this.applyFilter();

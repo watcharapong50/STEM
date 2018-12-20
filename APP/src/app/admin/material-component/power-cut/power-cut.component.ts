@@ -16,6 +16,13 @@ export class PowerCutComponent implements OnInit {
     private meterService: MeterService,
     private notificationService: NotificationService
   ) { }
+
+  color = 'accent';
+  checked = true;
+  disabled = false;
+
+
+
   dataSource;
   displayedColumns = ['room', 'Maddr', 'actions'];//, 'shortCircuit'
   ngOnInit() {
@@ -28,7 +35,13 @@ export class PowerCutComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
     })
   }
-
+  slideB(mac, status) {
+    if (status == 'false') {
+      this.TestB(mac + "/" + "true");
+    } else if (status == 'true') {
+      this.TestB(mac + "/" + "false");
+    }
+  }
   searchKey: string;
   onSearchClear() {
     this.searchKey = "";

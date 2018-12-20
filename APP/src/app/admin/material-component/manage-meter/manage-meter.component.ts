@@ -18,8 +18,8 @@ export class ManageMeterComponent implements OnInit {
   ) { }
 
   dataSource;
-  displayedColumns = ['room', 'Maddr',  'date', 'actions'];
-
+  displayedColumns = ['room', 'Maddr', 'actions'];
+//,  'date'
   searchKey: string;
   dialog: any;
   ngOnInit() {

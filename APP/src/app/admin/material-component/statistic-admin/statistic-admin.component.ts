@@ -88,25 +88,117 @@ export class StatisticReportAdmin implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   Data: any = [{}];
+  DataTH: any = [{}];
+
 
   dataSource
-  displayedColumns = ['ActiveEnergy', 'Frequency', 'LineCurrent', 'LineVoltage', 'date'];
+  displayedColumns = ['date','ActiveEnergy' ];
+  //, 'Frequency', 'LineCurrent', 'LineVoltage'
   ngOnInit(): void {
     this.meterService.showStatistic(this.data.month, this.data.year, this.data.room).subscribe(data => {
       if (!data) {
         return;
       }
+
+
       this.dataSource = data;
       this.Data = data;
-      console.log("data", data);
+      for (let i = 0; i < data.length; i++) {
+        this.conTime(i)
+      }
+
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
-      console.log(this.data);
+
+    })
+    this.meterService.showStatisticTH(this.data.month, this.data.year, this.data.room).subscribe(data => {
+      if (!data) {
+        return;
+      }
+      this.DataTH = data['สถิติการใช้'];
+      for (let i = 0; i < this.DataTH.length; i++) {
+        this.conTimeLoad(i)
+      }
     })
   }
+  conTimeLoad(index) {
+    var time = this.DataTH[index].เวลาที่บันทึก.split(",", 5)
+    var day = this.conDayTH(time[0])
+    var daynum = time[1]
+    var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+    var year = this.conYearTh(time[3].split(" ", 2)[1]);
+    var times = time[4]
+    var data = times + daynum + " " + Month + " " + year;
+    this.DataTH[index].เวลาที่บันทึก = data
+  }
+  conTime(index) {
+    var time = this.Data[index].date.split(",", 5)
+    var day = this.conDayTH(time[0])
+    var daynum = time[1]
+    var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+    var year = this.conYearTh(time[3].split(" ", 2)[1]);
+    var times = time[4]
+    var data = times + daynum + " " + Month + " " + year;
+    this.Data[index].date = data
+  }
+  conYearTh(selectedyear) {
+    return parseInt(selectedyear) + 543
+  }
+  conMonthTh(selectedMonth) {
+    var selectedMonthTH
+    if (selectedMonth == 'January') {
+      selectedMonthTH = 'มกราคม'
+    } else if (selectedMonth == 'February') {
+      selectedMonthTH = 'กุมภาพันธ์';
+    } else if (selectedMonth == 'March') {
+      selectedMonthTH = 'มีนาคม';
+    } else if (selectedMonth == 'April') {
+      selectedMonthTH = 'เมษายน';
+    } else if (selectedMonth == 'May') {
+      selectedMonthTH = 'พฤษภาคม';
+    } else if (selectedMonth == 'June') {
+      selectedMonthTH = 'มิถุนายน';
+    } else if (selectedMonth == 'July') {
+      selectedMonthTH = 'กรกฎาคม';
+    } else if (selectedMonth == 'August') {
+      selectedMonthTH = 'สิงหาคม';
+    } else if (selectedMonth == 'September') {
+      selectedMonthTH = 'กันยายน';
+    } else if (selectedMonth == 'October') {
+      selectedMonthTH = 'ตุลาคม';
+    } else if (selectedMonth == 'November') {
+      selectedMonthTH = 'พฤศจิกายน';
+    } else if (selectedMonth == 'December') {
+      selectedMonthTH = 'ธันวาคม';
+    }
+    return selectedMonthTH
+  }
+  conDayTH(data) {
+    var dayTH
+    if (data == 'Sunday') {
+      dayTH = 'อาทิตย์'
+    } else if (data == 'Monday') {
+      dayTH = 'จันทร์'
+    } else if (data == 'Tuesday') {
+      dayTH = 'อังคาร'
+    } else if (data == 'Wednesday') {
+      dayTH = 'พุธ'
+    } else if (data == 'Thursday') {
+      dayTH = 'พฤหัสบดี'
+    } else if (data == 'Friday') {
+      dayTH = 'ศุกร์'
+    } else if (data == 'Saturday') {
+      dayTH = 'เสาร์'
+    } else {
+      dayTH = 'ไม่มีการบันทึกค่า'
+    }
+    return dayTH
+  }
   exportAsXLSX(): void {
-    this.userService.exportAsExcelFile(this.Data, this.data.month + this.data.year + "Statistic");
+    var monthTH = this.conMonthTh(this.data.month)
+    var yearTH = this.conYearTh(this.data.year)
+    this.userService.exportAsExcelFile(this.DataTH, "สถิติการใช้ไฟห้อง" + this.data.room + "_ประจำเดือน" + monthTH + yearTH);
   }
   searchKeyReport: string;
   onSearchClearReport() {

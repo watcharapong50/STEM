@@ -30,7 +30,7 @@
               <ng-container matColumnDef="actions">
                 <mat-header-cell *matHeaderCellDef>การตัดไฟ</mat-header-cell>
                 <mat-cell *matCellDef="let element">
-                  <mat-button-toggle-group #group="matButtonToggleGroup">
+                  <!-- <mat-button-toggle-group #group="matButtonToggleGroup">
                     <mat-button-toggle value="off" checked="!{{element.shortCircuit}}" (click)="TestB(element.Maddr+'/false')">
                       <mat-icon class="mat-icon">power_off</mat-icon>
                       <span>ตัดไฟ</span>
@@ -39,7 +39,12 @@
                       <mat-icon>power</mat-icon>
                       <span class="left-icon">เปิดไฟ</span>
                     </mat-button-toggle>
-                  </mat-button-toggle-group>
+                  </mat-button-toggle-group> -->
+                  <span><strong>ตัดไฟ&nbsp;</strong></span>
+                  <mat-slide-toggle checked="{{element.shortCircuit}}" (click)="slideB(element.Maddr,element.shortCircuit)">
+                    <span>เปิดไฟ</span>
+                  </mat-slide-toggle>
+
                 </mat-cell>
               </ng-container>
               <ng-container matColumnDef="noData">

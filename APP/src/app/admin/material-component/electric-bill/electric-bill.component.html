@@ -54,26 +54,28 @@
             </mat-tab> -->
             <mat-tab label="รายงานค่าไฟ">
                 <br>
+                <h3 style="text-align: center;">กรุณาเลือกเวลาที่ต้องการค้นหาค่าไฟ</h3>
+                <br>
                 <form>
                     <mat-form-field>
                         <mat-select placeholder="กรุณาเลือกเดือน" [(ngModel)]="selectedMonth" name="month"
                             [formControl]="monthForm" required>
                             <mat-option *ngFor="let month of months" [value]="month.month">
-                                {{month.month}}
+                                {{month.m}}
                             </mat-option>
                         </mat-select>
                         <mat-error *ngIf="monthForm.hasError('required')">กรุณาเลือกเดือน</mat-error>
                     </mat-form-field>
                     <mat-form-field>
-                        <mat-select placeholder="กรุณาเลือกปี (ค.ศ.)" [(ngModel)]="selectedYear" name="year"
+                        <mat-select placeholder="กรุณาเลือกปี (พ.ศ.)" [(ngModel)]="selectedYear" name="year"
                             [formControl]="yearForm" required>
                             <mat-option *ngFor="let year of years" [value]="year.year">
-                                {{year.year}}
+                                {{year.y}}
                             </mat-option>
                         </mat-select>
-                        <mat-error *ngIf="yearForm.hasError('required')">กรุณาเลือกปี (ค.ศ.)</mat-error>
+                        <mat-error *ngIf="yearForm.hasError('required')">กรุณาเลือกปี (พ.ศ.)</mat-error>
                     </mat-form-field>
-                    <p> เวลาที่เลือก : {{selectedMonth}} {{selectedYear}} </p>
+                    <!-- <p> เวลาที่เลือก :{{selectedMonth.m}} {{selectedYear.y}} </p> -->
                 </form>
                 <div class="wrapper-center">
                     <button mat-raised-button color="accent" class="button" (click)="openDialog()">

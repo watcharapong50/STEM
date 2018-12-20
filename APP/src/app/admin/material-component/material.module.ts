@@ -20,6 +20,7 @@ import { AdComponent } from './manage-meter/ad/ad.component';
 import { SystemSettingComponent } from './system-setting/system-setting.component';
 import { FilterPipe} from './electric-bill/filter.pipe';
 import { StatisticAdminComponent, StatisticReportAdmin } from './statistic-admin/statistic-admin.component';
+import { BillYearAdminComponent } from './bill-year-admin/bill-year-admin.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -53,7 +54,8 @@ import { StatisticAdminComponent, StatisticReportAdmin } from './statistic-admin
     ReportData,
     FilterPipe,
     StatisticAdminComponent,
-    StatisticReportAdmin
+    StatisticReportAdmin,
+    BillYearAdminComponent
   ]
 })
 

@@ -4,13 +4,16 @@ import { UserService } from '../../../shared/user.service';
 import { NotificationService } from '../../../shared/notification.service';
 import { MatSort, MatPaginator, MatTableDataSource, MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
+import { nextTick } from 'q';
 
 export interface Month {
   month: string;
+  m: string;
 }
 
 export interface Year {
   year: string;
+  y: string;
 }
 
 
@@ -23,17 +26,18 @@ export interface Year {
 export class ElectricBillComponent implements OnInit {
 
   selectedMonth: string;
-  selectedYear: string = '2018';
+  selectedYear: string = '2018'
+
   monthForm = new FormControl('', [Validators.required]);
   yearForm = new FormControl('', [Validators.required]);
   months: Month[] = [
-    { month: 'January' }, { month: 'February' }, { month: 'March' }, { month: 'April' },
-    { month: 'May' }, { month: 'June' }, { month: 'July' }, { month: 'August' },
-    { month: 'September' }, { month: 'October' }, { month: 'November' }, { month: 'December' },
+    { month: 'January', m: 'มกราคม' }, { month: 'February', m: 'กุมภาพันธ์' }, { month: 'March', m: 'มีนาคม' }, { month: 'April', m: 'เมษายน' },
+    { month: 'May', m: 'พฤษภาคม' }, { month: 'June', m: 'มิถุนายน' }, { month: 'July', m: 'กรกฎาคม' }, { month: 'August', m: 'สิงหาคม' },
+    { month: 'September', m: 'กันยายน' }, { month: 'October', m: 'ตุลาคม' }, { month: 'November', m: 'พฤศจิกายน' }, { month: 'December', m: 'ธันวาคม' },
   ];
 
   years: Year[] = [
-    { year: '2018' }
+    { year: '2018', y: '2561' }
   ];
 
   @ViewChild(MatSort) sort: MatSort;
@@ -52,10 +56,7 @@ export class ElectricBillComponent implements OnInit {
       if (!data) {
         return;
       }
-      console.log(data);
       this.data = data
-      console.log(this.data);
-
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
@@ -110,9 +111,10 @@ export class ReportData implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   Data: any = [{}];
-
+  dataTH;
   dataSource
   displayedColumns = ['room', 'start', 'actions', 'bill'];
+  //
   ngOnInit(): void {
     this.meterService.report(this.data.month, this.data.year).subscribe(data => {
       if (!data) {
@@ -120,15 +122,103 @@ export class ReportData implements OnInit {
       }
       this.dataSource = data;
       this.Data = data;
-      console.log(data);
-      this.dataSource = new MatTableDataSource(data);
+      this.dataSource = new MatTableDataSource(this.dataSource);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
-      console.log(this.data);
+    })
+    this.meterService.reportTH(this.data.month, this.data.year).subscribe(data => {
+      if (!data) {
+        return;
+      }
+      this.dataTH = data;
+      for (let i = 0; i < data.length; i++) {
+        this.conTime(i)
+      }
     })
   }
+  conTime(index) {
+    if (this.dataTH[index].เวลาที่เริ่มบันทึก == 'ไม่มีการบันทึกค่าไฟ') {
+
+    } else {
+      var time = this.dataTH[index].เวลาที่เริ่มบันทึก.split(",", 5)
+      var day = this.conDayTH(time[0])
+      var daynum = time[1]
+      var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+      var year = this.conYearTh(time[3].split(" ", 2)[1]);
+      var times = time[4]
+      var data = times + daynum + " " + Month + " " + year;
+      this.dataTH[index].เวลาที่เริ่มบันทึก = data
+
+
+      var etime = this.dataTH[index].เวลาสิ้นสุด.split(",", 5)
+      var eday = this.conDayTH(etime[0])
+      var edaynum = etime[1]
+      var eMonth = this.conMonthTh(etime[2].split(" ", 2)[1]);
+      var eyear = this.conYearTh(etime[3].split(" ", 2)[1]);
+      var etimes = etime[4]
+      var edata = etimes + edaynum + " " + eMonth + " " + eyear;
+      this.dataTH[index].เวลาสิ้นสุด = edata
+    }
+
+  }
+  conYearTh(selectedyear) {
+    return parseInt(selectedyear) + 543
+  }
+  conMonthTh(selectedMonth) {
+    var selectedMonthTH
+    if (selectedMonth == 'January') {
+      selectedMonthTH = 'มกราคม'
+    } else if (selectedMonth == 'February') {
+      selectedMonthTH = 'กุมภาพันธ์';
+    } else if (selectedMonth == 'March') {
+      selectedMonthTH = 'มีนาคม';
+    } else if (selectedMonth == 'April') {
+      selectedMonthTH = 'เมษายน';
+    } else if (selectedMonth == 'May') {
+      selectedMonthTH = 'พฤษภาคม';
+    } else if (selectedMonth == 'June') {
+      selectedMonthTH = 'มิถุนายน';
+    } else if (selectedMonth == 'July') {
+      selectedMonthTH = 'กรกฎาคม';
+    } else if (selectedMonth == 'August') {
+      selectedMonthTH = 'สิงหาคม';
+    } else if (selectedMonth == 'September') {
+      selectedMonthTH = 'กันยายน';
+    } else if (selectedMonth == 'October') {
+      selectedMonthTH = 'ตุลาคม';
+    } else if (selectedMonth == 'November') {
+      selectedMonthTH = 'พฤศจิกายน';
+    } else if (selectedMonth == 'December') {
+      selectedMonthTH = 'ธันวาคม';
+    }
+    return selectedMonthTH
+  }
+  conDayTH(data) {
+    var dayTH
+    if (data == 'Sunday') {
+      dayTH = 'อาทิตย์'
+    } else if (data == 'Monday') {
+      dayTH = 'จันทร์'
+    } else if (data == 'Tuesday') {
+      dayTH = 'อังคาร'
+    } else if (data == 'Wednesday') {
+      dayTH = 'พุธ'
+    } else if (data == 'Thursday') {
+      dayTH = 'พฤหัสบดี'
+    } else if (data == 'Friday') {
+      dayTH = 'ศุกร์'
+    } else if (data == 'Saturday') {
+      dayTH = 'เสาร์'
+    } else {
+      dayTH = 'ไม่มีการบันทึกค่า'
+    }
+    return dayTH
+  }
   exportAsXLSX(): void {
-    this.userService.exportAsExcelFile(this.Data, this.data.month + this.data.year + "Bill");
+    var monthTH = this.conMonthTh(this.data.month)
+    var yearTH = this.conYearTh(this.data.year)
+
+    this.userService.exportAsExcelFile(this.dataTH, "ค่าไฟ" + monthTH + yearTH);
   }
   searchKeyReport: string;
   onSearchClearReport() {
