@@ -448,14 +448,14 @@ module.exports.showBillUserReportYear = (req, res) => {
                             if (error) {
                                 return res.status(200).json({ startFullTime: { ActiveEnergy: 0, date: 'ไม่มีการบันทึกค่า' }, lastFullTime: { ActiveEnergy: 0, date: 'ไม่มีการบันทึกค่า' } });
                             } else if (startelec) { // มีค่าสุดท้ายของเดือนที่แล้ว
-                                test[index] = { month: mTH[index], startFullTime: startelec, lastFullTime: elec, num: elec.ActiveEnergy - startelec.ActiveEnergy, bill: ((elec.ActiveEnergy - startelec.ActiveEnergy) * time.bathPerNum).toFixed(0) }
+                                test[index] = { month: mTH[index], startFullTime: startelec, lastFullTime: elec, num: (elec.ActiveEnergy - startelec.ActiveEnergy).toFixed(2), bill: ((elec.ActiveEnergy - startelec.ActiveEnergy) * time.bathPerNum).toFixed(0) }
                             } else if (elec) { // ไม่มีค่าสุดท้ายของเดือนที่แล้ว
                                 // หาค่าแรกของเดือนที่หาแทน
                                 Elec.findOne({ "date": { '$regex': lastFullTime }, Maddr: req.params.Maddr }, { __v: false, _id: false, Maddr: false, LineVoltage: false, Frequency: false, LineCurrent: false, sort: false }, (err, data) => {// .find({}, { _id: false, name: true }).limit(5).sort({ name: -1 })
                                     if (err) {
                                         return res.status(404).json({ success: false, message: 'Err : ' + err });
                                     } else if (data) {
-                                        test[index] = { month: mTH[index], startFullTime: data, lastFullTime: elec, num: elec.ActiveEnergy - data.ActiveEnergy, bill: ((elec.ActiveEnergy - data.ActiveEnergy) * time.bathPerNum).toFixed(0) }
+                                        test[index] = { month: mTH[index], startFullTime: data, lastFullTime: elec, num: (elec.ActiveEnergy - data.ActiveEnergy).toFixed(2), bill: ((elec.ActiveEnergy - data.ActiveEnergy) * time.bathPerNum).toFixed(0) }
                                     } else {
                                         return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + err });
                                     }
@@ -484,7 +484,7 @@ module.exports.showBillUserReportYear = (req, res) => {
                                 "lastFullTime": {
                                     "ActiveEnergy": "0",
                                     "date": "ไม่มีการบันทึก"
-                                }, "num": 0, "bill": 0
+                                }, "num": "0.0", "bill": 0
                             }
                         }
                     }
@@ -525,14 +525,14 @@ module.exports.showBillUserReportYearTH = (req, res) => {
                             if (error) {
                                 return res.status(200).json({ startFullTime: { ActiveEnergy: 0, date: 'ไม่มีการบันทึกค่า' }, lastFullTime: { ActiveEnergy: 0, date: 'ไม่มีการบันทึกค่า' } });
                             } else if (startelec) { // มีค่าสุดท้ายของเดือนที่แล้ว
-                                test[index] = { เดือน: mTH[index], หน่วยไฟที่เริ่มบันทึก: startelec.ActiveEnergy, เวลาที่เริ่มบันทึกหน่วยไฟ: startelec.date, หน่วยไฟสิ้นสุด: elec.ActiveEnergy, เวลาสิ้นสุดที่ทึกหน่วยไฟ: elec.date, จำนวนหน่วยไฟ: elec.ActiveEnergy - startelec.ActiveEnergy, ค่าไฟ: ((elec.ActiveEnergy - startelec.ActiveEnergy) * time.bathPerNum).toFixed(0) }                                
+                                test[index] = { เดือน: mTH[index], หน่วยไฟที่เริ่มบันทึก: startelec.ActiveEnergy, เวลาที่เริ่มบันทึกหน่วยไฟ: startelec.date, หน่วยไฟสิ้นสุด: elec.ActiveEnergy, เวลาสิ้นสุดที่ทึกหน่วยไฟ: elec.date, จำนวนหน่วยไฟ: (elec.ActiveEnergy - startelec.ActiveEnergy).toFixed(2), ค่าไฟ: ((elec.ActiveEnergy - startelec.ActiveEnergy) * time.bathPerNum).toFixed(0) }
                             } else if (elec) { // ไม่มีค่าสุดท้ายของเดือนที่แล้ว
                                 // หาค่าแรกของเดือนที่หาแทน
                                 Elec.findOne({ "date": { '$regex': lastFullTime }, Maddr: req.params.Maddr }, { __v: false, _id: false, Maddr: false, LineVoltage: false, Frequency: false, LineCurrent: false, sort: false }, (err, data) => {// .find({}, { _id: false, name: true }).limit(5).sort({ name: -1 })
                                     if (err) {
                                         return res.status(404).json({ success: false, message: 'Err : ' + err });
                                     } else if (data) {
-                                        test[index] = { เดือน: mTH[index], หน่วยไฟที่เริ่มบันทึก: data.ActiveEnergy, เวลาที่เริ่มบันทึกหน่วยไฟ: data.date, หน่วยไฟสิ้นสุด: elec.ActiveEnergy, เวลาสิ้นสุดที่ทึกหน่วยไฟ: elec.date, จำนวนหน่วยไฟ: elec.ActiveEnergy - data.ActiveEnergy, ค่าไฟ: ((elec.ActiveEnergy - data.ActiveEnergy) * time.bathPerNum).toFixed(0) }
+                                        test[index] = { เดือน: mTH[index], หน่วยไฟที่เริ่มบันทึก: data.ActiveEnergy, เวลาที่เริ่มบันทึกหน่วยไฟ: data.date, หน่วยไฟสิ้นสุด: elec.ActiveEnergy, เวลาสิ้นสุดที่ทึกหน่วยไฟ: elec.date, จำนวนหน่วยไฟ: (elec.ActiveEnergy - data.ActiveEnergy).toFixed(2), ค่าไฟ: ((elec.ActiveEnergy - data.ActiveEnergy) * time.bathPerNum).toFixed(0) }
                                     } else {
                                         return res.status(404).json({ success: false, message: 'can\'t find startFullTime: ' + err });
                                     }
@@ -558,7 +558,7 @@ module.exports.showBillUserReportYearTH = (req, res) => {
                                 "เวลาที่เริ่มบันทึกหน่วยไฟ": "ไม่มีการบันทึก",
                                 "หน่วยไฟสิ้นสุด": "0",
                                 "เวลาสิ้นสุดที่ทึกหน่วยไฟ": "ไม่มีการบันทึก",
-                                "จำนวนหน่วยไฟ": 0,
+                                "จำนวนหน่วยไฟ": "0.00",
                                 "ค่าไฟ": 0
                             }
                         }
