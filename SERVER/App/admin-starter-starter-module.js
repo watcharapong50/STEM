@@ -266,6 +266,12 @@ var MeterService = /** @class */ (function () {
     MeterService.prototype.showBillUserReport = function (Maddr, month, year) {
         return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showBillUserReport/' + Maddr + "/" + month + "/" + year);
     };
+    MeterService.prototype.showBillUserReportYear = function (Maddr, month, year) {
+        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showBillUserReportYear/' + Maddr + "/" + month + "/" + year);
+    };
+    MeterService.prototype.showBillUserReportYearTH = function (Maddr, month, year) {
+        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showBillUserReportYearTH/' + Maddr + "/" + month + "/" + year);
+    };
     MeterService.prototype.showMyElec = function (meter) {
         return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showMyElec/' + meter);
     };

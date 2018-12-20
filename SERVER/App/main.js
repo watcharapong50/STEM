@@ -10,6 +10,7 @@
 var map = {
 	"./admin/material-component/material.module": [
 		"./src/app/admin/material-component/material.module.ts",
+		"admin-material-component-material-module~user-material-component-material-module~user-starter-starte~c8049681",
 		"admin-material-component-material-module"
 	],
 	"./admin/starter/starter.module": [
@@ -18,12 +19,12 @@ var map = {
 	],
 	"./user/material-component/material.module": [
 		"./src/app/user/material-component/material.module.ts",
-		"user-material-component-material-module~user-starter-starter-module",
+		"admin-material-component-material-module~user-material-component-material-module~user-starter-starte~c8049681",
 		"user-material-component-material-module"
 	],
 	"./user/starter/starter.module": [
 		"./src/app/user/starter/starter.module.ts",
-		"user-material-component-material-module~user-starter-starter-module",
+		"admin-material-component-material-module~user-material-component-material-module~user-starter-starte~c8049681",
 		"user-starter-starter-module"
 	]
 };
@@ -613,6 +614,7 @@ var MENUITEMS = [
     { state: 'manageMeterAdmin', type: 'link', name: 'จัดการมิเตอร์ไฟฟ้า', icon: 'av_timer' },
     { state: 'electricBillAdmin', type: 'link', name: 'ค่าไฟที่ใช้', icon: 'receipt' },
     { state: 'statisticAdmin', type: 'link', name: 'รายงานการใช้ไฟฟ้า', icon: 'assessment' },
+    { state: 'billYearAdmin', type: 'link', name: 'รายงานค่าไฟรายปี', icon: 'calendar_today' },
     { state: 'powerCutAdmin', type: 'link', name: 'การตัดไฟ', icon: 'power_off' },
     { state: 'SystemSetting', type: 'link', name: 'จัดการระบบ', icon: 'settings' },
 ];
@@ -2134,6 +2136,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var MENUITEMS = [
     { state: 'starter', name: 'ค่าไฟที่ใช้', type: 'link', icon: 'receipt' },
     { state: 'billUser', type: 'link', name: 'ตรวจสอบค่าไฟ', icon: 'assessment' },
+    { state: 'billYear', type: 'link', name: 'ค่าไฟรายปี', icon: 'calendar_today' },
     { state: 'statisticUser', type: 'link', name: 'ตรวจสถิติการใช้ไฟ', icon: 'show_chart' },
 ];
 var MenuItems = /** @class */ (function () {
@@ -2215,7 +2218,7 @@ __webpack_require__.r(__webpack_exports__);
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 var environment = {
     production: false,
-    apiBaseUrl: 'http://35.240.216.73/api'
+    apiBaseUrl: 'http://35.240.216.73/api' //'http://localhost/api'
 };
 
 

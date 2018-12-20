@@ -18,7 +18,7 @@ module.exports = ".wrapper-center {\r\n    text-align: center;\r\n}\r\n\r\n.butt
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-card>\n  <mat-card-content>\n    <mat-tab-group>\n      <mat-tab label=\"รายงานค่าไฟ\">\n        <br>\n        <h3 style=\"text-align: center;\">กรุณาเลือกเวลาที่ต้องการค้นหาค่าไฟ</h3>\n        <br>\n        <form>\n          <mat-form-field>\n            <mat-select placeholder=\"กรุณาเลือกเดือน\" [(ngModel)]=\"selectedMonth\" name=\"month\" [formControl]=\"monthForm\"\n              required>\n              <mat-option *ngFor=\"let month of months\" [value]=\"month.month\">\n                {{month.m}}\n              </mat-option>\n            </mat-select>\n            <mat-error *ngIf=\"monthForm.hasError('required')\">กรุณาเลือกเดือน</mat-error>\n          </mat-form-field>\n          <mat-form-field>\n            <mat-select placeholder=\"กรุณาเลือกปี (พ.ศ.)\" [(ngModel)]=\"selectedYear\" name=\"year\" [formControl]=\"yearForm\"\n              required>\n              <mat-option *ngFor=\"let year of years\" [value]=\"year.year\">\n                {{year.y}}\n              </mat-option>\n            </mat-select>\n            <mat-error *ngIf=\"yearForm.hasError('required')\">กรุณาเลือกปี (พ.ศ.)</mat-error>\n          </mat-form-field>\n        </form>\n        <div class=\"wrapper-center\">\n          <button mat-raised-button color=\"accent\" class=\"button\" (click)=\"show = true\" (click)=\"submit()\">\n            <mat-icon>send</mat-icon> เลือก\n          </button>\n        </div>\n      </mat-tab>\n    </mat-tab-group>\n  </mat-card-content>\n</mat-card>\n\n<!-- <div *ngIf=\"show\">\n  <mat-card>\n    <mat-card-content>\n      <div>\n        <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" (click)=\"show = false\" style=\"float: right;\">\n          <mat-icon>close</mat-icon>\n        </button>\n      </div>\n      <div class=\"row\" *ngIf=\"bill\">\n        <div class=\"col-lg-4\">\n          <p>ค่าพลังงานไฟฟ้าเริ่มต้น : {{bill.startFullTime.ActiveEnergy}}</p>\n          <p>เวลาที่บันทึก : {{bill.startFullTime.date}}</p>\n\n        </div>\n        <div class=\"col-lg-4\">\n          <p>ค่าพลังงานไฟฟ้าสุดท้าย : {{bill.lastFullTime.ActiveEnergy}} </p>\n          <p>เวลาที่บันทึก : {{bill.lastFullTime.date}}</p>\n        </div>\n        <div class=\"col-lg-4\">\n          <p>จำนวนเงินที่ต้องจ่าย : {{(bill.lastFullTime.ActiveEnergy-bill.startFullTime.ActiveEnergy)*7}} บาท</p>\n        </div>\n      </div>\n    </mat-card-content>\n  </mat-card>\n</div> -->\n\n<div *ngIf=\"show\">\n  <section class=\"pricing py-5\" *ngIf=\"bill\">\n    <div class=\"container\">\n      <div class=\"row\">\n        <!-- Free Tier -->\n        <div class=\"col-lg-12\">\n          <input class=\"btn btn-danger\" type=\"button\" (click)=\"show = false\" value=\"ปิด\" style=\"float: right;\">\n        </div>\n        <div class=\"col-lg-12\">\n\n        </div>\n        <div class=\"col-lg-3\">\n\n        </div>\n        <!-- Plus Tier -->\n        <div class=\"col-lg-6\">\n          <div class=\"card mb-5 mb-lg-0\">\n            <div class=\"card-body\">\n              <h6 class=\"card-price text-center\">{{(bill.lastFullTime.ActiveEnergy-bill.startFullTime.ActiveEnergy)*userDetailsBath\n                |\n                number:'1.0-0'}}฿</h6>\n              <hr>\n              <h4>ค่าไฟประจำเดือน :</h4>\n              <ul class=\"fa-ul\">\n                <li><span class=\"fa-li\"><i class=\"fas fa-check\"></i></span>{{selectedMonthTH}} {{selectedYearTH}}</li>\n              </ul>\n              <h4>หน่วยไฟที่ใช้ :</h4>\n              <ul class=\"fa-ul\">\n                <li>\n                  <span class=\"fa-li\"><i class=\"fas fa-check\"></i>{{bill.startFullTime.ActiveEnergy}} -\n                    {{bill.lastFullTime.ActiveEnergy}}</span>\n                </li>\n                <li>\n                  <span class=\"fa-li\"><i class=\"fas fa-check\"></i>{{bill.lastFullTime.ActiveEnergy-bill.startFullTime.ActiveEnergy}}\n                    หน่วย</span>\n                </li>\n              </ul>\n              <h4>เวลาที่บันทึก:</h4>\n              <ul class=\"fa-ul\">\n                <!-- <li><span class=\"fa-li\"><i class=\"fas fa-check\"></i></span>{{bill.startFullTime.date}}</li>\n                <li><span class=\"fa-li\"><i class=\"fas fa-check\"></i></span>{{bill.lastFullTime.date}}</li> -->\n                <li><span class=\"fa-li\"><i class=\"fas fa-check\"></i></span>{{time}} {{day}}{{daynum}} {{Month}}\n                  {{year}}</li>\n                <li><span class=\"fa-li\"><i class=\"fas fa-check\"></i></span>{{etime}} {{eday}}{{edaynum}} {{eMonth}}\n                  {{eyear}}</li>\n              </ul>\n              <!-- <a href=\"\" class=\"btn btn-block btn-primary text-uppercase\" (click)=\"show = false\">ปิด</a> -->\n            </div>\n          </div>\n        </div>\n        <!-- Pro Tier -->\n        <div class=\"col-lg-3\">\n\n        </div>\n        <div class=\"col-lg-12\">\n          <div fxLayout=\"row\" fxLayoutWrap=\"wrap\">\n            <div fxFlex.gt-sm=\"100\" fxFlex.gt-xs=\"100\" fxFlex=\"100\">\n              <mat-card>\n                <mat-card-content>\n                  <div fxLayout=\"row\" fxLayoutWrap=\"wrap\">\n                    <div fxFlex.gt-sm=\"50\" fxFlex.gt-xs=\"50\" *ngIf=\"Maddr userDetails \">\n                    </div>\n                  </div>\n                  <canvas id=\"ActiveEnergy\" width=\"800\" height=\"450\"></canvas>\n                </mat-card-content>\n              </mat-card>\n            </div>\n          </div>\n\n        </div>\n      </div>\n    </div>\n  </section>\n</div>"
+module.exports = "<mat-card>\n  <mat-card-content>\n    <mat-tab-group>\n      <mat-tab label=\"รายงานค่าไฟ\">\n        <br>\n        <h3 style=\"text-align: center;\">กรุณาเลือกเวลาที่ต้องการค้นหาค่าไฟ</h3>\n        <br>\n        <form>\n          <mat-form-field>\n            <mat-select placeholder=\"กรุณาเลือกเดือน\" [(ngModel)]=\"selectedMonth\" name=\"month\" [formControl]=\"monthForm\"\n              required>\n              <mat-option *ngFor=\"let month of months\" [value]=\"month.month\">\n                {{month.m}}\n              </mat-option>\n            </mat-select>\n            <mat-error *ngIf=\"monthForm.hasError('required')\">กรุณาเลือกเดือน</mat-error>\n          </mat-form-field>\n          <mat-form-field>\n            <mat-select placeholder=\"กรุณาเลือกปี (พ.ศ.)\" [(ngModel)]=\"selectedYear\" name=\"year\" [formControl]=\"yearForm\"\n              required>\n              <mat-option *ngFor=\"let year of years\" [value]=\"year.year\">\n                {{year.y}}\n              </mat-option>\n            </mat-select>\n            <mat-error *ngIf=\"yearForm.hasError('required')\">กรุณาเลือกปี (พ.ศ.)</mat-error>\n          </mat-form-field>\n        </form>\n        <div class=\"wrapper-center\">\n          <button mat-raised-button color=\"accent\" class=\"button\" (click)=\"show = true\" (click)=\"submit()\">\n            <mat-icon>send</mat-icon> เลือก\n          </button>\n        </div>\n      </mat-tab>\n    </mat-tab-group>\n  </mat-card-content>\n</mat-card>\n\n<!-- <div *ngIf=\"show\">\n  <mat-card>\n    <mat-card-content>\n      <div>\n        <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" (click)=\"show = false\" style=\"float: right;\">\n          <mat-icon>close</mat-icon>\n        </button>\n      </div>\n      <div class=\"row\" *ngIf=\"bill\">\n        <div class=\"col-lg-4\">\n          <p>ค่าพลังงานไฟฟ้าเริ่มต้น : {{bill.startFullTime.ActiveEnergy}}</p>\n          <p>เวลาที่บันทึก : {{bill.startFullTime.date}}</p>\n\n        </div>\n        <div class=\"col-lg-4\">\n          <p>ค่าพลังงานไฟฟ้าสุดท้าย : {{bill.lastFullTime.ActiveEnergy}} </p>\n          <p>เวลาที่บันทึก : {{bill.lastFullTime.date}}</p>\n        </div>\n        <div class=\"col-lg-4\">\n          <p>จำนวนเงินที่ต้องจ่าย : {{(bill.lastFullTime.ActiveEnergy-bill.startFullTime.ActiveEnergy)*7}} บาท</p>\n        </div>\n      </div>\n    </mat-card-content>\n  </mat-card>\n</div> -->\n\n<div *ngIf=\"show\">\n  <section class=\"pricing py-5\" *ngIf=\"bill\">\n    <div class=\"container\">\n      <div class=\"row\">\n        <!-- Free Tier -->\n        <div class=\"col-lg-12\">\n          <input class=\"btn btn-danger\" type=\"button\" (click)=\"show = false\" value=\"ปิด\" style=\"float: right;\">\n        </div>\n        <div class=\"col-lg-12\">\n\n        </div>\n        <div class=\"col-lg-3\">\n\n        </div>\n        <!-- Plus Tier -->\n        <div class=\"col-lg-6\">\n          <div class=\"card mb-5 mb-lg-0\">\n            <div class=\"card-body\">\n              <h6 class=\"card-price text-center\">{{(bill.lastFullTime.ActiveEnergy-bill.startFullTime.ActiveEnergy)*userDetailsBath\n                |\n                number:'1.0-0'}}฿</h6>\n              <hr>\n              <h4>ค่าไฟประจำเดือน :</h4>\n              <ul class=\"fa-ul\">\n                <li><span class=\"fa-li\"><i class=\"fas fa-check\"></i></span>{{selectedMonthTH}} {{selectedYearTH}}</li>\n              </ul>\n              <h4>หน่วยไฟที่ใช้ :</h4>\n              <ul class=\"fa-ul\">\n                <li>\n                  <span class=\"fa-li\"><i class=\"fas fa-check\"></i>{{bill.startFullTime.ActiveEnergy}} -\n                    {{bill.lastFullTime.ActiveEnergy}}</span>\n                </li>\n                <li>\n                  <span class=\"fa-li\"><i class=\"fas fa-check\"></i>{{bill.lastFullTime.ActiveEnergy-bill.startFullTime.ActiveEnergy}}\n                    หน่วย</span>\n                </li>\n              </ul>\n              <h4>เวลาที่บันทึก:</h4>\n              <ul class=\"fa-ul\">\n                <!-- <li><span class=\"fa-li\"><i class=\"fas fa-check\"></i></span>{{bill.startFullTime.date}}</li>\n                <li><span class=\"fa-li\"><i class=\"fas fa-check\"></i></span>{{bill.lastFullTime.date}}</li> -->\n                <li><span class=\"fa-li\"><i class=\"fas fa-check\"></i></span>{{time}} {{day}}{{daynum}} {{Month}}\n                  {{year}}</li>\n                <li><span class=\"fa-li\"><i class=\"fas fa-check\"></i></span>{{etime}} {{eday}}{{edaynum}} {{eMonth}}\n                  {{eyear}}</li>\n              </ul>\n              <!-- <a href=\"\" class=\"btn btn-block btn-primary text-uppercase\" (click)=\"show = false\">ปิด</a> -->\n            </div>\n          </div>\n        </div>\n        <!-- Pro Tier -->\n        <div class=\"col-lg-3\">\n\n        </div>\n        <div class=\"col-lg-12\">\n          <div fxLayout=\"row\" fxLayoutWrap=\"wrap\">\n            <div fxFlex.gt-sm=\"100\" fxFlex.gt-xs=\"100\" fxFlex=\"100\">\n              <mat-card>\n                <mat-card-content>\n                  <div fxLayout=\"row\" fxLayoutWrap=\"wrap\">\n                    <div fxFlex.gt-sm=\"50\" fxFlex.gt-xs=\"50\" *ngIf=\"Maddr userDetails \">\n                    </div>\n                  </div>\n                  <canvas id=\"ActiveEnergy\" width=\"800\" height=\"450\"></canvas>\n                </mat-card-content>\n              </mat-card>\n            </div>\n          </div>\n\n        </div>\n      </div>\n    </div>\n  </section>\n</div>\n"
 
 /***/ }),
 
@@ -286,6 +286,292 @@ var BillAllComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/user/material-component/bill-year/bill-year.component.css":
+/*!***************************************************************************!*\
+  !*** ./src/app/user/material-component/bill-year/bill-year.component.css ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\r\n\r\n#customers td,\r\n#customers th {\r\n    border: 1px solid #ddd;\r\n    padding: 8px;\r\n}\r\n\r\n#customers tr:nth-child(even) {\r\n    background-color: #f2f2f2;\r\n}\r\n\r\n#customers tr:hover {\r\n    background-color: #ddd;\r\n}\r\n\r\n#customers th {\r\n    padding-top: 12px;\r\n    padding-bottom: 12px;\r\n    text-align: left;\r\n    background-color: rgb(96, 202, 100);\r\n    color: white;\r\n}"
+
+/***/ }),
+
+/***/ "./src/app/user/material-component/bill-year/bill-year.component.html":
+/*!****************************************************************************!*\
+  !*** ./src/app/user/material-component/bill-year/bill-year.component.html ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<mat-card>\n  <mat-card-content>\n    <mat-tab-group>\n      <mat-tab label=\"รายงานการใช้ไฟรายปี\">\n        <br>\n        <h4>กรุณาเลือกปี (พ.ศ.) :</h4>\n        <mat-form-field>\n          <mat-select [(value)]=\"yearSelected\">\n            <mat-option value=\"2018\">2561</mat-option>\n          </mat-select>\n        </mat-form-field>\n        <p>\n          <button mat-raised-button color=\"accent\" class=\"button\" (click)=\"show = true\" (click)=\"submit()\" style=\"float: right;\">\n            <mat-icon>send</mat-icon> เลือก\n          </button>\n        </p>\n      </mat-tab>\n    </mat-tab-group>\n  </mat-card-content>\n</mat-card>\n\n\n<div *ngIf=\"show\">\n  <mat-card>\n    <mat-card-content>\n      <h3 class=\"text-center\"><strong>ตารางแสดงค่าไฟปี พ.ศ.{{this.selectedYear + 543}}</strong></h3>\n      <div class=\"wrapper-center button-row\">\n          <button mat-raised-button color=\"warn\" style=\"float: right;\"(click)=\"show = false\">\n              <mat-icon>clear</mat-icon>ปิด\n            </button>\n            <span>&nbsp;&nbsp;&nbsp;</span>\n            <button mat-raised-button color=\"primary\" style=\"float: right;\" (click)=\"exportAsXLSX()\">\n              <mat-icon>cloud_download</mat-icon> ดาวโหลด (.xlsx)\n            </button>\n      </div>\n      <br>\n\n      <table class=\"table table-bordered\" id=\"customers\">\n        <thead>\n          <tr>\n            <th class=\"text-center\">เดือน</th>\n            <th class=\"text-center\">หน่วยไฟที่เริ่มบันทึก</th>\n            <th class=\"text-center\">เวลาที่เริ่มบันทึกหน่วยไฟ</th>\n            <th class=\"text-center\">หน่วยไฟสิ้นสุด</th>\n            <th class=\"text-center\">เวลาสิ้นสุดที่ทึกหน่วยไฟ</th>\n            <th class=\"text-center\">จำนวนหน่วยไฟ (หน่วย)</th>\n            <th class=\"text-center\">ค่าไฟ (บาท)</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr *ngFor=\"let item of Data\">\n            <td>{{item.month}}</td>\n            <td class=\"text-center\">{{item.startFullTime.ActiveEnergy}}</td>\n            <td>{{item.startFullTime.date}}</td>\n            <td class=\"text-center\">{{item.lastFullTime.ActiveEnergy}}</td>\n            <td>{{item.lastFullTime.date}}</td>\n            <td class=\"text-center\">{{item.num}}</td>\n            <td class=\"text-center\">{{item.bill}}</td>\n          </tr>\n        </tbody>\n      </table>\n      <div class=\"col-lg-12\">\n        <div fxLayout=\"row\" fxLayoutWrap=\"wrap\">\n          <div fxFlex.gt-sm=\"100\" fxFlex.gt-xs=\"100\" fxFlex=\"100\">\n            <mat-card>\n              <mat-card-content>\n                <div fxLayout=\"row\" fxLayoutWrap=\"wrap\">\n                  <div fxFlex.gt-sm=\"50\" fxFlex.gt-xs=\"50\">\n                  </div>\n                </div>\n                <canvas id=\"mychart\" width=\"800\" height=\"450\"></canvas>\n              </mat-card-content>\n            </mat-card>\n          </div>\n        </div>\n      </div>\n    </mat-card-content>\n  </mat-card>\n  <!-- <div *ngFor=\"let item of Data\">\n  <span>{{item|json}}</span>\n</div> -->\n\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/user/material-component/bill-year/bill-year.component.ts":
+/*!**************************************************************************!*\
+  !*** ./src/app/user/material-component/bill-year/bill-year.component.ts ***!
+  \**************************************************************************/
+/*! exports provided: BillYearComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BillYearComponent", function() { return BillYearComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _shared_user_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../shared/user.service */ "./src/app/shared/user.service.ts");
+/* harmony import */ var _shared_meter_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../shared/meter.service */ "./src/app/shared/meter.service.ts");
+/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! chart.js */ "./node_modules/chart.js/src/chart.js");
+/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(chart_js__WEBPACK_IMPORTED_MODULE_3__);
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var BillYearComponent = /** @class */ (function () {
+    function BillYearComponent(userService, meterService) {
+        this.userService = userService;
+        this.meterService = meterService;
+        this.yearSelected = "2018";
+        this.show = false;
+        this.LineChart = [];
+    }
+    BillYearComponent.prototype.ngOnInit = function () {
+    };
+    BillYearComponent.prototype.submit = function () {
+        var _this = this;
+        var month = new Array();
+        month[0] = "January";
+        month[1] = "February";
+        month[2] = "March";
+        month[3] = "April";
+        month[4] = "May";
+        month[5] = "June";
+        month[6] = "July";
+        month[7] = "August";
+        month[8] = "September";
+        month[9] = "October";
+        month[10] = "November";
+        month[11] = "December";
+        var time = new Date().getMonth();
+        this.selectedMonth = month[time];
+        this.selectedYear = new Date().getFullYear();
+        this.userService.getUserProfile().subscribe(function (res) {
+            _this.userDetails = res['user'];
+            _this.getmeter(_this.userDetails.room);
+            console.log(_this.selectedYear);
+            console.log(_this.selectedMonth);
+        }, function (err) {
+            console.log(err);
+        });
+    };
+    BillYearComponent.prototype.getdata = function (Maddr) {
+        var _this = this;
+        this.meterService.showBillUserReportYear(Maddr, this.selectedMonth, this.selectedYear).subscribe(function (res) {
+            _this.Data = res;
+            for (var i = 0; i < 12; i++) {
+                _this.con(i);
+                _this.conE(i);
+            }
+            console.log(_this.Data[0].startFullTime.ActiveEnergy);
+            _this.LineChart = new chart_js__WEBPACK_IMPORTED_MODULE_3__["Chart"]("mychart", {
+                type: 'line',
+                data: {
+                    labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+                    datasets: [{
+                            data: [_this.Data[0].bill, _this.Data[1].bill, _this.Data[2].bill, _this.Data[3].bill, _this.Data[4].bill, _this.Data[5].bill, _this.Data[6].bill, _this.Data[7].bill, _this.Data[8].bill, _this.Data[9].bill, _this.Data[10].bill, _this.Data[11].bill],
+                            borderColor: "#e8c3b9",
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'ค่าไฟประจำปี พ.ศ.' + _this.conYearTh(_this.selectedYear)
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.yLabel;
+                            }
+                        }
+                    },
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+        }, function (err) {
+            console.log(err);
+        });
+        this.meterService.showBillUserReportYearTH(Maddr, this.selectedMonth, this.selectedYear).subscribe(function (res) {
+            console.log(res);
+            _this.DataTH = res;
+            for (var i = 0; i < 12; i++) {
+                _this.ccon(i);
+                _this.cconE(i);
+            }
+        }, function (err) {
+            console.log(err);
+        });
+    };
+    BillYearComponent.prototype.con = function (index) {
+        if (this.Data[index].startFullTime.date != 'ไม่มีการบันทึก') {
+            var time = this.Data[index].startFullTime.date.split(",", 5);
+            var day = this.conDayTH(time[0]);
+            var daynum = time[1];
+            var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+            var year = this.conYearTh(time[3].split(" ", 2)[1]);
+            var times = time[4];
+            var data = times + daynum + " " + Month + " " + year;
+            this.Data[index].startFullTime.date = data;
+        }
+    };
+    BillYearComponent.prototype.conE = function (index) {
+        if (this.Data[index].lastFullTime.date != 'ไม่มีการบันทึก') {
+            var time = this.Data[index].lastFullTime.date.split(",", 5);
+            var day = this.conDayTH(time[0]);
+            var daynum = time[1];
+            var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+            var year = this.conYearTh(time[3].split(" ", 2)[1]);
+            var times = time[4];
+            var data = times + daynum + " " + Month + " " + year;
+            this.Data[index].lastFullTime.date = data;
+        }
+    };
+    BillYearComponent.prototype.ccon = function (index) {
+        if (this.DataTH[index].เวลาที่เริ่มบันทึกหน่วยไฟ != 'ไม่มีการบันทึก') {
+            var time = this.DataTH[index].เวลาที่เริ่มบันทึกหน่วยไฟ.split(",", 5);
+            var day = this.conDayTH(time[0]);
+            var daynum = time[1];
+            var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+            var year = this.conYearTh(time[3].split(" ", 2)[1]);
+            var times = time[4];
+            var data = times + daynum + " " + Month + " " + year;
+            this.DataTH[index].เวลาที่เริ่มบันทึกหน่วยไฟ = data;
+        }
+    };
+    BillYearComponent.prototype.cconE = function (index) {
+        if (this.DataTH[index].เวลาสิ้นสุดที่ทึกหน่วยไฟ != 'ไม่มีการบันทึก') {
+            var time = this.DataTH[index].เวลาสิ้นสุดที่ทึกหน่วยไฟ.split(",", 5);
+            var day = this.conDayTH(time[0]);
+            var daynum = time[1];
+            var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+            var year = this.conYearTh(time[3].split(" ", 2)[1]);
+            var times = time[4];
+            var data = times + daynum + " " + Month + " " + year;
+            this.DataTH[index].เวลาสิ้นสุดที่ทึกหน่วยไฟ = data;
+        }
+    };
+    BillYearComponent.prototype.conYearTh = function (selectedyear) {
+        return parseInt(selectedyear) + 543;
+    };
+    BillYearComponent.prototype.conMonthTh = function (selectedMonth) {
+        var selectedMonthTH;
+        if (selectedMonth == 'January') {
+            selectedMonthTH = 'มกราคม';
+        }
+        else if (selectedMonth == 'February') {
+            selectedMonthTH = 'กุมภาพันธ์';
+        }
+        else if (selectedMonth == 'March') {
+            selectedMonthTH = 'มีนาคม';
+        }
+        else if (selectedMonth == 'April') {
+            selectedMonthTH = 'เมษายน';
+        }
+        else if (selectedMonth == 'May') {
+            selectedMonthTH = 'พฤษภาคม';
+        }
+        else if (selectedMonth == 'June') {
+            selectedMonthTH = 'มิถุนายน';
+        }
+        else if (selectedMonth == 'July') {
+            selectedMonthTH = 'กรกฎาคม';
+        }
+        else if (selectedMonth == 'August') {
+            selectedMonthTH = 'สิงหาคม';
+        }
+        else if (selectedMonth == 'September') {
+            selectedMonthTH = 'กันยายน';
+        }
+        else if (selectedMonth == 'October') {
+            selectedMonthTH = 'ตุลาคม';
+        }
+        else if (selectedMonth == 'November') {
+            selectedMonthTH = 'พฤศจิกายน';
+        }
+        else if (selectedMonth == 'December') {
+            selectedMonthTH = 'ธันวาคม';
+        }
+        return selectedMonthTH;
+    };
+    BillYearComponent.prototype.conDayTH = function (data) {
+        var dayTH;
+        if (data == 'Sunday') {
+            dayTH = 'อาทิตย์';
+        }
+        else if (data == 'Monday') {
+            dayTH = 'จันทร์';
+        }
+        else if (data == 'Tuesday') {
+            dayTH = 'อังคาร';
+        }
+        else if (data == 'Wednesday') {
+            dayTH = 'พุธ';
+        }
+        else if (data == 'Thursday') {
+            dayTH = 'พฤหัสบดี';
+        }
+        else if (data == 'Friday') {
+            dayTH = 'ศุกร์';
+        }
+        else if (data == 'Saturday') {
+            dayTH = 'เสาร์';
+        }
+        else {
+            dayTH = 'ไม่มีการบันทึกค่า';
+        }
+        return dayTH;
+    };
+    BillYearComponent.prototype.getmeter = function (room) {
+        var _this = this;
+        this.userService.MacFromRoom(room).subscribe(function (res) {
+            _this.Maddr = res['Maddr'];
+            _this.getdata(res['Maddr']);
+        }, function (err) {
+            console.log(err);
+        });
+    };
+    BillYearComponent.prototype.exportAsXLSX = function () {
+        // var monthTH = this.conMonthTh(this.data.month)
+        var yearTH = this.conYearTh(this.selectedYear);
+        this.userService.exportAsExcelFile(this.DataTH, "ค่าไฟห้อง" + this.userDetails.room + "ประจำปี" + yearTH);
+    };
+    BillYearComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-bill-year',
+            template: __webpack_require__(/*! ./bill-year.component.html */ "./src/app/user/material-component/bill-year/bill-year.component.html"),
+            styles: [__webpack_require__(/*! ./bill-year.component.css */ "./src/app/user/material-component/bill-year/bill-year.component.css")]
+        }),
+        __metadata("design:paramtypes", [_shared_user_service__WEBPACK_IMPORTED_MODULE_1__["UserService"], _shared_meter_service__WEBPACK_IMPORTED_MODULE_2__["MeterService"]])
+    ], BillYearComponent);
+    return BillYearComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/user/material-component/material.module.ts":
 /*!************************************************************!*\
   !*** ./src/app/user/material-component/material.module.ts ***!
@@ -310,12 +596,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _profile_profile_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./profile/profile.component */ "./src/app/user/material-component/profile/profile.component.ts");
 /* harmony import */ var _statistic_statistic_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./statistic/statistic.component */ "./src/app/user/material-component/statistic/statistic.component.ts");
 /* harmony import */ var _bill_all_bill_all_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./bill-all/bill-all.component */ "./src/app/user/material-component/bill-all/bill-all.component.ts");
+/* harmony import */ var _bill_year_bill_year_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./bill-year/bill-year.component */ "./src/app/user/material-component/bill-year/bill-year.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -352,7 +640,8 @@ var MaterialComponentsModule = /** @class */ (function () {
                 _profile_profile_component__WEBPACK_IMPORTED_MODULE_10__["ProfileComponent"],
                 _statistic_statistic_component__WEBPACK_IMPORTED_MODULE_11__["StatisticComponent"],
                 _statistic_statistic_component__WEBPACK_IMPORTED_MODULE_11__["StatisticReportUser"],
-                _bill_all_bill_all_component__WEBPACK_IMPORTED_MODULE_12__["BillAllComponent"]
+                _bill_all_bill_all_component__WEBPACK_IMPORTED_MODULE_12__["BillAllComponent"],
+                _bill_year_bill_year_component__WEBPACK_IMPORTED_MODULE_13__["BillYearComponent"]
             ]
         })
     ], MaterialComponentsModule);
@@ -376,6 +665,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _profile_profile_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./profile/profile.component */ "./src/app/user/material-component/profile/profile.component.ts");
 /* harmony import */ var _statistic_statistic_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./statistic/statistic.component */ "./src/app/user/material-component/statistic/statistic.component.ts");
 /* harmony import */ var _bill_all_bill_all_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./bill-all/bill-all.component */ "./src/app/user/material-component/bill-all/bill-all.component.ts");
+/* harmony import */ var _bill_year_bill_year_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./bill-year/bill-year.component */ "./src/app/user/material-component/bill-year/bill-year.component.ts");
+
 
 
 
@@ -389,6 +680,9 @@ var MaterialRoutes = [
     }, {
         path: 'billUser',
         component: _bill_all_bill_all_component__WEBPACK_IMPORTED_MODULE_2__["BillAllComponent"]
+    }, {
+        path: 'billYear',
+        component: _bill_year_bill_year_component__WEBPACK_IMPORTED_MODULE_3__["BillYearComponent"]
     }
 ];
 

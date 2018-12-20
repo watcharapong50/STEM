@@ -1,5 +1,287 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["admin-material-component-material-module"],{
 
+/***/ "./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.css":
+/*!****************************************************************************************!*\
+  !*** ./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.css ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\r\n\r\n#customers td,\r\n#customers th {\r\n    border: 1px solid #ddd;\r\n    padding: 8px;\r\n}\r\n\r\n#customers tr:nth-child(even) {\r\n    background-color: #f2f2f2;\r\n}\r\n\r\n#customers tr:hover {\r\n    background-color: #ddd;\r\n}\r\n\r\n#customers th {\r\n    padding-top: 12px;\r\n    padding-bottom: 12px;\r\n    text-align: left;\r\n    background-color: rgb(96, 202, 100);\r\n    color: white;\r\n}"
+
+/***/ }),
+
+/***/ "./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.html":
+/*!*****************************************************************************************!*\
+  !*** ./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.html ***!
+  \*****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<mat-card>\n  <mat-card-content>\n    <mat-tab-group>\n      <mat-tab label=\"รายงานการใช้ไฟฟ้า\">\n        <mat-card-content>\n          <mat-form-field>\n            <mat-select [(value)]=\"Yearselected\">\n              <mat-option value=\"2018\">2561</mat-option>\n            </mat-select>\n          </mat-form-field>\n\n          <div class=\"search-div\">\n            <mat-form-field class=\"search-form-field\" floatLabel=\"never\">\n              <input matInput [(ngModel)]=\"searchKey\" placeholder=\"ค้นหาห้อง\" autocomplete=\"off\" (keyup)=\"applyFilter()\">\n              <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" *ngIf=\"searchKey\" (click)=\"onSearchClear()\">\n                <mat-icon>close</mat-icon>\n              </button>\n            </mat-form-field>\n\n          </div>\n          <div class=\"mat-elevation-z8 size\">\n            <mat-table [dataSource]=\"dataSource\" matSort>\n              <ng-container matColumnDef=\"room\" sticky>\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อห้อง</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.room}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"username\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อมิเตอร์ (Mac Address)</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.Maddr}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"actions\">\n                <mat-header-cell *matHeaderCellDef>ดูสถิติการใช้ไฟฟ้า</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">\n                  <button mat-raised-button color=\"accent\" (click)=\"show = true\" (click)=\"openDialog(element.Maddr,element.room)\">\n                    <mat-icon>search</mat-icon> เลือก\n                  </button>\n                </mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"noData\">\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                  No data.\n                </mat-footer-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"loading\">\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                  Loading data...\n                </mat-footer-cell>\n              </ng-container>\n              <mat-header-row *matHeaderRowDef=\"displayedColumns\"></mat-header-row>\n              <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\n              <mat-footer-row *matFooterRowDef=\"['noData']\" [ngClass]=\"{'hide':!(dataSource!=null && dataSource.data.length==0)}\"></mat-footer-row>\n              <mat-footer-row *matFooterRowDef=\"['loading']\" [ngClass]=\"{'hide':dataSource!=null}\"></mat-footer-row>\n            </mat-table>\n            <mat-paginator [pageSizeOptions]=\"[10, 20, 50, 100]\" [pageSize]=\"10\" showFirstLastButtons></mat-paginator>\n          </div>\n        </mat-card-content>\n      </mat-tab>\n\n    </mat-tab-group>\n  </mat-card-content>\n</mat-card>\n\n\n<div *ngIf=\"show\">\n  <mat-card>\n    <mat-card-content>\n      <h3 class=\"text-center\"><strong>ตารางแสดงค่าไฟปี พ.ศ.{{conYearTh(Yearselected)}}</strong></h3>\n      <div class=\"wrapper-center button-row\">\n        <button mat-raised-button color=\"warn\" style=\"float: right;\" (click)=\"show = false\">\n          <mat-icon>clear</mat-icon>ปิด\n        </button>\n        <span>&nbsp;&nbsp;&nbsp;</span>\n        <button mat-raised-button color=\"primary\" style=\"float: right;\" (click)=\"exportAsXLSX()\">\n          <mat-icon>cloud_download</mat-icon> ดาวโหลด (.xlsx)\n        </button>\n      </div>\n      <br>\n\n      <table class=\"table table-bordered\" id=\"customers\">\n        <thead>\n          <tr>\n            <th class=\"text-center\">เดือน</th>\n            <th class=\"text-center\">หน่วยไฟที่เริ่มบันทึก</th>\n            <th class=\"text-center\">เวลาที่เริ่มบันทึกหน่วยไฟ</th>\n            <th class=\"text-center\">หน่วยไฟสิ้นสุด</th>\n            <th class=\"text-center\">เวลาสิ้นสุดที่ทึกหน่วยไฟ</th>\n            <th class=\"text-center\">จำนวนหน่วยไฟ (หน่วย)</th>\n            <th class=\"text-center\">ค่าไฟ (บาท)</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr *ngFor=\"let item of Data\">\n            <td>{{item.month}}</td>\n            <td class=\"text-center\">{{item.startFullTime.ActiveEnergy}}</td>\n            <td>{{item.startFullTime.date}}</td>\n            <td class=\"text-center\">{{item.lastFullTime.ActiveEnergy}}</td>\n            <td>{{item.lastFullTime.date}}</td>\n            <td class=\"text-center\">{{item.num}}</td>\n            <td class=\"text-center\">{{item.bill}}</td>\n          </tr>\n        </tbody>\n      </table>\n      <div class=\"col-lg-12\">\n        <div fxLayout=\"row\" fxLayoutWrap=\"wrap\">\n          <div fxFlex.gt-sm=\"100\" fxFlex.gt-xs=\"100\" fxFlex=\"100\">\n            <mat-card>\n              <mat-card-content>\n                <div fxLayout=\"row\" fxLayoutWrap=\"wrap\">\n                  <div fxFlex.gt-sm=\"50\" fxFlex.gt-xs=\"50\">\n                  </div>\n                </div>\n                <canvas id=\"mychart\" width=\"800\" height=\"450\"></canvas>\n              </mat-card-content>\n            </mat-card>\n          </div>\n        </div>\n      </div>\n    </mat-card-content>\n  </mat-card>\n  <!-- <div *ngFor=\"let item of Data\">\n    <span>{{item|json}}</span>\n  </div> -->\n\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.ts":
+/*!***************************************************************************************!*\
+  !*** ./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.ts ***!
+  \***************************************************************************************/
+/*! exports provided: BillYearAdminComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BillYearAdminComponent", function() { return BillYearAdminComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _shared_meter_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../shared/meter.service */ "./src/app/shared/meter.service.ts");
+/* harmony import */ var _shared_user_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../shared/user.service */ "./src/app/shared/user.service.ts");
+/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! chart.js */ "./node_modules/chart.js/src/chart.js");
+/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(chart_js__WEBPACK_IMPORTED_MODULE_4__);
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+var BillYearAdminComponent = /** @class */ (function () {
+    function BillYearAdminComponent(meterService, userService, dialogMeter) {
+        this.meterService = meterService;
+        this.userService = userService;
+        this.dialogMeter = dialogMeter;
+        this.LineChart = [];
+        this.Yearselected = '2018';
+        this.show = false;
+        this.displayedColumns = ['room', 'username', 'actions']; //, 'shortCircuit'
+    }
+    BillYearAdminComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.meterService.showAllMeter().subscribe(function (data) {
+            if (!data) {
+                return;
+            }
+            console.log(data);
+            _this.dataSource = new _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatTableDataSource"](data);
+            _this.dataSource.sort = _this.sort;
+            _this.dataSource.paginator = _this.paginator;
+        });
+    };
+    BillYearAdminComponent.prototype.onSearchClear = function () {
+        this.searchKey = "";
+        this.applyFilter();
+    };
+    BillYearAdminComponent.prototype.applyFilter = function () {
+        this.dataSource.filter = this.searchKey.trim().toLocaleLowerCase();
+    };
+    BillYearAdminComponent.prototype.openDialog = function (element, room) {
+        var _this = this;
+        this.room = room;
+        this.meterService.showBillUserReportYear(element, 'December', this.Yearselected).subscribe(function (res) {
+            _this.Data = res;
+            console.log(res);
+            for (var i = 0; i < 12; i++) {
+                _this.con(i);
+                _this.conE(i);
+            }
+            _this.LineChart = new chart_js__WEBPACK_IMPORTED_MODULE_4__["Chart"]("mychart", {
+                type: 'line',
+                data: {
+                    labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+                    datasets: [{
+                            data: [_this.Data[0].bill, _this.Data[1].bill, _this.Data[2].bill, _this.Data[3].bill, _this.Data[4].bill, _this.Data[5].bill, _this.Data[6].bill, _this.Data[7].bill, _this.Data[8].bill, _this.Data[9].bill, _this.Data[10].bill, _this.Data[11].bill],
+                            borderColor: "#e8c3b9",
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'ค่าไฟประจำปี พ.ศ.' + _this.conYearTh(_this.Yearselected)
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.yLabel;
+                            }
+                        }
+                    },
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+        }, function (err) {
+            console.log(err);
+        });
+        this.meterService.showBillUserReportYearTH(element, 'December', this.Yearselected).subscribe(function (res) {
+            console.log(res);
+            _this.DataTH = res;
+            for (var i = 0; i < 12; i++) {
+                _this.ccon(i);
+                _this.cconE(i);
+            }
+        }, function (err) {
+            console.log(err);
+        });
+    };
+    BillYearAdminComponent.prototype.con = function (index) {
+        if (this.Data[index].startFullTime.date != 'ไม่มีการบันทึก') {
+            var time = this.Data[index].startFullTime.date.split(",", 5);
+            var day = this.conDayTH(time[0]);
+            var daynum = time[1];
+            var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+            var year = this.conYearTh(time[3].split(" ", 2)[1]);
+            var times = time[4];
+            var data = times + daynum + " " + Month + " " + year;
+            this.Data[index].startFullTime.date = data;
+        }
+    };
+    BillYearAdminComponent.prototype.conE = function (index) {
+        if (this.Data[index].lastFullTime.date != 'ไม่มีการบันทึก') {
+            var time = this.Data[index].lastFullTime.date.split(",", 5);
+            var day = this.conDayTH(time[0]);
+            var daynum = time[1];
+            var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+            var year = this.conYearTh(time[3].split(" ", 2)[1]);
+            var times = time[4];
+            var data = times + daynum + " " + Month + " " + year;
+            this.Data[index].lastFullTime.date = data;
+        }
+    };
+    BillYearAdminComponent.prototype.ccon = function (index) {
+        if (this.DataTH[index].เวลาที่เริ่มบันทึกหน่วยไฟ != 'ไม่มีการบันทึก') {
+            var time = this.DataTH[index].เวลาที่เริ่มบันทึกหน่วยไฟ.split(",", 5);
+            var day = this.conDayTH(time[0]);
+            var daynum = time[1];
+            var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+            var year = this.conYearTh(time[3].split(" ", 2)[1]);
+            var times = time[4];
+            var data = times + daynum + " " + Month + " " + year;
+            this.DataTH[index].เวลาที่เริ่มบันทึกหน่วยไฟ = data;
+        }
+    };
+    BillYearAdminComponent.prototype.cconE = function (index) {
+        if (this.DataTH[index].เวลาสิ้นสุดที่ทึกหน่วยไฟ != 'ไม่มีการบันทึก') {
+            var time = this.DataTH[index].เวลาสิ้นสุดที่ทึกหน่วยไฟ.split(",", 5);
+            var day = this.conDayTH(time[0]);
+            var daynum = time[1];
+            var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+            var year = this.conYearTh(time[3].split(" ", 2)[1]);
+            var times = time[4];
+            var data = times + daynum + " " + Month + " " + year;
+            this.DataTH[index].เวลาสิ้นสุดที่ทึกหน่วยไฟ = data;
+        }
+    };
+    BillYearAdminComponent.prototype.conYearTh = function (selectedyear) {
+        return parseInt(selectedyear) + 543;
+    };
+    BillYearAdminComponent.prototype.conMonthTh = function (selectedMonth) {
+        var selectedMonthTH;
+        if (selectedMonth == 'January') {
+            selectedMonthTH = 'มกราคม';
+        }
+        else if (selectedMonth == 'February') {
+            selectedMonthTH = 'กุมภาพันธ์';
+        }
+        else if (selectedMonth == 'March') {
+            selectedMonthTH = 'มีนาคม';
+        }
+        else if (selectedMonth == 'April') {
+            selectedMonthTH = 'เมษายน';
+        }
+        else if (selectedMonth == 'May') {
+            selectedMonthTH = 'พฤษภาคม';
+        }
+        else if (selectedMonth == 'June') {
+            selectedMonthTH = 'มิถุนายน';
+        }
+        else if (selectedMonth == 'July') {
+            selectedMonthTH = 'กรกฎาคม';
+        }
+        else if (selectedMonth == 'August') {
+            selectedMonthTH = 'สิงหาคม';
+        }
+        else if (selectedMonth == 'September') {
+            selectedMonthTH = 'กันยายน';
+        }
+        else if (selectedMonth == 'October') {
+            selectedMonthTH = 'ตุลาคม';
+        }
+        else if (selectedMonth == 'November') {
+            selectedMonthTH = 'พฤศจิกายน';
+        }
+        else if (selectedMonth == 'December') {
+            selectedMonthTH = 'ธันวาคม';
+        }
+        return selectedMonthTH;
+    };
+    BillYearAdminComponent.prototype.conDayTH = function (data) {
+        var dayTH;
+        if (data == 'Sunday') {
+            dayTH = 'อาทิตย์';
+        }
+        else if (data == 'Monday') {
+            dayTH = 'จันทร์';
+        }
+        else if (data == 'Tuesday') {
+            dayTH = 'อังคาร';
+        }
+        else if (data == 'Wednesday') {
+            dayTH = 'พุธ';
+        }
+        else if (data == 'Thursday') {
+            dayTH = 'พฤหัสบดี';
+        }
+        else if (data == 'Friday') {
+            dayTH = 'ศุกร์';
+        }
+        else if (data == 'Saturday') {
+            dayTH = 'เสาร์';
+        }
+        else {
+            dayTH = 'ไม่มีการบันทึกค่า';
+        }
+        return dayTH;
+    };
+    BillYearAdminComponent.prototype.exportAsXLSX = function () {
+        // var monthTH = this.conMonthTh(this.data.month)
+        var yearTH = this.conYearTh(this.Yearselected);
+        this.userService.exportAsExcelFile(this.DataTH, "ค่าไฟห้อง" + this.room + "ประจำปี" + yearTH);
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])(_angular_material__WEBPACK_IMPORTED_MODULE_1__["MatSort"]),
+        __metadata("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatSort"])
+    ], BillYearAdminComponent.prototype, "sort", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])(_angular_material__WEBPACK_IMPORTED_MODULE_1__["MatPaginator"]),
+        __metadata("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatPaginator"])
+    ], BillYearAdminComponent.prototype, "paginator", void 0);
+    BillYearAdminComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-bill-year-admin',
+            template: __webpack_require__(/*! ./bill-year-admin.component.html */ "./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.html"),
+            styles: [__webpack_require__(/*! ./bill-year-admin.component.css */ "./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.css")]
+        }),
+        __metadata("design:paramtypes", [_shared_meter_service__WEBPACK_IMPORTED_MODULE_2__["MeterService"],
+            _shared_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatDialog"]])
+    ], BillYearAdminComponent);
+    return BillYearAdminComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/admin/material-component/electric-bill/electric-bill.component.css":
 /*!************************************************************************************!*\
   !*** ./src/app/admin/material-component/electric-bill/electric-bill.component.css ***!
@@ -931,12 +1213,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _system_setting_system_setting_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./system-setting/system-setting.component */ "./src/app/admin/material-component/system-setting/system-setting.component.ts");
 /* harmony import */ var _electric_bill_filter_pipe__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./electric-bill/filter.pipe */ "./src/app/admin/material-component/electric-bill/filter.pipe.ts");
 /* harmony import */ var _statistic_admin_statistic_admin_component__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./statistic-admin/statistic-admin.component */ "./src/app/admin/material-component/statistic-admin/statistic-admin.component.ts");
+/* harmony import */ var _bill_year_admin_bill_year_admin_component__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./bill-year-admin/bill-year-admin.component */ "./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -991,7 +1275,8 @@ var MaterialComponentsModule = /** @class */ (function () {
                 _electric_bill_electric_bill_component__WEBPACK_IMPORTED_MODULE_13__["ReportData"],
                 _electric_bill_filter_pipe__WEBPACK_IMPORTED_MODULE_17__["FilterPipe"],
                 _statistic_admin_statistic_admin_component__WEBPACK_IMPORTED_MODULE_18__["StatisticAdminComponent"],
-                _statistic_admin_statistic_admin_component__WEBPACK_IMPORTED_MODULE_18__["StatisticReportAdmin"]
+                _statistic_admin_statistic_admin_component__WEBPACK_IMPORTED_MODULE_18__["StatisticReportAdmin"],
+                _bill_year_admin_bill_year_admin_component__WEBPACK_IMPORTED_MODULE_19__["BillYearAdminComponent"]
             ]
         })
     ], MaterialComponentsModule);
@@ -1019,6 +1304,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _power_cut_power_cut_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./power-cut/power-cut.component */ "./src/app/admin/material-component/power-cut/power-cut.component.ts");
 /* harmony import */ var _system_setting_system_setting_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./system-setting/system-setting.component */ "./src/app/admin/material-component/system-setting/system-setting.component.ts");
 /* harmony import */ var _statistic_admin_statistic_admin_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./statistic-admin/statistic-admin.component */ "./src/app/admin/material-component/statistic-admin/statistic-admin.component.ts");
+/* harmony import */ var _bill_year_admin_bill_year_admin_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./bill-year-admin/bill-year-admin.component */ "./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.ts");
+
 
 
 
@@ -1048,6 +1335,9 @@ var MaterialRoutes = [
     }, {
         path: 'statisticAdmin',
         component: _statistic_admin_statistic_admin_component__WEBPACK_IMPORTED_MODULE_6__["StatisticAdminComponent"]
+    }, {
+        path: 'billYearAdmin',
+        component: _bill_year_admin_bill_year_admin_component__WEBPACK_IMPORTED_MODULE_7__["BillYearAdminComponent"]
     }
 ];
 
@@ -1746,117 +2036,6 @@ var SystemSettingComponent = /** @class */ (function () {
             _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"]])
     ], SystemSettingComponent);
     return SystemSettingComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/shared/meter.service.ts":
-/*!*****************************************!*\
-  !*** ./src/app/shared/meter.service.ts ***!
-  \*****************************************/
-/*! exports provided: MeterService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MeterService", function() { return MeterService; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-var MeterService = /** @class */ (function () {
-    function MeterService(http) {
-        this.http = http;
-        this.selectedUser = {
-            Maddr: '',
-            room: ''
-        };
-        this.form = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormGroup"]({
-            Maddr: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](null),
-            room: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](''),
-        });
-        this.formCut = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormGroup"]({
-            Maddr: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](null),
-            timeDelay: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](''),
-        });
-        this.noAuthHeader = { headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({ 'NoAuth': 'True' }) };
-    }
-    MeterService.prototype.showMeterRoom = function () {
-        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showPowerCut');
-    };
-    MeterService.prototype.showBillUserAll = function () {
-        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showBillUserAll');
-    };
-    MeterService.prototype.showBillUserReport = function (Maddr, month, year) {
-        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showBillUserReport/' + Maddr + "/" + month + "/" + year);
-    };
-    MeterService.prototype.showMyElec = function (meter) {
-        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showMyElec/' + meter);
-    };
-    MeterService.prototype.showAllMeter = function () {
-        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showAllMeter');
-    };
-    MeterService.prototype.report = function (month, year) {
-        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showBill/' + month + "/" + year);
-    };
-    MeterService.prototype.reportTH = function (month, year) {
-        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showBillTH/' + month + "/" + year);
-    };
-    MeterService.prototype.showStatistic = function (month, year, room) {
-        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showStatistic/' + room + "/" + month + "/" + year);
-    };
-    MeterService.prototype.showStatisticTH = function (month, year, room) {
-        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showStatisticTH/' + room + "/" + month + "/" + year);
-    };
-    MeterService.prototype.postUser = function (user) {
-        return this.http.post(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/addMeter', user);
-    };
-    MeterService.prototype.deleteMeter = function (Maddr) {
-        return this.http.delete(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/deleteMeter/' + Maddr);
-    };
-    MeterService.prototype.powerCut = function (powerCut) {
-        return this.http.put(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/powerCut/' + powerCut, powerCut);
-    };
-    MeterService.prototype.updateMeter = function (user) {
-        return this.http.put(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/updateMeter', user);
-    };
-    MeterService.prototype.showElec = function () {
-        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showElec');
-    };
-    MeterService.prototype.updateSystem = function (systemTime) {
-        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/updateSystem/' + systemTime);
-    };
-    MeterService.prototype.showTimeDelay = function () {
-        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showTimeDelay');
-    };
-    MeterService.prototype.updateBath = function (systemTime) {
-        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/updateBath/' + systemTime);
-    };
-    MeterService.prototype.showBathPerNum = function () {
-        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showBathPerNum');
-    };
-    MeterService = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
-            providedIn: 'root'
-        }),
-        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]])
-    ], MeterService);
-    return MeterService;
 }());
 
 
