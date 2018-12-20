@@ -5464,7 +5464,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\New folder\STEM - Copy\stemTest\src\polyfills.ts */"./src/polyfills.ts");
+module.exports = __webpack_require__(/*! C:\New folder\STEM - Copy\APP\src\polyfills.ts */"./src/polyfills.ts");
 
 
 /***/ })

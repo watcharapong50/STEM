@@ -1,5 +1,287 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["admin-material-component-material-module"],{
 
+/***/ "./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.css":
+/*!****************************************************************************************!*\
+  !*** ./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.css ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\r\n\r\n#customers td,\r\n#customers th {\r\n    border: 1px solid #ddd;\r\n    padding: 8px;\r\n}\r\n\r\n#customers tr:nth-child(even) {\r\n    background-color: #f2f2f2;\r\n}\r\n\r\n#customers tr:hover {\r\n    background-color: #ddd;\r\n}\r\n\r\n#customers th {\r\n    padding-top: 12px;\r\n    padding-bottom: 12px;\r\n    text-align: left;\r\n    background-color: rgb(96, 202, 100);\r\n    color: white;\r\n}"
+
+/***/ }),
+
+/***/ "./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.html":
+/*!*****************************************************************************************!*\
+  !*** ./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.html ***!
+  \*****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<mat-card>\n  <mat-card-content>\n    <mat-tab-group>\n      <mat-tab label=\"รายงานการใช้ไฟฟ้า\">\n        <mat-card-content>\n          <mat-form-field>\n            <mat-select [(value)]=\"Yearselected\">\n              <mat-option value=\"2018\">2561</mat-option>\n            </mat-select>\n          </mat-form-field>\n\n          <div class=\"search-div\">\n            <mat-form-field class=\"search-form-field\" floatLabel=\"never\">\n              <input matInput [(ngModel)]=\"searchKey\" placeholder=\"ค้นหาห้อง\" autocomplete=\"off\" (keyup)=\"applyFilter()\">\n              <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" *ngIf=\"searchKey\" (click)=\"onSearchClear()\">\n                <mat-icon>close</mat-icon>\n              </button>\n            </mat-form-field>\n\n          </div>\n          <div class=\"mat-elevation-z8 size\">\n            <mat-table [dataSource]=\"dataSource\" matSort>\n              <ng-container matColumnDef=\"room\" sticky>\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อห้อง</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.room}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"username\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อมิเตอร์ (Mac Address)</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.Maddr}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"actions\">\n                <mat-header-cell *matHeaderCellDef>ดูสถิติการใช้ไฟฟ้า</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">\n                  <button mat-raised-button color=\"accent\" (click)=\"show = true\" (click)=\"openDialog(element.Maddr,element.room)\">\n                    <mat-icon>search</mat-icon> เลือก\n                  </button>\n                </mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"noData\">\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                  No data.\n                </mat-footer-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"loading\">\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                  Loading data...\n                </mat-footer-cell>\n              </ng-container>\n              <mat-header-row *matHeaderRowDef=\"displayedColumns\"></mat-header-row>\n              <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\n              <mat-footer-row *matFooterRowDef=\"['noData']\" [ngClass]=\"{'hide':!(dataSource!=null && dataSource.data.length==0)}\"></mat-footer-row>\n              <mat-footer-row *matFooterRowDef=\"['loading']\" [ngClass]=\"{'hide':dataSource!=null}\"></mat-footer-row>\n            </mat-table>\n            <mat-paginator [pageSizeOptions]=\"[10, 20, 50, 100]\" [pageSize]=\"10\" showFirstLastButtons></mat-paginator>\n          </div>\n        </mat-card-content>\n      </mat-tab>\n\n    </mat-tab-group>\n  </mat-card-content>\n</mat-card>\n\n\n<div *ngIf=\"show\">\n  <mat-card>\n    <mat-card-content>\n      <h3 class=\"text-center\"><strong>ตารางแสดงค่าไฟปี พ.ศ.{{conYearTh(Yearselected)}}</strong></h3>\n      <div class=\"wrapper-center button-row\">\n        <button mat-raised-button color=\"warn\" style=\"float: right;\" (click)=\"show = false\">\n          <mat-icon>clear</mat-icon>ปิด\n        </button>\n        <span>&nbsp;&nbsp;&nbsp;</span>\n        <button mat-raised-button color=\"primary\" style=\"float: right;\" (click)=\"exportAsXLSX()\">\n          <mat-icon>cloud_download</mat-icon> ดาวโหลด (.xlsx)\n        </button>\n      </div>\n      <br>\n\n      <table class=\"table table-bordered\" id=\"customers\">\n        <thead>\n          <tr>\n            <th class=\"text-center\">เดือน</th>\n            <th class=\"text-center\">หน่วยไฟที่เริ่มบันทึก</th>\n            <th class=\"text-center\">เวลาที่เริ่มบันทึกหน่วยไฟ</th>\n            <th class=\"text-center\">หน่วยไฟสิ้นสุด</th>\n            <th class=\"text-center\">เวลาสิ้นสุดที่ทึกหน่วยไฟ</th>\n            <th class=\"text-center\">จำนวนหน่วยไฟ (หน่วย)</th>\n            <th class=\"text-center\">ค่าไฟ (บาท)</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr *ngFor=\"let item of Data\">\n            <td>{{item.month}}</td>\n            <td class=\"text-center\">{{item.startFullTime.ActiveEnergy}}</td>\n            <td>{{item.startFullTime.date}}</td>\n            <td class=\"text-center\">{{item.lastFullTime.ActiveEnergy}}</td>\n            <td>{{item.lastFullTime.date}}</td>\n            <td class=\"text-center\">{{item.num}}</td>\n            <td class=\"text-center\">{{item.bill}}</td>\n          </tr>\n        </tbody>\n      </table>\n      <div class=\"col-lg-12\">\n        <div fxLayout=\"row\" fxLayoutWrap=\"wrap\">\n          <div fxFlex.gt-sm=\"100\" fxFlex.gt-xs=\"100\" fxFlex=\"100\">\n            <mat-card>\n              <mat-card-content>\n                <div fxLayout=\"row\" fxLayoutWrap=\"wrap\">\n                  <div fxFlex.gt-sm=\"50\" fxFlex.gt-xs=\"50\">\n                  </div>\n                </div>\n                <canvas id=\"mychart\" width=\"800\" height=\"450\"></canvas>\n              </mat-card-content>\n            </mat-card>\n          </div>\n        </div>\n      </div>\n    </mat-card-content>\n  </mat-card>\n  <!-- <div *ngFor=\"let item of Data\">\n    <span>{{item|json}}</span>\n  </div> -->\n\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.ts":
+/*!***************************************************************************************!*\
+  !*** ./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.ts ***!
+  \***************************************************************************************/
+/*! exports provided: BillYearAdminComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BillYearAdminComponent", function() { return BillYearAdminComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _shared_meter_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../shared/meter.service */ "./src/app/shared/meter.service.ts");
+/* harmony import */ var _shared_user_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../shared/user.service */ "./src/app/shared/user.service.ts");
+/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! chart.js */ "./node_modules/chart.js/src/chart.js");
+/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(chart_js__WEBPACK_IMPORTED_MODULE_4__);
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+var BillYearAdminComponent = /** @class */ (function () {
+    function BillYearAdminComponent(meterService, userService, dialogMeter) {
+        this.meterService = meterService;
+        this.userService = userService;
+        this.dialogMeter = dialogMeter;
+        this.LineChart = [];
+        this.Yearselected = '2018';
+        this.show = false;
+        this.displayedColumns = ['room', 'username', 'actions']; //, 'shortCircuit'
+    }
+    BillYearAdminComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.meterService.showAllMeter().subscribe(function (data) {
+            if (!data) {
+                return;
+            }
+            console.log(data);
+            _this.dataSource = new _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatTableDataSource"](data);
+            _this.dataSource.sort = _this.sort;
+            _this.dataSource.paginator = _this.paginator;
+        });
+    };
+    BillYearAdminComponent.prototype.onSearchClear = function () {
+        this.searchKey = "";
+        this.applyFilter();
+    };
+    BillYearAdminComponent.prototype.applyFilter = function () {
+        this.dataSource.filter = this.searchKey.trim().toLocaleLowerCase();
+    };
+    BillYearAdminComponent.prototype.openDialog = function (element, room) {
+        var _this = this;
+        this.room = room;
+        this.meterService.showBillUserReportYear(element, 'December', this.Yearselected).subscribe(function (res) {
+            _this.Data = res;
+            console.log(res);
+            for (var i = 0; i < 12; i++) {
+                _this.con(i);
+                _this.conE(i);
+            }
+            _this.LineChart = new chart_js__WEBPACK_IMPORTED_MODULE_4__["Chart"]("mychart", {
+                type: 'line',
+                data: {
+                    labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+                    datasets: [{
+                            data: [_this.Data[0].bill, _this.Data[1].bill, _this.Data[2].bill, _this.Data[3].bill, _this.Data[4].bill, _this.Data[5].bill, _this.Data[6].bill, _this.Data[7].bill, _this.Data[8].bill, _this.Data[9].bill, _this.Data[10].bill, _this.Data[11].bill],
+                            borderColor: "#e8c3b9",
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'ค่าไฟประจำปี พ.ศ.' + _this.conYearTh(_this.Yearselected)
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.yLabel;
+                            }
+                        }
+                    },
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+        }, function (err) {
+            console.log(err);
+        });
+        this.meterService.showBillUserReportYearTH(element, 'December', this.Yearselected).subscribe(function (res) {
+            console.log(res);
+            _this.DataTH = res;
+            for (var i = 0; i < 12; i++) {
+                _this.ccon(i);
+                _this.cconE(i);
+            }
+        }, function (err) {
+            console.log(err);
+        });
+    };
+    BillYearAdminComponent.prototype.con = function (index) {
+        if (this.Data[index].startFullTime.date != 'ไม่มีการบันทึก') {
+            var time = this.Data[index].startFullTime.date.split(",", 5);
+            var day = this.conDayTH(time[0]);
+            var daynum = time[1];
+            var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+            var year = this.conYearTh(time[3].split(" ", 2)[1]);
+            var times = time[4];
+            var data = times + daynum + " " + Month + " " + year;
+            this.Data[index].startFullTime.date = data;
+        }
+    };
+    BillYearAdminComponent.prototype.conE = function (index) {
+        if (this.Data[index].lastFullTime.date != 'ไม่มีการบันทึก') {
+            var time = this.Data[index].lastFullTime.date.split(",", 5);
+            var day = this.conDayTH(time[0]);
+            var daynum = time[1];
+            var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+            var year = this.conYearTh(time[3].split(" ", 2)[1]);
+            var times = time[4];
+            var data = times + daynum + " " + Month + " " + year;
+            this.Data[index].lastFullTime.date = data;
+        }
+    };
+    BillYearAdminComponent.prototype.ccon = function (index) {
+        if (this.DataTH[index].เวลาที่เริ่มบันทึกหน่วยไฟ != 'ไม่มีการบันทึก') {
+            var time = this.DataTH[index].เวลาที่เริ่มบันทึกหน่วยไฟ.split(",", 5);
+            var day = this.conDayTH(time[0]);
+            var daynum = time[1];
+            var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+            var year = this.conYearTh(time[3].split(" ", 2)[1]);
+            var times = time[4];
+            var data = times + daynum + " " + Month + " " + year;
+            this.DataTH[index].เวลาที่เริ่มบันทึกหน่วยไฟ = data;
+        }
+    };
+    BillYearAdminComponent.prototype.cconE = function (index) {
+        if (this.DataTH[index].เวลาสิ้นสุดที่ทึกหน่วยไฟ != 'ไม่มีการบันทึก') {
+            var time = this.DataTH[index].เวลาสิ้นสุดที่ทึกหน่วยไฟ.split(",", 5);
+            var day = this.conDayTH(time[0]);
+            var daynum = time[1];
+            var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+            var year = this.conYearTh(time[3].split(" ", 2)[1]);
+            var times = time[4];
+            var data = times + daynum + " " + Month + " " + year;
+            this.DataTH[index].เวลาสิ้นสุดที่ทึกหน่วยไฟ = data;
+        }
+    };
+    BillYearAdminComponent.prototype.conYearTh = function (selectedyear) {
+        return parseInt(selectedyear) + 543;
+    };
+    BillYearAdminComponent.prototype.conMonthTh = function (selectedMonth) {
+        var selectedMonthTH;
+        if (selectedMonth == 'January') {
+            selectedMonthTH = 'มกราคม';
+        }
+        else if (selectedMonth == 'February') {
+            selectedMonthTH = 'กุมภาพันธ์';
+        }
+        else if (selectedMonth == 'March') {
+            selectedMonthTH = 'มีนาคม';
+        }
+        else if (selectedMonth == 'April') {
+            selectedMonthTH = 'เมษายน';
+        }
+        else if (selectedMonth == 'May') {
+            selectedMonthTH = 'พฤษภาคม';
+        }
+        else if (selectedMonth == 'June') {
+            selectedMonthTH = 'มิถุนายน';
+        }
+        else if (selectedMonth == 'July') {
+            selectedMonthTH = 'กรกฎาคม';
+        }
+        else if (selectedMonth == 'August') {
+            selectedMonthTH = 'สิงหาคม';
+        }
+        else if (selectedMonth == 'September') {
+            selectedMonthTH = 'กันยายน';
+        }
+        else if (selectedMonth == 'October') {
+            selectedMonthTH = 'ตุลาคม';
+        }
+        else if (selectedMonth == 'November') {
+            selectedMonthTH = 'พฤศจิกายน';
+        }
+        else if (selectedMonth == 'December') {
+            selectedMonthTH = 'ธันวาคม';
+        }
+        return selectedMonthTH;
+    };
+    BillYearAdminComponent.prototype.conDayTH = function (data) {
+        var dayTH;
+        if (data == 'Sunday') {
+            dayTH = 'อาทิตย์';
+        }
+        else if (data == 'Monday') {
+            dayTH = 'จันทร์';
+        }
+        else if (data == 'Tuesday') {
+            dayTH = 'อังคาร';
+        }
+        else if (data == 'Wednesday') {
+            dayTH = 'พุธ';
+        }
+        else if (data == 'Thursday') {
+            dayTH = 'พฤหัสบดี';
+        }
+        else if (data == 'Friday') {
+            dayTH = 'ศุกร์';
+        }
+        else if (data == 'Saturday') {
+            dayTH = 'เสาร์';
+        }
+        else {
+            dayTH = 'ไม่มีการบันทึกค่า';
+        }
+        return dayTH;
+    };
+    BillYearAdminComponent.prototype.exportAsXLSX = function () {
+        // var monthTH = this.conMonthTh(this.data.month)
+        var yearTH = this.conYearTh(this.Yearselected);
+        this.userService.exportAsExcelFile(this.DataTH, "ค่าไฟห้อง" + this.room + "ประจำปี" + yearTH);
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])(_angular_material__WEBPACK_IMPORTED_MODULE_1__["MatSort"]),
+        __metadata("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatSort"])
+    ], BillYearAdminComponent.prototype, "sort", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])(_angular_material__WEBPACK_IMPORTED_MODULE_1__["MatPaginator"]),
+        __metadata("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatPaginator"])
+    ], BillYearAdminComponent.prototype, "paginator", void 0);
+    BillYearAdminComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-bill-year-admin',
+            template: __webpack_require__(/*! ./bill-year-admin.component.html */ "./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.html"),
+            styles: [__webpack_require__(/*! ./bill-year-admin.component.css */ "./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.css")]
+        }),
+        __metadata("design:paramtypes", [_shared_meter_service__WEBPACK_IMPORTED_MODULE_2__["MeterService"],
+            _shared_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatDialog"]])
+    ], BillYearAdminComponent);
+    return BillYearAdminComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/admin/material-component/electric-bill/electric-bill.component.css":
 /*!************************************************************************************!*\
   !*** ./src/app/admin/material-component/electric-bill/electric-bill.component.css ***!
@@ -18,7 +300,7 @@ module.exports = ".wrapper-center {\r\n    text-align: center;\r\n}\r\n\r\n.butt
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-card>\r\n    <mat-card-content>\r\n        <mat-tab-group>\r\n            <!-- <mat-tab label=\"ค่าไฟเดือนนี้\">\r\n                <mat-card-content>\r\n                    <div class=\"search-div\">\r\n                        <mat-form-field class=\"search-form-field\" floatLabel=\"never\">\r\n                            <input matInput [(ngModel)]=\"searchKey\" placeholder=\"ค้นหาห้อง\" autocomplete=\"off\" (keyup)=\"applyFilter()\">\r\n                            <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" *ngIf=\"searchKey\" (click)=\"onSearchClear()\">\r\n                                <mat-icon>close</mat-icon>\r\n                            </button>\r\n                        </mat-form-field><button mat-button matSuffix mat-icon-button (click)=\"ngOnInit()\">\r\n                            <mat-icon>refresh</mat-icon>\r\n                        </button>\r\n                    </div>\r\n                    <div class=\"mat-elevation-z8\">\r\n                        <mat-table [dataSource]=\"dataSource\" matSort>\r\n                            <ng-container matColumnDef=\"room\">\r\n                                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อห้อง</mat-header-cell>\r\n                                <mat-cell *matCellDef=\"let element\">{{element.room}}</mat-cell>\r\n                            </ng-container>\r\n                            <ng-container matColumnDef=\"start\" sticky>\r\n                                <mat-header-cell *matHeaderCellDef mat-sort-header>ค่าพลังงานไฟฟ้าเริ่มต้น</mat-header-cell>\r\n                                <mat-cell *matCellDef=\"let element\">{{element.start}}</mat-cell>\r\n                            </ng-container>\r\n                            <ng-container matColumnDef=\"actions\">\r\n                                <mat-header-cell *matHeaderCellDef mat-sort-header>ค่าพลังงานไฟฟ้าสิ้นสุด</mat-header-cell>\r\n                                <mat-cell *matCellDef=\"let element\">\r\n                                    {{element.end}}\r\n                                </mat-cell>\r\n                            </ng-container>\r\n                            <ng-container matColumnDef=\"bill\">\r\n                                <mat-header-cell *matHeaderCellDef>ค่าไฟ (บาท)</mat-header-cell>\r\n                                <mat-cell *matCellDef=\"let element\">{{(element.end-element.start)*7 |number:'1.0-0'}}</mat-cell>\r\n                            </ng-container>\r\n                            <ng-container matColumnDef=\"noData\">\r\n                                <mat-footer-cell *matFooterCellDef colspan=\"6\">\r\n                                    No data.\r\n                                </mat-footer-cell>\r\n                            </ng-container>\r\n                            <ng-container matColumnDef=\"loading\">\r\n                                <mat-footer-cell *matFooterCellDef colspan=\"6\">\r\n                                    Loading data...\r\n                                </mat-footer-cell>\r\n                            </ng-container>\r\n                            <mat-header-row *matHeaderRowDef=\"displayedColumns\"></mat-header-row>\r\n                            <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\r\n                            <mat-footer-row *matFooterRowDef=\"['noData']\" [ngClass]=\"{'hide':!(dataSource!=null && dataSource.data.length==0)}\"></mat-footer-row>\r\n                            <mat-footer-row *matFooterRowDef=\"['loading']\" [ngClass]=\"{'hide':dataSource!=null}\"></mat-footer-row>\r\n                        </mat-table>\r\n                        <mat-paginator [pageSizeOptions]=\"[10, 20, 50, 100]\" [pageSize]=\"10\" showFirstLastButtons></mat-paginator>\r\n                    </div>\r\n                </mat-card-content>\r\n            </mat-tab> -->\r\n            <mat-tab label=\"รายงานค่าไฟ\">\r\n                <br>\r\n                <form>\r\n                    <mat-form-field>\r\n                        <mat-select placeholder=\"กรุณาเลือกเดือน\" [(ngModel)]=\"selectedMonth\" name=\"month\"\r\n                            [formControl]=\"monthForm\" required>\r\n                            <mat-option *ngFor=\"let month of months\" [value]=\"month.month\">\r\n                                {{month.month}}\r\n                            </mat-option>\r\n                        </mat-select>\r\n                        <mat-error *ngIf=\"monthForm.hasError('required')\">กรุณาเลือกเดือน</mat-error>\r\n                    </mat-form-field>\r\n                    <mat-form-field>\r\n                        <mat-select placeholder=\"กรุณาเลือกปี (ค.ศ.)\" [(ngModel)]=\"selectedYear\" name=\"year\"\r\n                            [formControl]=\"yearForm\" required>\r\n                            <mat-option *ngFor=\"let year of years\" [value]=\"year.year\">\r\n                                {{year.year}}\r\n                            </mat-option>\r\n                        </mat-select>\r\n                        <mat-error *ngIf=\"yearForm.hasError('required')\">กรุณาเลือกปี (ค.ศ.)</mat-error>\r\n                    </mat-form-field>\r\n                    <p> เวลาที่เลือก : {{selectedMonth}} {{selectedYear}} </p>\r\n                </form>\r\n                <div class=\"wrapper-center\">\r\n                    <button mat-raised-button color=\"accent\" class=\"button\" (click)=\"openDialog()\">\r\n                        <mat-icon>search</mat-icon> ค้นหา\r\n                    </button>\r\n                </div>\r\n            </mat-tab>\r\n        </mat-tab-group>\r\n    </mat-card-content>\r\n</mat-card>"
+module.exports = "<mat-card>\r\n    <mat-card-content>\r\n        <mat-tab-group>\r\n            <!-- <mat-tab label=\"ค่าไฟเดือนนี้\">\r\n                <mat-card-content>\r\n                    <div class=\"search-div\">\r\n                        <mat-form-field class=\"search-form-field\" floatLabel=\"never\">\r\n                            <input matInput [(ngModel)]=\"searchKey\" placeholder=\"ค้นหาห้อง\" autocomplete=\"off\" (keyup)=\"applyFilter()\">\r\n                            <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" *ngIf=\"searchKey\" (click)=\"onSearchClear()\">\r\n                                <mat-icon>close</mat-icon>\r\n                            </button>\r\n                        </mat-form-field><button mat-button matSuffix mat-icon-button (click)=\"ngOnInit()\">\r\n                            <mat-icon>refresh</mat-icon>\r\n                        </button>\r\n                    </div>\r\n                    <div class=\"mat-elevation-z8\">\r\n                        <mat-table [dataSource]=\"dataSource\" matSort>\r\n                            <ng-container matColumnDef=\"room\">\r\n                                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อห้อง</mat-header-cell>\r\n                                <mat-cell *matCellDef=\"let element\">{{element.room}}</mat-cell>\r\n                            </ng-container>\r\n                            <ng-container matColumnDef=\"start\" sticky>\r\n                                <mat-header-cell *matHeaderCellDef mat-sort-header>ค่าพลังงานไฟฟ้าเริ่มต้น</mat-header-cell>\r\n                                <mat-cell *matCellDef=\"let element\">{{element.start}}</mat-cell>\r\n                            </ng-container>\r\n                            <ng-container matColumnDef=\"actions\">\r\n                                <mat-header-cell *matHeaderCellDef mat-sort-header>ค่าพลังงานไฟฟ้าสิ้นสุด</mat-header-cell>\r\n                                <mat-cell *matCellDef=\"let element\">\r\n                                    {{element.end}}\r\n                                </mat-cell>\r\n                            </ng-container>\r\n                            <ng-container matColumnDef=\"bill\">\r\n                                <mat-header-cell *matHeaderCellDef>ค่าไฟ (บาท)</mat-header-cell>\r\n                                <mat-cell *matCellDef=\"let element\">{{(element.end-element.start)*7 |number:'1.0-0'}}</mat-cell>\r\n                            </ng-container>\r\n                            <ng-container matColumnDef=\"noData\">\r\n                                <mat-footer-cell *matFooterCellDef colspan=\"6\">\r\n                                    No data.\r\n                                </mat-footer-cell>\r\n                            </ng-container>\r\n                            <ng-container matColumnDef=\"loading\">\r\n                                <mat-footer-cell *matFooterCellDef colspan=\"6\">\r\n                                    Loading data...\r\n                                </mat-footer-cell>\r\n                            </ng-container>\r\n                            <mat-header-row *matHeaderRowDef=\"displayedColumns\"></mat-header-row>\r\n                            <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\r\n                            <mat-footer-row *matFooterRowDef=\"['noData']\" [ngClass]=\"{'hide':!(dataSource!=null && dataSource.data.length==0)}\"></mat-footer-row>\r\n                            <mat-footer-row *matFooterRowDef=\"['loading']\" [ngClass]=\"{'hide':dataSource!=null}\"></mat-footer-row>\r\n                        </mat-table>\r\n                        <mat-paginator [pageSizeOptions]=\"[10, 20, 50, 100]\" [pageSize]=\"10\" showFirstLastButtons></mat-paginator>\r\n                    </div>\r\n                </mat-card-content>\r\n            </mat-tab> -->\r\n            <mat-tab label=\"รายงานค่าไฟ\">\r\n                <br>\r\n                <h3 style=\"text-align: center;\">กรุณาเลือกเวลาที่ต้องการค้นหาค่าไฟ</h3>\r\n                <br>\r\n                <form>\r\n                    <mat-form-field>\r\n                        <mat-select placeholder=\"กรุณาเลือกเดือน\" [(ngModel)]=\"selectedMonth\" name=\"month\"\r\n                            [formControl]=\"monthForm\" required>\r\n                            <mat-option *ngFor=\"let month of months\" [value]=\"month.month\">\r\n                                {{month.m}}\r\n                            </mat-option>\r\n                        </mat-select>\r\n                        <mat-error *ngIf=\"monthForm.hasError('required')\">กรุณาเลือกเดือน</mat-error>\r\n                    </mat-form-field>\r\n                    <mat-form-field>\r\n                        <mat-select placeholder=\"กรุณาเลือกปี (พ.ศ.)\" [(ngModel)]=\"selectedYear\" name=\"year\"\r\n                            [formControl]=\"yearForm\" required>\r\n                            <mat-option *ngFor=\"let year of years\" [value]=\"year.year\">\r\n                                {{year.y}}\r\n                            </mat-option>\r\n                        </mat-select>\r\n                        <mat-error *ngIf=\"yearForm.hasError('required')\">กรุณาเลือกปี (พ.ศ.)</mat-error>\r\n                    </mat-form-field>\r\n                    <!-- <p> เวลาที่เลือก :{{selectedMonth.m}} {{selectedYear.y}} </p> -->\r\n                </form>\r\n                <div class=\"wrapper-center\">\r\n                    <button mat-raised-button color=\"accent\" class=\"button\" (click)=\"openDialog()\">\r\n                        <mat-icon>search</mat-icon> ค้นหา\r\n                    </button>\r\n                </div>\r\n            </mat-tab>\r\n        </mat-tab-group>\r\n    </mat-card-content>\r\n</mat-card>"
 
 /***/ }),
 
@@ -63,12 +345,12 @@ var ElectricBillComponent = /** @class */ (function () {
         this.monthForm = new _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormControl"]('', [_angular_forms__WEBPACK_IMPORTED_MODULE_4__["Validators"].required]);
         this.yearForm = new _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormControl"]('', [_angular_forms__WEBPACK_IMPORTED_MODULE_4__["Validators"].required]);
         this.months = [
-            { month: 'January' }, { month: 'February' }, { month: 'March' }, { month: 'April' },
-            { month: 'May' }, { month: 'June' }, { month: 'July' }, { month: 'August' },
-            { month: 'September' }, { month: 'October' }, { month: 'November' }, { month: 'December' },
+            { month: 'January', m: 'มกราคม' }, { month: 'February', m: 'กุมภาพันธ์' }, { month: 'March', m: 'มีนาคม' }, { month: 'April', m: 'เมษายน' },
+            { month: 'May', m: 'พฤษภาคม' }, { month: 'June', m: 'มิถุนายน' }, { month: 'July', m: 'กรกฎาคม' }, { month: 'August', m: 'สิงหาคม' },
+            { month: 'September', m: 'กันยายน' }, { month: 'October', m: 'ตุลาคม' }, { month: 'November', m: 'พฤศจิกายน' }, { month: 'December', m: 'ธันวาคม' },
         ];
         this.years = [
-            { year: '2018' }
+            { year: '2018', y: '2561' }
         ];
         this.displayedColumns = ['room', 'start', 'actions', 'bill']; //, 'shortCircuit'
     }
@@ -78,9 +360,7 @@ var ElectricBillComponent = /** @class */ (function () {
             if (!data) {
                 return;
             }
-            console.log(data);
             _this.data = data;
-            console.log(_this.data);
             _this.dataSource = new _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatTableDataSource"](data);
             _this.dataSource.sort = _this.sort;
             _this.dataSource.paginator = _this.paginator;
@@ -150,6 +430,7 @@ var ReportData = /** @class */ (function () {
         this.Data = [{}];
         this.displayedColumns = ['room', 'start', 'actions', 'bill'];
     }
+    //
     ReportData.prototype.ngOnInit = function () {
         var _this = this;
         this.meterService.report(this.data.month, this.data.year).subscribe(function (data) {
@@ -158,15 +439,117 @@ var ReportData = /** @class */ (function () {
             }
             _this.dataSource = data;
             _this.Data = data;
-            console.log(data);
-            _this.dataSource = new _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatTableDataSource"](data);
+            _this.dataSource = new _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatTableDataSource"](_this.dataSource);
             _this.dataSource.sort = _this.sort;
             _this.dataSource.paginator = _this.paginator;
-            console.log(_this.data);
+        });
+        this.meterService.reportTH(this.data.month, this.data.year).subscribe(function (data) {
+            if (!data) {
+                return;
+            }
+            _this.dataTH = data;
+            for (var i = 0; i < data.length; i++) {
+                _this.conTime(i);
+            }
         });
     };
+    ReportData.prototype.conTime = function (index) {
+        if (this.dataTH[index].เวลาที่เริ่มบันทึก == 'ไม่มีการบันทึกค่าไฟ') {
+        }
+        else {
+            var time = this.dataTH[index].เวลาที่เริ่มบันทึก.split(",", 5);
+            var day = this.conDayTH(time[0]);
+            var daynum = time[1];
+            var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+            var year = this.conYearTh(time[3].split(" ", 2)[1]);
+            var times = time[4];
+            var data = times + daynum + " " + Month + " " + year;
+            this.dataTH[index].เวลาที่เริ่มบันทึก = data;
+            var etime = this.dataTH[index].เวลาสิ้นสุด.split(",", 5);
+            var eday = this.conDayTH(etime[0]);
+            var edaynum = etime[1];
+            var eMonth = this.conMonthTh(etime[2].split(" ", 2)[1]);
+            var eyear = this.conYearTh(etime[3].split(" ", 2)[1]);
+            var etimes = etime[4];
+            var edata = etimes + edaynum + " " + eMonth + " " + eyear;
+            this.dataTH[index].เวลาสิ้นสุด = edata;
+        }
+    };
+    ReportData.prototype.conYearTh = function (selectedyear) {
+        return parseInt(selectedyear) + 543;
+    };
+    ReportData.prototype.conMonthTh = function (selectedMonth) {
+        var selectedMonthTH;
+        if (selectedMonth == 'January') {
+            selectedMonthTH = 'มกราคม';
+        }
+        else if (selectedMonth == 'February') {
+            selectedMonthTH = 'กุมภาพันธ์';
+        }
+        else if (selectedMonth == 'March') {
+            selectedMonthTH = 'มีนาคม';
+        }
+        else if (selectedMonth == 'April') {
+            selectedMonthTH = 'เมษายน';
+        }
+        else if (selectedMonth == 'May') {
+            selectedMonthTH = 'พฤษภาคม';
+        }
+        else if (selectedMonth == 'June') {
+            selectedMonthTH = 'มิถุนายน';
+        }
+        else if (selectedMonth == 'July') {
+            selectedMonthTH = 'กรกฎาคม';
+        }
+        else if (selectedMonth == 'August') {
+            selectedMonthTH = 'สิงหาคม';
+        }
+        else if (selectedMonth == 'September') {
+            selectedMonthTH = 'กันยายน';
+        }
+        else if (selectedMonth == 'October') {
+            selectedMonthTH = 'ตุลาคม';
+        }
+        else if (selectedMonth == 'November') {
+            selectedMonthTH = 'พฤศจิกายน';
+        }
+        else if (selectedMonth == 'December') {
+            selectedMonthTH = 'ธันวาคม';
+        }
+        return selectedMonthTH;
+    };
+    ReportData.prototype.conDayTH = function (data) {
+        var dayTH;
+        if (data == 'Sunday') {
+            dayTH = 'อาทิตย์';
+        }
+        else if (data == 'Monday') {
+            dayTH = 'จันทร์';
+        }
+        else if (data == 'Tuesday') {
+            dayTH = 'อังคาร';
+        }
+        else if (data == 'Wednesday') {
+            dayTH = 'พุธ';
+        }
+        else if (data == 'Thursday') {
+            dayTH = 'พฤหัสบดี';
+        }
+        else if (data == 'Friday') {
+            dayTH = 'ศุกร์';
+        }
+        else if (data == 'Saturday') {
+            dayTH = 'เสาร์';
+        }
+        else {
+            dayTH = 'ไม่มีการบันทึกค่า';
+        }
+        return dayTH;
+    };
     ReportData.prototype.exportAsXLSX = function () {
-        this.userService.exportAsExcelFile(this.Data, this.data.month + this.data.year + "Bill");
+        var monthTH = this.conMonthTh(this.data.month);
+        var yearTH = this.conYearTh(this.data.year);
+        this.userService.exportAsExcelFile(this.dataTH, "ค่าไฟ" + monthTH + yearTH);
     };
     ReportData.prototype.onSearchClearReport = function () {
         this.searchKeyReport = "";
@@ -262,7 +645,7 @@ var FilterPipe = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"search-div\">\r\n    <mat-form-field class=\"search-form-field\" floatLabel=\"never\">\r\n        <input matInput [(ngModel)]=\"searchKeyReport\" placeholder=\"ค้นหาค่าไฟ\" autocomplete=\"off\" (keyup)=\"applyFilterReport()\">\r\n        <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" *ngIf=\"searchKeyReport\" (click)=\"onSearchClearReport()\">\r\n            <mat-icon>close</mat-icon>\r\n        </button>\r\n    </mat-form-field>\r\n\r\n</div>\r\n<mat-dialog-content class=\"mat-typography\">\r\n<div class=\"mat-elevation-z8 size\">\r\n    <mat-table [dataSource]=\"dataSource\" matSort>\r\n        <ng-container matColumnDef=\"room\">\r\n            <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อห้อง</mat-header-cell>\r\n            <mat-cell *matCellDef=\"let element\">{{element.Room}}</mat-cell>\r\n        </ng-container>\r\n        <ng-container matColumnDef=\"start\" sticky>\r\n            <mat-header-cell *matHeaderCellDef mat-sort-header>ค่าพลังงานไฟฟ้าเรื่มต้น</mat-header-cell>\r\n            <mat-cell *matCellDef=\"let element\">{{element.startActiveEnergy}}</mat-cell>\r\n        </ng-container>\r\n        <ng-container matColumnDef=\"actions\">\r\n            <mat-header-cell *matHeaderCellDef mat-sort-header>ค่าพลังงานไฟฟ้าสิ้นสุด</mat-header-cell>\r\n            <mat-cell *matCellDef=\"let element\">\r\n                {{element.endActiveEnergy}}\r\n            </mat-cell>\r\n        </ng-container>\r\n        <ng-container matColumnDef=\"bill\">\r\n            <mat-header-cell *matHeaderCellDef>ค่าไฟ (บาท)</mat-header-cell>\r\n            <mat-cell *matCellDef=\"let element\">{{element.Bill}}</mat-cell>\r\n        </ng-container>\r\n        <ng-container matColumnDef=\"noData\">\r\n            <mat-footer-cell *matFooterCellDef colspan=\"6\">\r\n               ไม่มีข้อมูล\r\n            </mat-footer-cell>\r\n        </ng-container>\r\n        <ng-container matColumnDef=\"loading\">\r\n            <mat-footer-cell *matFooterCellDef colspan=\"6\">\r\n                กำลังดาวน์โหลดข้อมูล\r\n            </mat-footer-cell>\r\n        </ng-container>\r\n        <mat-header-row *matHeaderRowDef=\"displayedColumns\"></mat-header-row>\r\n        <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\r\n        <mat-footer-row *matFooterRowDef=\"['noData']\" [ngClass]=\"{'hide':!(dataSource!=null && dataSource.data.length==0)}\"></mat-footer-row>\r\n        <mat-footer-row *matFooterRowDef=\"['loading']\" [ngClass]=\"{'hide':dataSource!=null}\"></mat-footer-row>\r\n    </mat-table>\r\n    <mat-paginator [pageSizeOptions]=\"[10, 20, 50, 100]\" [pageSize]=\"10\" showFirstLastButtons></mat-paginator>\r\n</div>\r\n</mat-dialog-content>\r\n<br>\r\n<div class=\"wrapper-center button-row\">\r\n    <button mat-raised-button color=\"primary\" (click)=\"exportAsXLSX()\"><mat-icon>cloud_download</mat-icon> ดาวโหลด (.xlsx)</button> \r\n    <button mat-raised-button color=\"warn\" (click)=\"onClear()\"><mat-icon>clear</mat-icon>ปิด</button>\r\n  </div>"
+module.exports = "<div class=\"search-div\">\r\n    <mat-form-field class=\"search-form-field\" floatLabel=\"never\">\r\n        <input matInput [(ngModel)]=\"searchKeyReport\" placeholder=\"ค้นหาค่าไฟ\" autocomplete=\"off\" (keyup)=\"applyFilterReport()\">\r\n        <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" *ngIf=\"searchKeyReport\" (click)=\"onSearchClearReport()\">\r\n            <mat-icon>close</mat-icon>\r\n        </button>\r\n    </mat-form-field>\r\n\r\n</div>\r\n<mat-dialog-content class=\"mat-typography\">\r\n    <div class=\"mat-elevation-z8 size\">\r\n        <mat-table [dataSource]=\"dataSource\" matSort>\r\n            <ng-container matColumnDef=\"room\">\r\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อห้อง</mat-header-cell>\r\n                <mat-cell *matCellDef=\"let element\">{{element.Room}}</mat-cell>\r\n            </ng-container>\r\n            <ng-container matColumnDef=\"start\" sticky>\r\n                <mat-header-cell *matHeaderCellDef mat-sort-header>หน่วยไฟที่เริ่มบันทึก</mat-header-cell>\r\n                <mat-cell *matCellDef=\"let element\">{{element.startActiveEnergy}}</mat-cell>\r\n            </ng-container>\r\n            <ng-container matColumnDef=\"actions\">\r\n                <mat-header-cell *matHeaderCellDef mat-sort-header>หน่วยไฟสิ้นสุดสิ้นสุด</mat-header-cell>\r\n                <mat-cell *matCellDef=\"let element\">\r\n                    {{element.endActiveEnergy}}\r\n                </mat-cell>\r\n            </ng-container>\r\n            <ng-container matColumnDef=\"bill\">\r\n                <mat-header-cell *matHeaderCellDef>ค่าไฟ (บาท)</mat-header-cell>\r\n                <mat-cell *matCellDef=\"let element\">{{element.Bill}}</mat-cell>\r\n            </ng-container>\r\n            <ng-container matColumnDef=\"noData\">\r\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\r\n                    ไม่มีข้อมูล\r\n                </mat-footer-cell>\r\n            </ng-container>\r\n            <ng-container matColumnDef=\"loading\">\r\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\r\n                    กำลังดาวน์โหลดข้อมูล\r\n                </mat-footer-cell>\r\n            </ng-container>\r\n            <mat-header-row *matHeaderRowDef=\"displayedColumns\"></mat-header-row>\r\n            <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\r\n            <mat-footer-row *matFooterRowDef=\"['noData']\" [ngClass]=\"{'hide':!(dataSource!=null && dataSource.data.length==0)}\"></mat-footer-row>\r\n            <mat-footer-row *matFooterRowDef=\"['loading']\" [ngClass]=\"{'hide':dataSource!=null}\"></mat-footer-row>\r\n        </mat-table>\r\n        <mat-paginator [pageSizeOptions]=\"[10, 20, 50, 100]\" [pageSize]=\"10\" showFirstLastButtons></mat-paginator>\r\n    </div>\r\n</mat-dialog-content>\r\n<br>\r\n<div class=\"wrapper-center button-row\">\r\n    <button mat-raised-button color=\"primary\" (click)=\"exportAsXLSX()\">\r\n        <mat-icon>cloud_download</mat-icon> ดาวโหลด (.xlsx)\r\n    </button>\r\n    <button mat-raised-button color=\"warn\" (click)=\"onClear()\">\r\n        <mat-icon>clear</mat-icon>ปิด\r\n    </button>\r\n</div>"
 
 /***/ }),
 
@@ -284,7 +667,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-card-content>\n  <div>\n    <!-- <img src=\"/assets/img/users.png\" id=\"icon\" alt=\"User Icon\" /> -->\n  </div>\n  <form #signUpForm=\"ngForm\" (ngSubmit)=\"signUpForm.valid && onSubmit(signUpForm)\">\n    <mat-form-field>\n      <input matInput type=\"text\" #Maddr=\"ngModel\" [(ngModel)]=\"meterService.selectedUser.Maddr\" name=\"Maddr\"\n        placeholder=\"ชื่อมิเตอร์ไฟฟ้า (Mac Address)\" required [ngClass]=\"{'invalid-textbox' :signUpForm.submitted && !Maddr.valid }\">\n    </mat-form-field>\n    <div *ngIf=\"signUpForm.submitted && !Maddr.valid\">\n      <label class=\"validation-message\" style=\"color: red\">กรุณากรอกชื่อมิเตอร์ไฟฟ้า</label>\n    </div>\n    <mat-form-field>\n      <input matInput type=\"text\" #room=\"ngModel\" [(ngModel)]=\"meterService.selectedUser.room\" name=\"room\" placeholder=\"ชื่อห้อง\"\n        required [ngClass]=\"{'invalid-textbox' :signUpForm.submitted && !room.valid }\">\n    </mat-form-field>\n    <div *ngIf=\"signUpForm.submitted && !room.valid\">\n      <label class=\"validation-message\" style=\"color: red\">กรุณากรอกชื่อห้อง</label>\n    </div>\n    <div style=\"width:135px; margin-right:auto; margin-left:auto;\">\n        <input class=\"btn btn-success\" type=\"submit\" value=\"เพิ่มมิเตอร์ไฟฟ้า\" (click)='ngOnInit()'>\n    </div>\n  </form>\n  <br>\n  <!-- Success message -->\n  <div class=\"success\" *ngIf=\"showSucessMessage\" class=\"success\">\n    เพิ่มมิเตอร์ไฟฟ้าสำเร็จ\n  </div>\n\n  <!-- Error message -->\n  <div class=\"alert\" *ngIf=\"serverErrorMessages\" class=\"warn\">\n    {{serverErrorMessages}}\n\n  </div>\n</mat-card-content>"
+module.exports = "<mat-card-content>\n  <div>\n    <!-- <img src=\"/assets/img/users.png\" id=\"icon\" alt=\"User Icon\" /> -->\n  </div>\n  <form #signUpForm=\"ngForm\" (ngSubmit)=\"signUpForm.valid && onSubmit(signUpForm)\">\n    <mat-form-field>\n      <input autofocus id=\"myTextField\" matInput type=\"text\" #Maddr=\"ngModel\" [(ngModel)]=\"meterService.selectedUser.Maddr\" name=\"Maddr\"\n        placeholder=\"ชื่อมิเตอร์ไฟฟ้า (Mac Address)\" required [ngClass]=\"{'invalid-textbox' :signUpForm.submitted && !Maddr.valid }\">\n    </mat-form-field>\n    <div *ngIf=\"signUpForm.submitted && !Maddr.valid\">\n      <label  class=\"validation-message\" style=\"color: red\">กรุณากรอกชื่อมิเตอร์ไฟฟ้า</label>\n    </div>\n    <mat-form-field>\n      <input matInput type=\"text\" #room=\"ngModel\" [(ngModel)]=\"meterService.selectedUser.room\" name=\"room\" placeholder=\"ชื่อห้อง\"\n        required [ngClass]=\"{'invalid-textbox' :signUpForm.submitted && !room.valid }\">\n    </mat-form-field>\n    <div *ngIf=\"signUpForm.submitted && !room.valid\">\n      <label class=\"validation-message\" style=\"color: red\">กรุณากรอกชื่อห้อง</label>\n    </div>\n    <div style=\"width:135px; margin-right:auto; margin-left:auto;\">\n        <input class=\"btn btn-success\" type=\"submit\" value=\"เพิ่มมิเตอร์ไฟฟ้า\" (click)='focusMethod()'>\n    </div>\n  </form>\n  <br>\n  <!-- Success message -->\n  <div class=\"success\" *ngIf=\"showSucessMessage\" class=\"success\">\n    เพิ่มมิเตอร์ไฟฟ้าสำเร็จ\n  </div>\n\n  <!-- Error message -->\n  <div class=\"alert\" *ngIf=\"serverErrorMessages\" class=\"warn\">\n    {{serverErrorMessages}}\n  </div>\n</mat-card-content>"
 
 /***/ }),
 
@@ -322,6 +705,14 @@ var AdComponent = /** @class */ (function () {
         this.manageMeterComponent = manageMeterComponent;
     }
     AdComponent.prototype.ngOnInit = function () {
+        this.focusMethod = function getFocus() {
+            document.getElementById("myTextField").focus();
+        };
+    };
+    AdComponent.prototype.focusMethod = function () {
+        this.focusMethod = function getFocus() {
+            document.getElementById("myTextField").focus();
+        };
     };
     AdComponent.prototype.onSubmit = function (form) {
         var _this = this;
@@ -393,7 +784,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-card>\n  <mat-card-content>\n    <mat-tab-group>\n      <mat-tab label=\"ลบและแก้ไขมิเตอร์\" (click)=\"onLoad()\">\n        <mat-card-content>\n          <div class=\"search-div\">\n            <mat-form-field class=\"search-form-field\" floatLabel=\"never\">\n              <input matInput [(ngModel)]=\"searchKey\" placeholder=\"ค้นหามิเตอร์ไฟฟ้า\" autocomplete=\"off\" (keyup)=\"applyFilter()\">\n              <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" *ngIf=\"searchKey\" (click)=\"onSearchClear()\">\n                <mat-icon>close</mat-icon>\n              </button>\n\n            </mat-form-field><button mat-button matSuffix mat-icon-button (click)=\"ngOnInit()\">\n              <mat-icon>refresh</mat-icon>\n            </button>\n          </div>\n          <div class=\"mat-elevation-z8 size\">\n            <mat-table [dataSource]=\"dataSource\" matSort>\n              <ng-container matColumnDef=\"Maddr\" sticky>\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อมิเตอร์ไฟฟ้า (Mac Address)</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.Maddr}}</mat-cell>\n              </ng-container>\n              <!-- <ng-container matColumnDef=\"shortCircuit\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>Power Cut</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.shortCircuit}}</mat-cell>\n              </ng-container> -->\n              <ng-container matColumnDef=\"room\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อห้อง</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.room}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"date\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>เวลาที่เพิ่มมิเตอร์ไฟฟ้า</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.date}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"actions\">\n                <mat-header-cell *matHeaderCellDef>ลบและแก้ไขมิเตอร์</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">\n                  <button mat-icon-button (click)=\"openDialog(element)\">\n                    <mat-icon>create</mat-icon>\n                  </button>\n                  <button mat-icon-button color=\"warn\" (click)=' onDelete(element.Maddr)'>\n                    <mat-icon>delete_outline</mat-icon>\n                  </button>\n                </mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"noData\">\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                  ไม่มีข้อมูล\n                </mat-footer-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"loading\">\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                  กำลังดาวน์โหลดข้อมูล\n                </mat-footer-cell>\n              </ng-container>\n              <mat-header-row *matHeaderRowDef=\"displayedColumns\"></mat-header-row>\n              <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\n              <mat-footer-row *matFooterRowDef=\"['noData']\" [ngClass]=\"{'hide':!(dataSource!=null && dataSource.data.length==0)}\"></mat-footer-row>\n              <mat-footer-row *matFooterRowDef=\"['loading']\" [ngClass]=\"{'hide':dataSource!=null}\"></mat-footer-row>\n            </mat-table>\n            <mat-paginator [pageSizeOptions]=\"[10, 20, 50, 100]\" [pageSize]=\"10\" showFirstLastButtons></mat-paginator>\n          </div>\n        </mat-card-content>\n      </mat-tab>\n      <mat-tab label=\"เพิ่มมิเตอร์ไฟฟ้า\">\n        <mat-card-content>\n          <app-ad></app-ad>\n        </mat-card-content>\n      </mat-tab>\n    </mat-tab-group>\n  </mat-card-content>\n</mat-card>"
+module.exports = "<mat-card>\n  <mat-card-content>\n    <mat-tab-group>\n      <mat-tab label=\"ลบและแก้ไขมิเตอร์\" (click)=\"onLoad()\">\n        <mat-card-content>\n          <div class=\"search-div\">\n            <mat-form-field class=\"search-form-field\" floatLabel=\"never\">\n              <input matInput [(ngModel)]=\"searchKey\" placeholder=\"ค้นหามิเตอร์ไฟฟ้า\" autocomplete=\"off\" (keyup)=\"applyFilter()\">\n              <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" *ngIf=\"searchKey\" (click)=\"onSearchClear()\">\n                <mat-icon>close</mat-icon>\n              </button>\n\n            </mat-form-field><button mat-button matSuffix mat-icon-button (click)=\"ngOnInit()\">\n              <mat-icon>refresh</mat-icon>\n            </button>\n          </div>\n          <div class=\"mat-elevation-z8 size\">\n            <mat-table [dataSource]=\"dataSource\" matSort>\n              <ng-container matColumnDef=\"Maddr\" sticky>\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อมิเตอร์ไฟฟ้า (Mac Address)</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.Maddr}}</mat-cell>\n              </ng-container>\n              <!-- <ng-container matColumnDef=\"shortCircuit\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>Power Cut</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.shortCircuit}}</mat-cell>\n              </ng-container> -->\n              <ng-container matColumnDef=\"room\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อห้อง</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.room}}</mat-cell>\n              </ng-container>\n              <!-- <ng-container matColumnDef=\"date\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>เวลาที่เพิ่มมิเตอร์ไฟฟ้า</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.date}}</mat-cell>\n              </ng-container> -->\n              <ng-container matColumnDef=\"actions\">\n                <mat-header-cell *matHeaderCellDef>ลบและแก้ไขมิเตอร์</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">\n                  <button mat-icon-button (click)=\"openDialog(element)\">\n                    <mat-icon>create</mat-icon>\n                  </button>\n                  <button mat-icon-button color=\"warn\" (click)=' onDelete(element.Maddr)'>\n                    <mat-icon>delete_outline</mat-icon>\n                  </button>\n                </mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"noData\">\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                  ไม่มีข้อมูล\n                </mat-footer-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"loading\">\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                  กำลังดาวน์โหลดข้อมูล\n                </mat-footer-cell>\n              </ng-container>\n              <mat-header-row *matHeaderRowDef=\"displayedColumns\"></mat-header-row>\n              <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\n              <mat-footer-row *matFooterRowDef=\"['noData']\" [ngClass]=\"{'hide':!(dataSource!=null && dataSource.data.length==0)}\"></mat-footer-row>\n              <mat-footer-row *matFooterRowDef=\"['loading']\" [ngClass]=\"{'hide':dataSource!=null}\"></mat-footer-row>\n            </mat-table>\n            <mat-paginator [pageSizeOptions]=\"[10, 20, 50, 100]\" [pageSize]=\"10\" showFirstLastButtons></mat-paginator>\n          </div>\n        </mat-card-content>\n      </mat-tab>\n      <mat-tab label=\"เพิ่มมิเตอร์ไฟฟ้า\">\n        <mat-card-content>\n          <app-ad></app-ad>\n        </mat-card-content>\n      </mat-tab>\n    </mat-tab-group>\n  </mat-card-content>\n</mat-card>"
 
 /***/ }),
 
@@ -433,7 +824,7 @@ var ManageMeterComponent = /** @class */ (function () {
         this.meterService = meterService;
         this.notificationService = notificationService;
         this.dialogMeter = dialogMeter;
-        this.displayedColumns = ['room', 'Maddr', 'date', 'actions'];
+        this.displayedColumns = ['room', 'Maddr', 'actions'];
     }
     ManageMeterComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -563,7 +954,7 @@ var DialogOverviewExampleDialogMeter = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form [formGroup]=\"userService.form\" class=\"normal-form\" #signUpForm=\"ngForm\" (ngSubmit)=\"signUpForm.valid && onSubmit(signUpForm)\" class=\"size\">\r\n  <mat-grid-list cols=\"2\" rowHeight=\"300px\">\r\n    <mat-grid-tile>\r\n      <div class=\"controles-container\">\r\n        <h5>ชื่อผู้ใช้งาน : {{data.username}}</h5>\r\n        <input [(ngModel)]=\"data.username\" type=\"hidden\" formControlName=\"username\">\r\n        <mat-form-field >\r\n          <input [(ngModel)]=\"data.firstname\" formControlName=\"firstname\" value=\"{{data.firstname.substring(0,1).toUpperCase()}}{{data.firstname.substring(1,data.firstname. length)}}\"\r\n            matInput placeholder=\"ชื่อ*\">\r\n        </mat-form-field>\r\n        <mat-form-field>\r\n          <input [(ngModel)]=\"data.lastname\" formControlName=\"lastname\" value=\"{{data.lastname.substring(0,1).toUpperCase()}}{{data.lastname.substring(1,data.lastname. length)}}\"\r\n            matInput placeholder=\"นามสกุล*\">\r\n        </mat-form-field>\r\n        <mat-form-field>\r\n          <input [(ngModel)]=\"data.email\" formControlName=\"email\" value=\"{{data.email}}\" matInput placeholder=\"อีเมล*\">\r\n        </mat-form-field>\r\n        <mat-form-field>\r\n          <input [(ngModel)]=\"data.room\" formControlName=\"room\" value=\"{{data.room}}\" matInput placeholder=\"ชื่อห้อง*\">\r\n        </mat-form-field>\r\n      </div>\r\n    </mat-grid-tile>\r\n    <mat-grid-tile>\r\n      <div class=\"controles-container\">\r\n        <div class=\"add-bottom-padding\">\r\n          <mat-radio-group [(ngModel)]=\"data.permission\" formControlName=\"permission\">\r\n            <span>ระดับสิทธิผู้ใช้ : </span>\r\n            <mat-radio-button value=\"genaral\">General</mat-radio-button>\r\n            <mat-radio-button value=\"admin\">Admin</mat-radio-button>\r\n          </mat-radio-group>\r\n        </div>\r\n        <!-- <mat-form-field>\r\n          <mat-select formControlName=\"Maddr\" placeholder=\"Electric Meter\">\r\n            <mat-option value=\"Don't Have\">Don't Have</mat-option>\r\n            <ng-container *ngFor=\"let department of departments\">\r\n              <mat-option value=\"{{department.Maddr}}\">{{department.Maddr}}</mat-option>\r\n            </ng-container>\r\n          </mat-select>\r\n        </mat-form-field> -->\r\n        <div class=\"button-row\">\r\n          <button mat-raised-button color=\"primary\" type=\"submit\" value=\"Sign Up\" type=\"submit\" >แก้ไข</button>\r\n          <button mat-raised-button color=\"warn\" (click)=\"onClear()\">ปิด</button>\r\n        </div>\r\n      </div>\r\n\r\n    </mat-grid-tile>\r\n  </mat-grid-list>\r\n</form> \r\n"
+module.exports = "<form [formGroup]=\"userService.form\" class=\"normal-form\" #signUpForm=\"ngForm\" (ngSubmit)=\"signUpForm.valid && onSubmit(signUpForm)\" class=\"size\">\r\n  <mat-grid-list cols=\"2\" rowHeight=\"300px\">\r\n    <mat-grid-tile>\r\n      <div class=\"controles-container\">\r\n        <h5>ชื่อผู้ใช้งาน : {{data.username}}</h5>\r\n        <input [(ngModel)]=\"data.username\" type=\"hidden\" formControlName=\"username\">\r\n        <mat-form-field >\r\n          <input [(ngModel)]=\"data.firstname\" formControlName=\"firstname\" value=\"{{data.firstname.substring(0,1).toUpperCase()}}{{data.firstname.substring(1,data.firstname. length)}}\"\r\n            matInput placeholder=\"ชื่อ*\">\r\n        </mat-form-field>\r\n        <mat-form-field>\r\n          <input [(ngModel)]=\"data.lastname\" formControlName=\"lastname\" value=\"{{data.lastname.substring(0,1).toUpperCase()}}{{data.lastname.substring(1,data.lastname. length)}}\"\r\n            matInput placeholder=\"นามสกุล*\">\r\n        </mat-form-field>\r\n        <mat-form-field>\r\n          <input [(ngModel)]=\"data.email\" formControlName=\"email\" value=\"{{data.email}}\" matInput placeholder=\"อีเมล*\">\r\n        </mat-form-field>\r\n        <mat-form-field>\r\n          <input [(ngModel)]=\"data.room\" formControlName=\"room\" value=\"{{data.room}}\" matInput placeholder=\"ชื่อห้อง*\">\r\n        </mat-form-field>\r\n      </div>\r\n    </mat-grid-tile>\r\n    <mat-grid-tile>\r\n      <div class=\"controles-container\">\r\n        <div class=\"add-bottom-padding\">\r\n          <mat-radio-group [(ngModel)]=\"data.permission\" formControlName=\"permission\">\r\n            <span>ระดับสิทธิผู้ใช้ : </span>\r\n            <mat-radio-button value=\"genaral\">ผู้ใช้งานทั่วไป</mat-radio-button>\r\n            <mat-radio-button value=\"admin\">ผู้ดูแลระบบ</mat-radio-button>\r\n          </mat-radio-group>\r\n        </div>\r\n        <!-- <mat-form-field>\r\n          <mat-select formControlName=\"Maddr\" placeholder=\"Electric Meter\">\r\n            <mat-option value=\"Don't Have\">Don't Have</mat-option>\r\n            <ng-container *ngFor=\"let department of departments\">\r\n              <mat-option value=\"{{department.Maddr}}\">{{department.Maddr}}</mat-option>\r\n            </ng-container>\r\n          </mat-select>\r\n        </mat-form-field> -->\r\n        <div class=\"button-row\">\r\n          <button mat-raised-button color=\"primary\" type=\"submit\" value=\"Sign Up\" type=\"submit\" >แก้ไข</button>\r\n          <button mat-raised-button color=\"warn\" (click)=\"onClear()\">ปิด</button>\r\n        </div>\r\n      </div>\r\n\r\n    </mat-grid-tile>\r\n  </mat-grid-list>\r\n</form> \r\n"
 
 /***/ }),
 
@@ -585,7 +976,7 @@ module.exports = "/* table {\r\n    width: 100%;\r\n  }\r\n\r\n\r\n  input[type=
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-card>\n  <mat-card-content>\n    <mat-tab-group>\n      <mat-tab label=\"เพิ่มลบบัญชีผู้ใช้\">\n        <mat-card-content>\n          <div class=\"search-div\">\n            <mat-form-field class=\"search-form-field\" floatLabel=\"never\">\n              <input matInput [(ngModel)]=\"searchKey\" placeholder=\"ค้นหาบัญชีผู้ใช้\" autocomplete=\"off\" (keyup)=\"applyFilter()\">\n              <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" *ngIf=\"searchKey\" (click)=\"onSearchClear()\">\n                <mat-icon>close</mat-icon>\n              </button>\n\n            </mat-form-field><button mat-button matSuffix mat-icon-button (click)=\"ngOnInit()\">\n              <mat-icon>refresh</mat-icon>\n            </button>\n          </div>\n          <div class=\"mat-elevation-z8\" style=\"min-width: 1800px;\">\n            <mat-table [dataSource]=\"dataSource\" matSort>\n              <ng-container matColumnDef=\"username\" sticky>\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อผู้ใช้</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.username}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"firstname\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อ</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.firstname.substring(0,1).toUpperCase()}}{{element.firstname.substring(1,element.firstname.length)}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"lastname\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>นามสกุล</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.lastname.substring(0,1).toUpperCase()}}{{element.lastname.substring(1,element.lastname.length)}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"email\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>อีเมล</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.email}}</mat-cell>\n              </ng-container>\n\n              <ng-container matColumnDef=\"room\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อห้อง</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.room}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"permission\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ระดับสิทธิผู้ใช้</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.permission}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"date\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>เวลาที่เพิ่มบัญชี</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.date}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"actions\">\n                <mat-header-cell *matHeaderCellDef>แก้ไขหรือลบ</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">\n                  <button mat-icon-button (click)=\"openDialog(element)\">\n                    <mat-icon>create</mat-icon>\n                  </button>\n                  <button mat-icon-button color=\"warn\" (click)=' onDelete(element.username)'>\n                    <mat-icon>delete_outline</mat-icon>\n                  </button>\n                </mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"noData\">\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                  No data.\n                </mat-footer-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"loading\">\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                  Loading data...\n                </mat-footer-cell>\n              </ng-container>\n              <mat-header-row *matHeaderRowDef=\"displayedColumns\"></mat-header-row>\n              <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\n              <mat-footer-row *matFooterRowDef=\"['noData']\" [ngClass]=\"{'hide':!(dataSource!=null && dataSource.data.length==0)}\"></mat-footer-row>\n              <mat-footer-row *matFooterRowDef=\"['loading']\" [ngClass]=\"{'hide':dataSource!=null}\"></mat-footer-row>\n            </mat-table>\n            <mat-paginator [pageSizeOptions]=\"[10, 20, 50, 100]\" [pageSize]=\"10\" showFirstLastButtons></mat-paginator>\n          </div>\n        </mat-card-content>\n      </mat-tab>\n      <mat-tab label=\"เพิ่มบัญชีผู้ใช้\">\n        <mat-card-content>\n          <div>\n            <!-- <img src=\"/assets/img/users.png\" id=\"icon\" alt=\"User Icon\" /> -->\n          </div>\n          <form #signUpForm=\"ngForm\" (ngSubmit)=\"signUpForm.valid && onSubmit(signUpForm)\">\n            <mat-form-field>\n              <input matInput type=\"text\" #username=\"ngModel\" [(ngModel)]=\"userService.selectedUser.username\" name=\"username\"\n                placeholder=\"ชื่อผู้ใช้งาน\" required [ngClass]=\"{'invalid-textbox' :signUpForm.submitted && !username.valid }\">\n            </mat-form-field>\n            <div *ngIf=\"signUpForm.submitted && !username.valid\">\n              <label class=\"validation-message\">กรุณากรอกชื่อผู้ใช้งาน</label>\n            </div>\n            <mat-form-field>\n              <input matInput type=\"text\" #firstname=\"ngModel\" [(ngModel)]=\"userService.selectedUser.firstname\" name=\"firstname\"\n                placeholder=\"ชื่อ\" required [ngClass]=\"{'invalid-textbox' :signUpForm.submitted && !firstname.valid }\">\n            </mat-form-field>\n            <div *ngIf=\"signUpForm.submitted && !firstname.valid\">\n              <label class=\"validation-message\">กรุณากรอกชื่อ</label>\n            </div>\n            <mat-form-field>\n              <input matInput type=\"text\" #lastname=\"ngModel\" [(ngModel)]=\"userService.selectedUser.lastname\" name=\"lastname\"\n                placeholder=\"นามสกุล\" required [ngClass]=\"{'invalid-textbox' :signUpForm.submitted && !lastname.valid }\">\n            </mat-form-field>\n            <div *ngIf=\"signUpForm.submitted && !lastname.valid\">\n              <label class=\"validation-message\">กรุณากรอกนามสกุล</label>\n            </div>\n            <mat-form-field>\n              <input matInput type=\"text\" #room=\"ngModel\" [(ngModel)]=\"userService.selectedUser.room\" name=\"room\"\n                placeholder=\"ชื่อห้อง\" required [ngClass]=\"{'invalid-textbox' :signUpForm.submitted && !room.valid }\">\n            </mat-form-field>\n            <div *ngIf=\"signUpForm.submitted && !room.valid\">\n              <label class=\"validation-message\">กรุณากรอกชื่อห้อง</label>\n            </div>\n            <mat-form-field>\n              <input matInput type=\"text\" #email=\"ngModel\" [(ngModel)]=\"userService.selectedUser.email\" name=\"email\"\n                placeholder=\"อีเมล\" required [pattern]=\"emailRegex\" [ngClass]=\"{'invalid-textbox' :signUpForm.submitted && !email.valid }\">\n            </mat-form-field>\n            <div *ngIf=\"signUpForm.submitted && email.errors\">\n              <label *ngIf=\"email.errors.required\" class=\"validation-message\">กรุณากรอกอีเมล</label>\n              <label *ngIf=\"email.errors.pattern\" class=\"validation-message\">ไม่สามารถใช้อีเมลนี้ได้</label>\n            </div>\n            <mat-form-field>\n              <input matInput type=\"password\" #password=\"ngModel\" [(ngModel)]=\"userService.selectedUser.password\" name=\"password\"\n                placeholder=\"รหัสผ่าน\" minlength=\"4\" required [ngClass]=\"{'invalid-textbox' :signUpForm.submitted && !password.valid }\">\n            </mat-form-field>\n            <div *ngIf=\"signUpForm.submitted && password.errors\">\n              <label *ngIf=\"password.errors.required\" class=\"validation-message\">กรุณากรอกรหัสผ่าน</label>\n              <label *ngIf=\"password.errors.minlength\" class=\"validation-message\">กรุณากรอกรหัสผ่านอย่างน้อย 4\n                ตัวอักษร.</label>\n            </div>\n            <div style=\"width:135px; margin-right:auto; margin-left:auto;\">\n              <input class=\"btn btn-success\" type=\"submit\" value=\"เพิ่มบัญชีผู้ใช้\" (click)='ngOnInit()'>\n            </div>\n          </form>\n          <br>\n          <!-- Success message -->\n          <div class=\"success\" *ngIf=\"showSucessMessage\" class=\"success\">\n            เพิ่มบัญชีผู้ใช้สำเร็จ\n          </div>\n\n          <!-- Error message -->\n          <div class=\"alert\" *ngIf=\"serverErrorMessages\" class=\"warn\">\n            {{serverErrorMessages}}\n          </div>\n        </mat-card-content>\n      </mat-tab>\n    </mat-tab-group>\n  </mat-card-content>\n</mat-card>"
+module.exports = "<mat-card>\n  <mat-card-content>\n    <mat-tab-group>\n      <mat-tab label=\"ลบและแก้ไขบัญชีผู้ใช้\">\n        <mat-card-content>\n          <div class=\"search-div\">\n            <mat-form-field class=\"search-form-field\" floatLabel=\"never\">\n              <input matInput [(ngModel)]=\"searchKey\" placeholder=\"ค้นหาบัญชีผู้ใช้\" autocomplete=\"off\" (keyup)=\"applyFilter()\">\n              <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" *ngIf=\"searchKey\" (click)=\"onSearchClear()\">\n                <mat-icon>close</mat-icon>\n              </button>\n\n            </mat-form-field><button mat-button matSuffix mat-icon-button (click)=\"ngOnInit()\">\n              <mat-icon>refresh</mat-icon>\n            </button>\n          </div>\n          <!-- style=\"min-width: 1800px;\" -->\n          <div class=\"mat-elevation-z8 size\" >\n            <mat-table [dataSource]=\"dataSource\" matSort>\n              <ng-container matColumnDef=\"username\" sticky>\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อผู้ใช้</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.username}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"firstname\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อ</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.firstname.substring(0,1).toUpperCase()}}{{element.firstname.substring(1,element.firstname.length)}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"lastname\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>นามสกุล</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.lastname.substring(0,1).toUpperCase()}}{{element.lastname.substring(1,element.lastname.length)}}</mat-cell>\n              </ng-container>\n              <!-- <ng-container matColumnDef=\"email\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>อีเมล</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.email}}</mat-cell>\n              </ng-container> -->\n\n              <ng-container matColumnDef=\"room\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อห้อง</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.room}}</mat-cell>\n              </ng-container>\n              <!-- <ng-container matColumnDef=\"permission\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ระดับสิทธิผู้ใช้</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.permission}}</mat-cell>\n              </ng-container> -->\n              <!-- <ng-container matColumnDef=\"date\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>เวลาที่เพิ่มบัญชี</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.date}}</mat-cell>\n              </ng-container> -->\n              <ng-container matColumnDef=\"actions\">\n                <mat-header-cell *matHeaderCellDef>แก้ไขหรือลบ</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">\n                  <button mat-icon-button (click)=\"openDialog(element)\">\n                    <mat-icon>create</mat-icon>\n                  </button>\n                  <button mat-icon-button color=\"warn\" (click)=' onDelete(element.username)'>\n                    <mat-icon>delete_outline</mat-icon>\n                  </button>\n                </mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"noData\">\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                  No data.\n                </mat-footer-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"loading\">\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                  Loading data...\n                </mat-footer-cell>\n              </ng-container>\n              <mat-header-row *matHeaderRowDef=\"displayedColumns\"></mat-header-row>\n              <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\n              <mat-footer-row *matFooterRowDef=\"['noData']\" [ngClass]=\"{'hide':!(dataSource!=null && dataSource.data.length==0)}\"></mat-footer-row>\n              <mat-footer-row *matFooterRowDef=\"['loading']\" [ngClass]=\"{'hide':dataSource!=null}\"></mat-footer-row>\n            </mat-table>\n            <mat-paginator [pageSizeOptions]=\"[10, 20, 50, 100]\" [pageSize]=\"10\" showFirstLastButtons></mat-paginator>\n          </div>\n        </mat-card-content>\n      </mat-tab>\n      <mat-tab label=\"เพิ่มบัญชีผู้ใช้\">\n        <mat-card-content>\n          <div>\n            <!-- <img src=\"/assets/img/users.png\" id=\"icon\" alt=\"User Icon\" /> -->\n          </div>\n          <form #signUpForm=\"ngForm\" (ngSubmit)=\"signUpForm.valid && onSubmit(signUpForm)\">\n            <mat-form-field>\n              <input autofocus id=\"myTextField\" matInput type=\"text\" #username=\"ngModel\" [(ngModel)]=\"userService.selectedUser.username\" name=\"username\"\n                placeholder=\"ชื่อผู้ใช้งาน\" required [ngClass]=\"{'invalid-textbox' :signUpForm.submitted && !username.valid }\">\n            </mat-form-field>\n            <div *ngIf=\"signUpForm.submitted && !username.valid\">\n              <label class=\"validation-message\">กรุณากรอกชื่อผู้ใช้งาน</label>\n            </div>\n            <mat-form-field>\n              <input matInput type=\"text\" #firstname=\"ngModel\" [(ngModel)]=\"userService.selectedUser.firstname\" name=\"firstname\"\n                placeholder=\"ชื่อ\" required [ngClass]=\"{'invalid-textbox' :signUpForm.submitted && !firstname.valid }\">\n            </mat-form-field>\n            <div *ngIf=\"signUpForm.submitted && !firstname.valid\">\n              <label class=\"validation-message\">กรุณากรอกชื่อ</label>\n            </div>\n            <mat-form-field>\n              <input matInput type=\"text\" #lastname=\"ngModel\" [(ngModel)]=\"userService.selectedUser.lastname\" name=\"lastname\"\n                placeholder=\"นามสกุล\" required [ngClass]=\"{'invalid-textbox' :signUpForm.submitted && !lastname.valid }\">\n            </mat-form-field>\n            <div *ngIf=\"signUpForm.submitted && !lastname.valid\">\n              <label class=\"validation-message\">กรุณากรอกนามสกุล</label>\n            </div>\n            <mat-form-field>\n              <input matInput type=\"text\" #room=\"ngModel\" [(ngModel)]=\"userService.selectedUser.room\" name=\"room\"\n                placeholder=\"ชื่อห้อง\" required [ngClass]=\"{'invalid-textbox' :signUpForm.submitted && !room.valid }\">\n            </mat-form-field>\n            <div *ngIf=\"signUpForm.submitted && !room.valid\">\n              <label class=\"validation-message\">กรุณากรอกชื่อห้อง</label>\n            </div>\n            <mat-form-field>\n              <input matInput type=\"text\" #email=\"ngModel\" [(ngModel)]=\"userService.selectedUser.email\" name=\"email\"\n                placeholder=\"อีเมล\" required [pattern]=\"emailRegex\" [ngClass]=\"{'invalid-textbox' :signUpForm.submitted && !email.valid }\">\n            </mat-form-field>\n            <div *ngIf=\"signUpForm.submitted && email.errors\">\n              <label *ngIf=\"email.errors.required\" class=\"validation-message\">กรุณากรอกอีเมล</label>\n              <label *ngIf=\"email.errors.pattern\" class=\"validation-message\">ไม่สามารถใช้อีเมลนี้ได้</label>\n            </div>\n            <mat-form-field>\n              <input matInput type=\"password\" #password=\"ngModel\" [(ngModel)]=\"userService.selectedUser.password\" name=\"password\"\n                placeholder=\"รหัสผ่าน\" minlength=\"4\" required [ngClass]=\"{'invalid-textbox' :signUpForm.submitted && !password.valid }\">\n            </mat-form-field>\n            <div *ngIf=\"signUpForm.submitted && password.errors\">\n              <label *ngIf=\"password.errors.required\" class=\"validation-message\">กรุณากรอกรหัสผ่าน</label>\n              <label *ngIf=\"password.errors.minlength\" class=\"validation-message\">กรุณากรอกรหัสผ่านอย่างน้อย 4\n                ตัวอักษร.</label>\n            </div>\n            <div style=\"width:135px; margin-right:auto; margin-left:auto;\">\n              <input class=\"btn btn-success\" type=\"submit\" value=\"เพิ่มบัญชีผู้ใช้\" (click)='focusMethod()'>\n            </div>\n          </form>\n          <br>\n          <!-- Success message -->\n          <div class=\"success\" *ngIf=\"showSucessMessage\" class=\"success\">\n            เพิ่มบัญชีผู้ใช้สำเร็จ\n          </div>\n\n          <!-- Error message -->\n          <div class=\"alert\" *ngIf=\"serverErrorMessages\" class=\"warn\">\n            {{serverErrorMessages}}\n          </div>\n        </mat-card-content>\n      </mat-tab>\n    </mat-tab-group>\n  </mat-card-content>\n</mat-card>"
 
 /***/ }),
 
@@ -626,7 +1017,7 @@ var ManageUserComponent = /** @class */ (function () {
         this.userService = userService;
         this.notificationService = notificationService;
         this.dialog2 = dialog2;
-        this.displayedColumns = ['username', 'firstname', 'lastname', 'email', 'room', 'permission', 'date', 'actions'];
+        this.displayedColumns = ['username', 'firstname', 'lastname', 'room', 'actions'];
         this.emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     }
     ManageUserComponent.prototype.ngOnInit = function () {
@@ -639,6 +1030,14 @@ var ManageUserComponent = /** @class */ (function () {
             _this.dataSource.sort = _this.sort;
             _this.dataSource.paginator = _this.paginator;
         });
+        this.focusMethod = function getFocus() {
+            document.getElementById("myTextField").focus();
+        };
+    };
+    ManageUserComponent.prototype.focusMethod = function () {
+        this.focusMethod = function getFocus() {
+            document.getElementById("myTextField").focus();
+        };
     };
     ManageUserComponent.prototype.onSearchClear = function () {
         this.searchKey = "";
@@ -814,12 +1213,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _system_setting_system_setting_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./system-setting/system-setting.component */ "./src/app/admin/material-component/system-setting/system-setting.component.ts");
 /* harmony import */ var _electric_bill_filter_pipe__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./electric-bill/filter.pipe */ "./src/app/admin/material-component/electric-bill/filter.pipe.ts");
 /* harmony import */ var _statistic_admin_statistic_admin_component__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./statistic-admin/statistic-admin.component */ "./src/app/admin/material-component/statistic-admin/statistic-admin.component.ts");
+/* harmony import */ var _bill_year_admin_bill_year_admin_component__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./bill-year-admin/bill-year-admin.component */ "./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -874,7 +1275,8 @@ var MaterialComponentsModule = /** @class */ (function () {
                 _electric_bill_electric_bill_component__WEBPACK_IMPORTED_MODULE_13__["ReportData"],
                 _electric_bill_filter_pipe__WEBPACK_IMPORTED_MODULE_17__["FilterPipe"],
                 _statistic_admin_statistic_admin_component__WEBPACK_IMPORTED_MODULE_18__["StatisticAdminComponent"],
-                _statistic_admin_statistic_admin_component__WEBPACK_IMPORTED_MODULE_18__["StatisticReportAdmin"]
+                _statistic_admin_statistic_admin_component__WEBPACK_IMPORTED_MODULE_18__["StatisticReportAdmin"],
+                _bill_year_admin_bill_year_admin_component__WEBPACK_IMPORTED_MODULE_19__["BillYearAdminComponent"]
             ]
         })
     ], MaterialComponentsModule);
@@ -902,6 +1304,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _power_cut_power_cut_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./power-cut/power-cut.component */ "./src/app/admin/material-component/power-cut/power-cut.component.ts");
 /* harmony import */ var _system_setting_system_setting_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./system-setting/system-setting.component */ "./src/app/admin/material-component/system-setting/system-setting.component.ts");
 /* harmony import */ var _statistic_admin_statistic_admin_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./statistic-admin/statistic-admin.component */ "./src/app/admin/material-component/statistic-admin/statistic-admin.component.ts");
+/* harmony import */ var _bill_year_admin_bill_year_admin_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./bill-year-admin/bill-year-admin.component */ "./src/app/admin/material-component/bill-year-admin/bill-year-admin.component.ts");
+
 
 
 
@@ -931,6 +1335,9 @@ var MaterialRoutes = [
     }, {
         path: 'statisticAdmin',
         component: _statistic_admin_statistic_admin_component__WEBPACK_IMPORTED_MODULE_6__["StatisticAdminComponent"]
+    }, {
+        path: 'billYearAdmin',
+        component: _bill_year_admin_bill_year_admin_component__WEBPACK_IMPORTED_MODULE_7__["BillYearAdminComponent"]
     }
 ];
 
@@ -944,7 +1351,7 @@ var MaterialRoutes = [
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".mat-button-toggle-checked {\r\n    background-color: rgba(7, 65, 255, 0.712);\r\n    color: white;\r\n}\r\n\r\n"
+module.exports = ".mat-button-toggle-checked {\r\n    background-color: rgba(7, 65, 255, 0.712);\r\n    color: white;\r\n}\r\n\r\n.example-h2 {\r\n    margin: 10px;\r\n  }\r\n\r\n.example-section {\r\n    display: flex;\r\n    align-content: center;\r\n    align-items: center;\r\n    height: 60px;\r\n  }\r\n\r\n.example-margin {\r\n    margin: 10px;\r\n  }"
 
 /***/ }),
 
@@ -955,7 +1362,7 @@ module.exports = ".mat-button-toggle-checked {\r\n    background-color: rgba(7, 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-card>\n  <mat-card-content>\n    <mat-tab-group>\n      <mat-tab label=\"การตัดไฟ\">\n        <mat-card-content>\n          <div class=\"search-div\">\n            <mat-form-field class=\"search-form-field\" floatLabel=\"never\">\n              <input matInput [(ngModel)]=\"searchKey\" placeholder=\"ค้นหา\" autocomplete=\"off\" (keyup)=\"applyFilter()\">\n              <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" *ngIf=\"searchKey\" (click)=\"onSearchClear()\">\n                <mat-icon>close</mat-icon>\n              </button>\n            </mat-form-field><button mat-button matSuffix mat-icon-button (click)=\"ngOnInit()\">\n              <mat-icon>refresh</mat-icon>\n            </button>\n          </div>\n          <div class=\"mat-elevation-z8 size\">\n            <mat-table [dataSource]=\"dataSource\" matSort>\n              <ng-container matColumnDef=\"room\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อห้อง</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.room}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"Maddr\" sticky>\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อมิเตอร์ไฟฟ้า (Mac Address)</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.Maddr}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"shortCircuit\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.shortCircuit}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"actions\">\n                <mat-header-cell *matHeaderCellDef>การตัดไฟ</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">\n                  <mat-button-toggle-group #group=\"matButtonToggleGroup\">\n                    <mat-button-toggle value=\"off\" checked=\"!{{element.shortCircuit}}\" (click)=\"TestB(element.Maddr+'/false')\">\n                      <mat-icon class=\"mat-icon\">power_off</mat-icon>\n                      <span>ตัดไฟ</span>\n                    </mat-button-toggle>\n                    <mat-button-toggle value=\"on\" checked=\"{{element.shortCircuit}}\" (click)=\"TestB(element.Maddr+'/true')\">\n                      <mat-icon>power</mat-icon>\n                      <span class=\"left-icon\">เปิดไฟ</span>\n                    </mat-button-toggle>\n                  </mat-button-toggle-group>\n                </mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"noData\">\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                  No data.\n                </mat-footer-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"loading\">\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                  Loading data...\n                </mat-footer-cell>\n              </ng-container>\n              <mat-header-row *matHeaderRowDef=\"displayedColumns\"></mat-header-row>\n              <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\n              <mat-footer-row *matFooterRowDef=\"['noData']\" [ngClass]=\"{'hide':!(dataSource!=null && dataSource.data.length==0)}\"></mat-footer-row>\n              <mat-footer-row *matFooterRowDef=\"['loading']\" [ngClass]=\"{'hide':dataSource!=null}\"></mat-footer-row>\n            </mat-table>\n            <mat-paginator [pageSizeOptions]=\"[10, 20, 50, 100]\" [pageSize]=\"10\" showFirstLastButtons></mat-paginator>\n          </div>\n        </mat-card-content>\n      </mat-tab>\n\n    </mat-tab-group>\n  </mat-card-content>\n</mat-card>"
+module.exports = "<mat-card>\n  <mat-card-content>\n    <mat-tab-group>\n      <mat-tab label=\"การตัดไฟ\">\n        <mat-card-content>\n          <div class=\"search-div\">\n            <mat-form-field class=\"search-form-field\" floatLabel=\"never\">\n              <input matInput [(ngModel)]=\"searchKey\" placeholder=\"ค้นหา\" autocomplete=\"off\" (keyup)=\"applyFilter()\">\n              <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" *ngIf=\"searchKey\" (click)=\"onSearchClear()\">\n                <mat-icon>close</mat-icon>\n              </button>\n            </mat-form-field><button mat-button matSuffix mat-icon-button (click)=\"ngOnInit()\">\n              <mat-icon>refresh</mat-icon>\n            </button>\n          </div>\n          <div class=\"mat-elevation-z8 size\">\n            <mat-table [dataSource]=\"dataSource\" matSort>\n              <ng-container matColumnDef=\"room\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อห้อง</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.room}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"Maddr\" sticky>\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อมิเตอร์ไฟฟ้า (Mac Address)</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.Maddr}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"shortCircuit\">\n                <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">{{element.shortCircuit}}</mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"actions\">\n                <mat-header-cell *matHeaderCellDef>การตัดไฟ</mat-header-cell>\n                <mat-cell *matCellDef=\"let element\">\n                  <!-- <mat-button-toggle-group #group=\"matButtonToggleGroup\">\n                    <mat-button-toggle value=\"off\" checked=\"!{{element.shortCircuit}}\" (click)=\"TestB(element.Maddr+'/false')\">\n                      <mat-icon class=\"mat-icon\">power_off</mat-icon>\n                      <span>ตัดไฟ</span>\n                    </mat-button-toggle>\n                    <mat-button-toggle value=\"on\" checked=\"{{element.shortCircuit}}\" (click)=\"TestB(element.Maddr+'/true')\">\n                      <mat-icon>power</mat-icon>\n                      <span class=\"left-icon\">เปิดไฟ</span>\n                    </mat-button-toggle>\n                  </mat-button-toggle-group> -->\n                  <span><strong>ตัดไฟ&nbsp;</strong></span>\n                  <mat-slide-toggle checked=\"{{element.shortCircuit}}\" (click)=\"slideB(element.Maddr,element.shortCircuit)\">\n                    <span>เปิดไฟ</span>\n                  </mat-slide-toggle>\n\n                </mat-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"noData\">\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                  No data.\n                </mat-footer-cell>\n              </ng-container>\n              <ng-container matColumnDef=\"loading\">\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                  Loading data...\n                </mat-footer-cell>\n              </ng-container>\n              <mat-header-row *matHeaderRowDef=\"displayedColumns\"></mat-header-row>\n              <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\n              <mat-footer-row *matFooterRowDef=\"['noData']\" [ngClass]=\"{'hide':!(dataSource!=null && dataSource.data.length==0)}\"></mat-footer-row>\n              <mat-footer-row *matFooterRowDef=\"['loading']\" [ngClass]=\"{'hide':dataSource!=null}\"></mat-footer-row>\n            </mat-table>\n            <mat-paginator [pageSizeOptions]=\"[10, 20, 50, 100]\" [pageSize]=\"10\" showFirstLastButtons></mat-paginator>\n          </div>\n        </mat-card-content>\n      </mat-tab>\n\n    </mat-tab-group>\n  </mat-card-content>\n</mat-card>"
 
 /***/ }),
 
@@ -990,6 +1397,9 @@ var PowerCutComponent = /** @class */ (function () {
     function PowerCutComponent(meterService, notificationService) {
         this.meterService = meterService;
         this.notificationService = notificationService;
+        this.color = 'accent';
+        this.checked = true;
+        this.disabled = false;
         this.displayedColumns = ['room', 'Maddr', 'actions']; //, 'shortCircuit'
     }
     PowerCutComponent.prototype.ngOnInit = function () {
@@ -1002,6 +1412,14 @@ var PowerCutComponent = /** @class */ (function () {
             _this.dataSource.sort = _this.sort;
             _this.dataSource.paginator = _this.paginator;
         });
+    };
+    PowerCutComponent.prototype.slideB = function (mac, status) {
+        if (status == 'false') {
+            this.TestB(mac + "/" + "true");
+        }
+        else if (status == 'true') {
+            this.TestB(mac + "/" + "false");
+        }
     };
     PowerCutComponent.prototype.onSearchClear = function () {
         this.searchKey = "";
@@ -1130,7 +1548,7 @@ var ProfileComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"search-div\">\r\n    <mat-form-field class=\"search-form-field\" floatLabel=\"never\">\r\n        <input matInput [(ngModel)]=\"searchKeyReport\" placeholder=\"ค้นหา\" autocomplete=\"off\" (keyup)=\"applyFilterReport()\">\r\n        <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" *ngIf=\"searchKeyReport\" (click)=\"onSearchClearReport()\">\r\n            <mat-icon>close</mat-icon>\r\n        </button>\r\n    </mat-form-field>\r\n\r\n</div>\r\n<mat-dialog-content class=\"mat-typography\">\r\n    <div class=\"mat-elevation-z8 size\">\r\n        <mat-table [dataSource]=\"dataSource\" matSort>\r\n            <ng-container matColumnDef=\"ActiveEnergy\">\r\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ค่าพลังงานไฟฟ้า</mat-header-cell>\r\n                <mat-cell *matCellDef=\"let element\">{{element.ActiveEnergy}}</mat-cell>\r\n            </ng-container>\r\n            <ng-container matColumnDef=\"Frequency\" sticky>\r\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ความถี่</mat-header-cell>\r\n                <mat-cell *matCellDef=\"let element\">{{element.Frequency}}</mat-cell>\r\n            </ng-container>\r\n            <ng-container matColumnDef=\"LineCurrent\">\r\n                <mat-header-cell *matHeaderCellDef>กระแสไฟฟ้าที่สาย</mat-header-cell>\r\n                <mat-cell *matCellDef=\"let element\">\r\n                    {{element.LineCurrent}}\r\n                </mat-cell>\r\n            </ng-container>\r\n            <ng-container matColumnDef=\"LineVoltage\">\r\n                <mat-header-cell *matHeaderCellDef>แรงดันระหว่างสาย</mat-header-cell>\r\n                <mat-cell *matCellDef=\"let element\">\r\n                    {{element.LineVoltage}}\r\n                </mat-cell>\r\n            </ng-container>\r\n            <ng-container matColumnDef=\"date\">\r\n                <mat-header-cell *matHeaderCellDef>เวลาที่บันทึก</mat-header-cell>\r\n                <mat-cell *matCellDef=\"let element\">\r\n                    {{element.date}}\r\n                </mat-cell>\r\n            </ng-container>\r\n            <ng-container matColumnDef=\"noData\">\r\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\r\n                    ไม่มีข้อมูล\r\n                </mat-footer-cell>\r\n            </ng-container>\r\n            <ng-container matColumnDef=\"loading\">\r\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\r\n                    กำลังดาวน์โหลดข้อมูล\r\n                </mat-footer-cell>\r\n            </ng-container>\r\n            <mat-header-row *matHeaderRowDef=\"displayedColumns\"></mat-header-row>\r\n            <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\r\n            <mat-footer-row *matFooterRowDef=\"['noData']\" [ngClass]=\"{'hide':!(dataSource!=null && dataSource.data.length==0)}\"></mat-footer-row>\r\n            <mat-footer-row *matFooterRowDef=\"['loading']\" [ngClass]=\"{'hide':dataSource!=null}\"></mat-footer-row>\r\n        </mat-table>\r\n        <mat-paginator [pageSizeOptions]=\"[10, 20, 50, 100]\" [pageSize]=\"10\" showFirstLastButtons></mat-paginator>\r\n    </div>\r\n    <br>\r\n</mat-dialog-content>\r\n<div class=\"wrapper-center button-row\">\r\n    <button mat-raised-button color=\"primary\" (click)=\"exportAsXLSX()\">\r\n        <mat-icon>cloud_download</mat-icon> ดาวโหลด (.xlsx)\r\n    </button>\r\n    <button mat-raised-button color=\"warn\" (click)=\"onClear()\">\r\n        <mat-icon>clear</mat-icon>ปิด\r\n    </button>\r\n</div>"
+module.exports = "<div class=\"search-div\">\r\n    <mat-form-field class=\"search-form-field\" floatLabel=\"never\">\r\n        <input matInput [(ngModel)]=\"searchKeyReport\" placeholder=\"ค้นหา\" autocomplete=\"off\" (keyup)=\"applyFilterReport()\">\r\n        <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" *ngIf=\"searchKeyReport\" (click)=\"onSearchClearReport()\">\r\n            <mat-icon>close</mat-icon>\r\n        </button>\r\n    </mat-form-field>\r\n\r\n</div>\r\n<mat-dialog-content class=\"mat-typography\">\r\n    <div class=\"mat-elevation-z8 size\">\r\n        <mat-table [dataSource]=\"dataSource\" matSort>\r\n            <ng-container matColumnDef=\"ActiveEnergy\">\r\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ค่าพลังงานไฟฟ้า</mat-header-cell>\r\n                <mat-cell *matCellDef=\"let element\">{{element.ActiveEnergy}}</mat-cell>\r\n            </ng-container>\r\n            <!-- <ng-container matColumnDef=\"Frequency\" sticky>\r\n                <mat-header-cell *matHeaderCellDef mat-sort-header>ความถี่</mat-header-cell>\r\n                <mat-cell *matCellDef=\"let element\">{{element.Frequency}}</mat-cell>\r\n            </ng-container>\r\n            <ng-container matColumnDef=\"LineCurrent\">\r\n                <mat-header-cell *matHeaderCellDef>กระแสไฟฟ้าที่สาย</mat-header-cell>\r\n                <mat-cell *matCellDef=\"let element\">\r\n                    {{element.LineCurrent}}\r\n                </mat-cell>\r\n            </ng-container>\r\n            <ng-container matColumnDef=\"LineVoltage\">\r\n                <mat-header-cell *matHeaderCellDef>แรงดันระหว่างสาย</mat-header-cell>\r\n                <mat-cell *matCellDef=\"let element\">\r\n                    {{element.LineVoltage}}\r\n                </mat-cell>\r\n            </ng-container> -->\r\n            <ng-container matColumnDef=\"date\">\r\n                <mat-header-cell *matHeaderCellDef>เวลาที่บันทึก</mat-header-cell>\r\n                <mat-cell *matCellDef=\"let element\">\r\n                    {{element.date}}\r\n                </mat-cell>\r\n            </ng-container>\r\n            <ng-container matColumnDef=\"noData\">\r\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\r\n                    ไม่มีข้อมูล\r\n                </mat-footer-cell>\r\n            </ng-container>\r\n            <ng-container matColumnDef=\"loading\">\r\n                <mat-footer-cell *matFooterCellDef colspan=\"6\">\r\n                    กำลังดาวน์โหลดข้อมูล\r\n                </mat-footer-cell>\r\n            </ng-container>\r\n            <mat-header-row *matHeaderRowDef=\"displayedColumns\"></mat-header-row>\r\n            <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\r\n            <mat-footer-row *matFooterRowDef=\"['noData']\" [ngClass]=\"{'hide':!(dataSource!=null && dataSource.data.length==0)}\"></mat-footer-row>\r\n            <mat-footer-row *matFooterRowDef=\"['loading']\" [ngClass]=\"{'hide':dataSource!=null}\"></mat-footer-row>\r\n        </mat-table>\r\n        <mat-paginator [pageSizeOptions]=\"[10, 20, 50, 100]\" [pageSize]=\"10\" showFirstLastButtons></mat-paginator>\r\n    </div>\r\n    <br>\r\n</mat-dialog-content>\r\n<div class=\"wrapper-center button-row\">\r\n    <button mat-raised-button color=\"primary\" (click)=\"exportAsXLSX()\">\r\n        <mat-icon>cloud_download</mat-icon> ดาวโหลด (.xlsx)\r\n    </button>\r\n    <button mat-raised-button color=\"warn\" (click)=\"onClear()\">\r\n        <mat-icon>clear</mat-icon>ปิด\r\n    </button>\r\n</div>"
 
 /***/ }),
 
@@ -1152,7 +1570,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-card>\n    <mat-card-content>\n      <mat-tab-group>\n        <mat-tab label=\"รายงานการใช้ไฟฟ้า\">\n          <mat-card-content>\n              <mat-form-field>\n                  <mat-select [(value)]=\"Monthselected\">\n                    <mat-option value=\"January\">January</mat-option>\n                    <mat-option value=\"February\">February</mat-option>\n                    <mat-option value=\"March\">March</mat-option>\n                    <mat-option value=\"April\">April</mat-option>\n                    <mat-option value=\"May\">May</mat-option>\n                    <mat-option value=\"June\">June</mat-option>\n                    <mat-option value=\"July\">July</mat-option>\n                    <mat-option value=\"August\">August</mat-option>\n                    <mat-option value=\"September\">September</mat-option>\n                    <mat-option value=\"October\">October</mat-option>\n                    <mat-option value=\"November\">November</mat-option>\n                    <mat-option value=\"December\">December</mat-option>\n                  </mat-select>\n                </mat-form-field>\n                <mat-form-field>\n                    <mat-select [(value)]=\"Yearselected\">\n                      <mat-option value=\"2018\">2018</mat-option>\n                    </mat-select>\n                  </mat-form-field>\n  \n            <div class=\"search-div\">\n              <mat-form-field class=\"search-form-field\" floatLabel=\"never\">\n                <input matInput [(ngModel)]=\"searchKey\" placeholder=\"ค้นหาห้อง\" autocomplete=\"off\" (keyup)=\"applyFilter()\">\n                <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" *ngIf=\"searchKey\" (click)=\"onSearchClear()\">\n                  <mat-icon>close</mat-icon>\n                </button>\n              </mat-form-field>\n  \n            </div>\n            <div class=\"mat-elevation-z8 size\">\n              <mat-table [dataSource]=\"dataSource\" matSort>\n                <ng-container matColumnDef=\"room\" sticky>\n                  <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อห้อง</mat-header-cell>\n                  <mat-cell *matCellDef=\"let element\">{{element.room}}</mat-cell>\n                </ng-container>\n                <ng-container matColumnDef=\"username\" >\n                  <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อมิเตอร์ (Mac Address)</mat-header-cell>\n                  <mat-cell *matCellDef=\"let element\">{{element.Maddr}}</mat-cell>\n                </ng-container>\n                <ng-container matColumnDef=\"actions\">\n                  <mat-header-cell *matHeaderCellDef>ดูสถิติการใช้ไฟฟ้า</mat-header-cell>\n                  <mat-cell *matCellDef=\"let element\">\n                    <button mat-raised-button color=\"accent\" (click)=\"openDialog(element.room)\">\n                      <mat-icon>search</mat-icon> เลือก\n                    </button>\n                  </mat-cell>\n                </ng-container>\n                <ng-container matColumnDef=\"noData\">\n                  <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                    No data.\n                  </mat-footer-cell>\n                </ng-container>\n                <ng-container matColumnDef=\"loading\">\n                  <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                    Loading data...\n                  </mat-footer-cell>\n                </ng-container>\n                <mat-header-row *matHeaderRowDef=\"displayedColumns\"></mat-header-row>\n                <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\n                <mat-footer-row *matFooterRowDef=\"['noData']\" [ngClass]=\"{'hide':!(dataSource!=null && dataSource.data.length==0)}\"></mat-footer-row>\n                <mat-footer-row *matFooterRowDef=\"['loading']\" [ngClass]=\"{'hide':dataSource!=null}\"></mat-footer-row>\n              </mat-table>\n              <mat-paginator [pageSizeOptions]=\"[10, 20, 50, 100]\" [pageSize]=\"10\" showFirstLastButtons></mat-paginator>\n            </div>\n          </mat-card-content>\n        </mat-tab>\n  \n      </mat-tab-group>\n    </mat-card-content>\n  </mat-card>"
+module.exports = "<mat-card>\n    <mat-card-content>\n      <mat-tab-group>\n        <mat-tab label=\"รายงานการใช้ไฟฟ้า\">\n          <mat-card-content>\n              <mat-form-field>\n                  <mat-select [(value)]=\"Monthselected\">\n                    <mat-option value=\"January\">มกราคม</mat-option>\n                    <mat-option value=\"February\">กุมภาพันธ์</mat-option>\n                    <mat-option value=\"March\">มีนาคม</mat-option>\n                    <mat-option value=\"April\">เมษายน</mat-option>\n                    <mat-option value=\"May\">พฤษภาคม</mat-option>\n                    <mat-option value=\"June\">มิถุนายน</mat-option>\n                    <mat-option value=\"July\">กรกฎาคม</mat-option>\n                    <mat-option value=\"August\">สิงหาคม</mat-option>\n                    <mat-option value=\"September\">กันยายน</mat-option>\n                    <mat-option value=\"October\">ตุลาคม</mat-option>\n                    <mat-option value=\"November\">พฤศจิกายน</mat-option>\n                    <mat-option value=\"December\">ธันวาคม</mat-option>\n                  </mat-select>\n                </mat-form-field>\n                <mat-form-field>\n                    <mat-select [(value)]=\"Yearselected\">\n                      <mat-option value=\"2018\">2561</mat-option>\n                    </mat-select>\n                  </mat-form-field>\n  \n            <div class=\"search-div\">\n              <mat-form-field class=\"search-form-field\" floatLabel=\"never\">\n                <input matInput [(ngModel)]=\"searchKey\" placeholder=\"ค้นหาห้อง\" autocomplete=\"off\" (keyup)=\"applyFilter()\">\n                <button mat-button matSuffix mat-icon-button aria-label=\"Clear\" *ngIf=\"searchKey\" (click)=\"onSearchClear()\">\n                  <mat-icon>close</mat-icon>\n                </button>\n              </mat-form-field>\n  \n            </div>\n            <div class=\"mat-elevation-z8 size\">\n              <mat-table [dataSource]=\"dataSource\" matSort>\n                <ng-container matColumnDef=\"room\" sticky>\n                  <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อห้อง</mat-header-cell>\n                  <mat-cell *matCellDef=\"let element\">{{element.room}}</mat-cell>\n                </ng-container>\n                <ng-container matColumnDef=\"username\" >\n                  <mat-header-cell *matHeaderCellDef mat-sort-header>ชื่อมิเตอร์ (Mac Address)</mat-header-cell>\n                  <mat-cell *matCellDef=\"let element\">{{element.Maddr}}</mat-cell>\n                </ng-container>\n                <ng-container matColumnDef=\"actions\">\n                  <mat-header-cell *matHeaderCellDef>ดูสถิติการใช้ไฟฟ้า</mat-header-cell>\n                  <mat-cell *matCellDef=\"let element\">\n                    <button mat-raised-button color=\"accent\" (click)=\"openDialog(element.room)\">\n                      <mat-icon>search</mat-icon> เลือก\n                    </button>\n                  </mat-cell>\n                </ng-container>\n                <ng-container matColumnDef=\"noData\">\n                  <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                    No data.\n                  </mat-footer-cell>\n                </ng-container>\n                <ng-container matColumnDef=\"loading\">\n                  <mat-footer-cell *matFooterCellDef colspan=\"6\">\n                    Loading data...\n                  </mat-footer-cell>\n                </ng-container>\n                <mat-header-row *matHeaderRowDef=\"displayedColumns\"></mat-header-row>\n                <mat-row *matRowDef=\"let row; columns: displayedColumns;\"></mat-row>\n                <mat-footer-row *matFooterRowDef=\"['noData']\" [ngClass]=\"{'hide':!(dataSource!=null && dataSource.data.length==0)}\"></mat-footer-row>\n                <mat-footer-row *matFooterRowDef=\"['loading']\" [ngClass]=\"{'hide':dataSource!=null}\"></mat-footer-row>\n              </mat-table>\n              <mat-paginator [pageSizeOptions]=\"[10, 20, 50, 100]\" [pageSize]=\"10\" showFirstLastButtons></mat-paginator>\n            </div>\n          </mat-card-content>\n        </mat-tab>\n  \n      </mat-tab-group>\n    </mat-card-content>\n  </mat-card>"
 
 /***/ }),
 
@@ -1269,8 +1687,10 @@ var StatisticReportAdmin = /** @class */ (function () {
         this.meterService = meterService;
         this.userService = userService;
         this.Data = [{}];
-        this.displayedColumns = ['ActiveEnergy', 'Frequency', 'LineCurrent', 'LineVoltage', 'date'];
+        this.DataTH = [{}];
+        this.displayedColumns = ['date', 'ActiveEnergy'];
     }
+    //, 'Frequency', 'LineCurrent', 'LineVoltage'
     StatisticReportAdmin.prototype.ngOnInit = function () {
         var _this = this;
         this.meterService.showStatistic(this.data.month, this.data.year, this.data.room).subscribe(function (data) {
@@ -1279,15 +1699,118 @@ var StatisticReportAdmin = /** @class */ (function () {
             }
             _this.dataSource = data;
             _this.Data = data;
-            console.log("data", data);
+            for (var i = 0; i < data.length; i++) {
+                _this.conTime(i);
+            }
             _this.dataSource = new _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatTableDataSource"](data);
             _this.dataSource.sort = _this.sort;
             _this.dataSource.paginator = _this.paginator;
-            console.log(_this.data);
+        });
+        this.meterService.showStatisticTH(this.data.month, this.data.year, this.data.room).subscribe(function (data) {
+            if (!data) {
+                return;
+            }
+            _this.DataTH = data['สถิติการใช้'];
+            for (var i = 0; i < _this.DataTH.length; i++) {
+                _this.conTimeLoad(i);
+            }
         });
     };
+    StatisticReportAdmin.prototype.conTimeLoad = function (index) {
+        var time = this.DataTH[index].เวลาที่บันทึก.split(",", 5);
+        var day = this.conDayTH(time[0]);
+        var daynum = time[1];
+        var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+        var year = this.conYearTh(time[3].split(" ", 2)[1]);
+        var times = time[4];
+        var data = times + daynum + " " + Month + " " + year;
+        this.DataTH[index].เวลาที่บันทึก = data;
+    };
+    StatisticReportAdmin.prototype.conTime = function (index) {
+        var time = this.Data[index].date.split(",", 5);
+        var day = this.conDayTH(time[0]);
+        var daynum = time[1];
+        var Month = this.conMonthTh(time[2].split(" ", 2)[1]);
+        var year = this.conYearTh(time[3].split(" ", 2)[1]);
+        var times = time[4];
+        var data = times + daynum + " " + Month + " " + year;
+        this.Data[index].date = data;
+    };
+    StatisticReportAdmin.prototype.conYearTh = function (selectedyear) {
+        return parseInt(selectedyear) + 543;
+    };
+    StatisticReportAdmin.prototype.conMonthTh = function (selectedMonth) {
+        var selectedMonthTH;
+        if (selectedMonth == 'January') {
+            selectedMonthTH = 'มกราคม';
+        }
+        else if (selectedMonth == 'February') {
+            selectedMonthTH = 'กุมภาพันธ์';
+        }
+        else if (selectedMonth == 'March') {
+            selectedMonthTH = 'มีนาคม';
+        }
+        else if (selectedMonth == 'April') {
+            selectedMonthTH = 'เมษายน';
+        }
+        else if (selectedMonth == 'May') {
+            selectedMonthTH = 'พฤษภาคม';
+        }
+        else if (selectedMonth == 'June') {
+            selectedMonthTH = 'มิถุนายน';
+        }
+        else if (selectedMonth == 'July') {
+            selectedMonthTH = 'กรกฎาคม';
+        }
+        else if (selectedMonth == 'August') {
+            selectedMonthTH = 'สิงหาคม';
+        }
+        else if (selectedMonth == 'September') {
+            selectedMonthTH = 'กันยายน';
+        }
+        else if (selectedMonth == 'October') {
+            selectedMonthTH = 'ตุลาคม';
+        }
+        else if (selectedMonth == 'November') {
+            selectedMonthTH = 'พฤศจิกายน';
+        }
+        else if (selectedMonth == 'December') {
+            selectedMonthTH = 'ธันวาคม';
+        }
+        return selectedMonthTH;
+    };
+    StatisticReportAdmin.prototype.conDayTH = function (data) {
+        var dayTH;
+        if (data == 'Sunday') {
+            dayTH = 'อาทิตย์';
+        }
+        else if (data == 'Monday') {
+            dayTH = 'จันทร์';
+        }
+        else if (data == 'Tuesday') {
+            dayTH = 'อังคาร';
+        }
+        else if (data == 'Wednesday') {
+            dayTH = 'พุธ';
+        }
+        else if (data == 'Thursday') {
+            dayTH = 'พฤหัสบดี';
+        }
+        else if (data == 'Friday') {
+            dayTH = 'ศุกร์';
+        }
+        else if (data == 'Saturday') {
+            dayTH = 'เสาร์';
+        }
+        else {
+            dayTH = 'ไม่มีการบันทึกค่า';
+        }
+        return dayTH;
+    };
     StatisticReportAdmin.prototype.exportAsXLSX = function () {
-        this.userService.exportAsExcelFile(this.Data, this.data.month + this.data.year + "Statistic");
+        var monthTH = this.conMonthTh(this.data.month);
+        var yearTH = this.conYearTh(this.data.year);
+        this.userService.exportAsExcelFile(this.DataTH, "สถิติการใช้ไฟห้อง" + this.data.room + "_ประจำเดือน" + monthTH + yearTH);
     };
     StatisticReportAdmin.prototype.onSearchClearReport = function () {
         this.searchKeyReport = "";
@@ -1341,7 +1864,7 @@ module.exports = "  .mat-button-toggle-checked {\r\n    background-color:rgba(7,
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"row\">\n  <div fxFlex.gt-sm=\"50%\">\n    <mat-card>\n      <mat-card-content>\n        <mat-card-title>เวลาที่มิเตอร์ไฟฟ้าส่งค่าไฟฟ้าให้ Server (นาที)</mat-card-title>\n        <mat-card-subtitle></mat-card-subtitle>\n        <mat-button-toggle-group appearance=\"legacy\" name=\"fontStyle\" aria-label=\"Font Style\">\n          <mat-button-toggle value=\"1\" (click)=\"time(1)\"  checked={{bt1}}>1</mat-button-toggle>\n          <mat-button-toggle value=\"5\" (click)=\"time(5)\" checked={{bt5}}>5</mat-button-toggle>\n          <mat-button-toggle value=\"10\" (click)=\"time(10)\" checked={{bt10}}>10</mat-button-toggle>\n          <mat-button-toggle value=\"15\" (click)=\"time(15)\" checked={{bt15}}>15</mat-button-toggle>\n          <mat-button-toggle value=\"30\" (click)=\"time(30)\" checked={{bt30}}>30</mat-button-toggle>\n          <mat-button-toggle value=\"45\" (click)=\"time(45)\" checked={{bt45}}>45</mat-button-toggle>\n          <mat-button-toggle value=\"60\" (click)=\"time(60)\" checked={{bt60}}>60</mat-button-toggle>\n        </mat-button-toggle-group>\n        <h5>\n          <br>\n          เวลาที่เลือก : <strong>{{userDetails}} </strong> นาที\n        </h5>\n      </mat-card-content>\n    </mat-card>\n  </div>\n</div>\n\n"
+module.exports = "<div fxLayout=\"row\">\n  <div fxFlex.gt-sm=\"50%\">\n    <mat-card>\n      <mat-card-content>\n        <mat-card-title>เวลาที่มิเตอร์ไฟฟ้าส่งค่าไฟฟ้าให้ Server (นาที)</mat-card-title>\n        <mat-card-subtitle></mat-card-subtitle>\n        <mat-button-toggle-group appearance=\"legacy\" name=\"fontStyle\" aria-label=\"Font Style\">\n          <mat-button-toggle value=\"1\" (click)=\"time(1)\"  checked={{bt1}}>1</mat-button-toggle>\n          <mat-button-toggle value=\"5\" (click)=\"time(5)\" checked={{bt5}}>5</mat-button-toggle>\n          <mat-button-toggle value=\"10\" (click)=\"time(10)\" checked={{bt10}}>10</mat-button-toggle>\n          <mat-button-toggle value=\"15\" (click)=\"time(15)\" checked={{bt15}}>15</mat-button-toggle>\n          <mat-button-toggle value=\"30\" (click)=\"time(30)\" checked={{bt30}}>30</mat-button-toggle>\n          <mat-button-toggle value=\"45\" (click)=\"time(45)\" checked={{bt45}}>45</mat-button-toggle>\n          <mat-button-toggle value=\"60\" (click)=\"time(60)\" checked={{bt60}}>60</mat-button-toggle>\n        </mat-button-toggle-group>\n        <h5>\n          <br>\n          เวลาที่เลือก : <strong>{{userDetails}} </strong> นาที\n        </h5>\n      </mat-card-content>\n    </mat-card>\n  </div>\n  <div fxFlex.gt-sm=\"50%\">\n    <mat-card>\n      <mat-card-content>\n        <mat-card-title>ค่าไฟต่อหน่วย (บาท)</mat-card-title>\n        <mat-card-subtitle></mat-card-subtitle>\n        <mat-button-toggle-group appearance=\"legacy\" name=\"fontStyle\" aria-label=\"Font Style\">\n          <mat-button-toggle value=\"4\" (click)=\"bath(4)\"  checked={{bat1}}>4</mat-button-toggle>\n          <mat-button-toggle value=\"5\" (click)=\"bath(5)\" checked={{bat5}}>5</mat-button-toggle>\n          <mat-button-toggle value=\"6\" (click)=\"bath(6)\" checked={{bat10}}>6</mat-button-toggle>\n          <mat-button-toggle value=\"7\" (click)=\"bath(7)\" checked={{bat15}}>7</mat-button-toggle>\n          <mat-button-toggle value=\"8\" (click)=\"bath(8)\" checked={{bat30}}>8</mat-button-toggle>\n          <mat-button-toggle value=\"9\" (click)=\"bath(9)\" checked={{bat45}}>9</mat-button-toggle>\n          <mat-button-toggle value=\"10\" (click)=\"bath(10)\" checked={{bat60}}>10</mat-button-toggle>\n        </mat-button-toggle-group>\n        <h5>\n          <br>\n          ค่าเลือก : <strong>{{userDetailsBath}} </strong> บาท\n        </h5>\n      </mat-card-content>\n    </mat-card>\n  </div>\n</div>\n\n"
 
 /***/ }),
 
@@ -1384,12 +1907,26 @@ var SystemSettingComponent = /** @class */ (function () {
         this.bt30 = false;
         this.bt45 = false;
         this.bt60 = false;
+        this.bat1 = false;
+        this.bat5 = false;
+        this.bat10 = false;
+        this.bat15 = false;
+        this.bat30 = false;
+        this.bat45 = false;
+        this.bat60 = false;
     }
     SystemSettingComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.meterService.showTimeDelay().subscribe(function (res) {
-            _this.userDetails = res[0].timeDelay;
+            _this.userDetails = res['timeDelay'];
             _this.btActive(_this.userDetails);
+        }, function (err) {
+            console.log(err);
+        });
+        this.meterService.showBathPerNum().subscribe(function (res) {
+            _this.userDetailsBath = res['bathPerNum'];
+            console.log(_this.userDetailsBath);
+            _this.btActiveBath(_this.userDetailsBath);
         }, function (err) {
             console.log(err);
         });
@@ -1427,6 +1964,53 @@ var SystemSettingComponent = /** @class */ (function () {
     SystemSettingComponent.prototype.time = function (time) {
         var _this = this;
         this.meterService.updateSystem(time).subscribe(function (res) {
+            _this.showSucessMessage = true;
+            setTimeout(function () { return _this.showSucessMessage = false; }, 4000);
+            _this.notificationService.success('Edit successfully !!!');
+            _this.ngOnInit();
+        }, function (err) {
+            if (err.status === 422) {
+                _this.serverErrorMessages = err.error.join('<br/>');
+            }
+            else {
+                _this.notificationService.warn('Edit Fail!!!');
+                _this.serverErrorMessages = 'Something went wrong.Please contact admin.';
+            }
+        });
+    };
+    SystemSettingComponent.prototype.btActiveBath = function (state) {
+        this.bat1 = false;
+        this.bat5 = false;
+        this.bat10 = false;
+        this.bat15 = false;
+        this.bat30 = false;
+        this.bat45 = false;
+        this.bat60 = false;
+        if (state == 4) {
+            this.bat1 = true;
+        }
+        else if (state == 5) {
+            this.bat5 = true;
+        }
+        else if (state == 6) {
+            this.bat10 = true;
+        }
+        else if (state == 7) {
+            this.bat15 = true;
+        }
+        else if (state == 8) {
+            this.bat30 = true;
+        }
+        else if (state == 9) {
+            this.bat45 = true;
+        }
+        else if (state == 10) {
+            this.bat60 = true;
+        }
+    };
+    SystemSettingComponent.prototype.bath = function (time) {
+        var _this = this;
+        this.meterService.updateBath(time).subscribe(function (res) {
             _this.showSucessMessage = true;
             setTimeout(function () { return _this.showSucessMessage = false; }, 4000);
             _this.notificationService.success('Edit successfully !!!');
