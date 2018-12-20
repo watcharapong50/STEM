@@ -39,6 +39,9 @@ router.get('/showBillUserAll', ctrlElec.showBillUserAll);
 router.get('/showStatistic/:room/:month/:year', ctrlElec.showStatistic);
 router.get('/showStatisticTH/:room/:month/:year', ctrlElec.showStatisticTH);
 router.get('/showBillUserReport/:Maddr/:month/:year', ctrlElec.showBillUserReport);
+router.get('/showBillUserReportYear/:Maddr/:month/:year', ctrlElec.showBillUserReportYear);
+router.get('/showBillUserReportYearTH/:Maddr/:month/:year', ctrlElec.showBillUserReportYearTH);
+
 // System
 router.get('/updateSystem/:timeDelay', ctrlSystem.updateSystem);
 router.get('/showTimeDelay', ctrlSystem.showTimeDelay);
