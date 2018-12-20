@@ -580,8 +580,8 @@ if(false) {}
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\New folder\STEM - Copy\APP\src\styles.css */"./src/styles.css");
-module.exports = __webpack_require__(/*! C:\New folder\STEM - Copy\APP\src\assets\styles\style.scss */"./src/assets/styles/style.scss");
+__webpack_require__(/*! C:\New folder\STEM - Copy\stemTest\src\styles.css */"./src/styles.css");
+module.exports = __webpack_require__(/*! C:\New folder\STEM - Copy\stemTest\src\assets\styles\style.scss */"./src/assets/styles/style.scss");
 
 
 /***/ })

@@ -86,12 +86,6 @@ var MeterService = /** @class */ (function () {
     MeterService.prototype.showTimeDelay = function () {
         return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showTimeDelay');
     };
-    MeterService.prototype.updateBath = function (systemTime) {
-        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/updateBath/' + systemTime);
-    };
-    MeterService.prototype.showBathPerNum = function () {
-        return this.http.get(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiBaseUrl + '/showBathPerNum');
-    };
     MeterService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
             providedIn: 'root'
